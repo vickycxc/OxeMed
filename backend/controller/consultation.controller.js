@@ -1,11 +1,14 @@
-import { Op } from "sequelize";
+import { Op, or } from "sequelize";
 import {
   CompoundedMedication,
   Consultation,
+  ConsultationSummary,
   Diagnosis,
   DoctorNote,
+  Message,
   Prescription,
 } from "../models/index.js";
+import genai, { geminiConfig } from "../lib/genai.js";
 
 export const addConsultation = async (req, res) => {
   const consultation = req.body;
@@ -122,6 +125,107 @@ export const addPrescription = async (req, res) => {
     res.status(201).json({ message: "Resep Digital berhasil dibuat" });
   } catch (error) {
     console.log("Error di addPrescription controller", error);
+    res.status(500).json({
+      message: "Terjadi kesalahan pada server",
+    });
+  }
+};
+
+export const summarizeConsultation = async (req, res) => {
+  const consultationId = req.params.id;
+  try {
+    const consultationMessages = await Message.findAll({
+      where: {
+        consultationId: consultationId,
+      },
+      order: [["createdAt", "ASC"]],
+    });
+
+    const doctorNote = await DoctorNote.findOne({
+      attributes: { exclude: ["createdAt", "updatedAt", "id"] },
+      where: {
+        id: consultationId,
+      },
+      include: {
+        model: Diagnosis,
+        attributes: {
+          exclude: ["createdAt", "updatedAt", "consultationId", "id"],
+        },
+      },
+    });
+
+    const prescription = await Prescription.findAll({
+      attributes: {
+        exclude: ["createdAt", "updatedAt", "consultationId", "id"],
+      },
+      where: {
+        consultationId: consultationId,
+      },
+      include: {
+        model: CompoundedMedication,
+        attributes: {
+          exclude: ["createdAt", "updatedAt", "consultationId", "id"],
+        },
+      },
+    });
+
+    if (consultationMessages.length !== 0) {
+      const filteredMessages = consultationMessages.map((message) => {
+        return {
+          senderId: message.senderId,
+          content: message.message,
+        };
+      });
+      console.log(
+        "🚀 ~ filteredMessages ~ filteredMessages:",
+        filteredMessages
+      );
+
+      const prompt = `Saya memiliki transkrip konsultasi antara dokter dan pasien. Tolong jelaskan sejelas jelasnya tentang definisi diagnosis pasien, kegunaan obat yang diresepkan dokter, serta buatlah rangkuman mengenai sesi konsultasi tersebut
+
+Transkrip Chat: ${JSON.stringify(filteredMessages)}
+Catatan Dokter: ${doctorNote ? JSON.stringify(doctorNote) : ""}
+Resep: ${prescription ? JSON.stringify(prescription) : ""}`;
+
+      console.log("🚀 ~ summarizeConsultation ~ prompt:", prompt);
+
+      const response = await genai.models.generateContent({
+        model: "gemini-2.0-flash",
+        contents: prompt,
+        config: geminiConfig,
+      });
+      const kesimpulan = JSON.parse(response.text);
+
+      if (kesimpulan) {
+        const {
+          keluhan,
+          penjelasanTentangDiagnosis,
+          penjelasanTentangObat,
+          rangkuman,
+        } = kesimpulan;
+        const summary = {
+          id: consultationId,
+          chiefComplaint: keluhan,
+          medicationExplanation: penjelasanTentangObat,
+          diagnosisExplanation: penjelasanTentangDiagnosis,
+          summary: rangkuman,
+        };
+        await ConsultationSummary.create(summary);
+        res.status(201).json({
+          message: "Berhasil membuat rangkuman",
+        });
+      } else {
+        res.status(400).json({
+          message: "Gagal membuat rangkuman",
+        });
+      }
+    } else {
+      return res.status(404).json({
+        message: "Konsultasi tidak ditemukan",
+      });
+    }
+  } catch (error) {
+    console.log("Error di summarizeConsultations controller", error);
     res.status(500).json({
       message: "Terjadi kesalahan pada server",
     });

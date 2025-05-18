@@ -27,7 +27,5 @@ export const Diagnosis = sequelize.define(
   },
   {
     timestamps: true,
-    tableName: "diagnoses",
-    freezeTableName: true,
   }
 );

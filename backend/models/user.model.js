@@ -43,6 +43,6 @@ export const User = sequelize.define(
     },
   },
   {
-    timestamps: false,
+    timestamps: true,
   }
 );

@@ -1,5 +1,6 @@
 import { CompoundedMedication } from "./compunded_medication.model.js";
 import { Consultation } from "./consultation.model.js";
+import { ConsultationSummary } from "./consultation_summary.model.js";
 import { Diagnosis } from "./diagnosis.model.js";
 import { Doctor } from "./doctor.model.js";
 import { DoctorEducation } from "./doctor_education.model.js";
@@ -97,6 +98,14 @@ Prescription.belongsTo(Consultation, {
   foreignKey: "consultationId",
 });
 
+// Consultation - Consultation Summary (1:1)
+Consultation.hasOne(ConsultationSummary, {
+  foreignKey: "id",
+});
+ConsultationSummary.belongsTo(Consultation, {
+  foreignKey: "id",
+});
+
 // Consultation - Message (1:N)
 Consultation.hasMany(Message, {
   foreignKey: "consultationId",
@@ -145,6 +154,7 @@ export {
   Message,
   Notification,
   Consultation,
+  ConsultationSummary,
   Diagnosis,
   DoctorEducation,
   DoctorSchedule,

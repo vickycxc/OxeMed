@@ -2,6 +2,7 @@ import bcryptjs from "bcryptjs";
 import { DoctorEducation, DoctorSchedule, User } from "../models/index.js";
 import { generateToken } from "../lib/jwt.js";
 import cloudinary from "../lib/cloudinary.js";
+import crypto from "crypto";
 
 export const register = async (req, res) => {
   const {
@@ -54,6 +55,7 @@ export const register = async (req, res) => {
     }
     const salt = await bcryptjs.genSalt(10);
     const hashedPassword = await bcryptjs.hash(password, salt);
+    const apiKey = crypto.randomBytes(16).toString("hex");
 
     const newUser = await User.create({
       fullName,
@@ -64,6 +66,7 @@ export const register = async (req, res) => {
       phoneNumber,
       role,
       drugAllergies,
+      apiKey,
     });
 
     if (newUser && role === "Pasien") {

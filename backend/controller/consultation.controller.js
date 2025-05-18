@@ -8,26 +8,9 @@ import {
 } from "../models/index.js";
 
 export const addConsultation = async (req, res) => {
-  const {
-    id,
-    patientId,
-    doctorId,
-    timeStart,
-    timeEnd,
-    nextConsultation,
-    status,
-  } = req.body;
+  const consultation = req.body;
   try {
-    await Consultation.create({
-      id,
-      patientId,
-      doctorId,
-      timeStart,
-      timeEnd,
-      nextConsultation,
-      status,
-    });
-
+    await Consultation.create(consultation);
     res.status(201).json({ messages: "Konsultasi baru berhasil dibuat" });
   } catch (error) {
     console.log("Error di addConsultation controller", error);

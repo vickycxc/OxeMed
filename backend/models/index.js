@@ -8,6 +8,7 @@ import { DoctorSchedule } from "./doctor_schedule.model.js";
 import { Message } from "./message.model.js";
 import { Notification } from "./notification.model.js";
 import { Prescription } from "./prescription.model.js";
+import { SensorReading } from "./sensor_reading.model.js";
 import { User } from "./user.model.js";
 
 // User - Doctor (1:1)
@@ -130,6 +131,14 @@ CompoundedMedication.belongsTo(Prescription, {
   foreignKey: "prescriptionId",
 });
 
+// User - Sensor Reading (1:N)
+User.hasMany(SensorReading, {
+  foreignKey: "userId",
+});
+SensorReading.belongsTo(User, {
+  foreignKey: "userId",
+});
+
 export {
   User,
   Doctor,
@@ -142,4 +151,5 @@ export {
   DoctorNote,
   Prescription,
   CompoundedMedication,
+  SensorReading,
 };

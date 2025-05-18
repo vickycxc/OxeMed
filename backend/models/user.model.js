@@ -37,8 +37,12 @@ export const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    apiKey: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   },
   {
-    timestamps: true,
+    timestamps: false,
   }
 );

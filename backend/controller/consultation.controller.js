@@ -9,9 +9,16 @@ import {
   Prescription,
 } from "../models/index.js";
 import genai, { geminiConfig } from "../lib/genai.js";
+import { generateConsultationId } from "../lib/consultation_id.js";
 
 export const addConsultation = async (req, res) => {
   const consultation = req.body;
+  const dateStart = new Date(consultation.timeStart);
+  consultation.id = generateConsultationId(
+    req.user.id,
+    consultation.patientId,
+    dateStart
+  );
   try {
     await Consultation.create(consultation);
     res.status(201).json({ messages: "Konsultasi baru berhasil dibuat" });

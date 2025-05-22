@@ -1,8 +1,10 @@
 import logo from './logo.svg';
 import './App.css';
-import Dashboard from './pages/Dashboard.jsx';
+import React from 'react';
+import Dashboard from './pages/dashboard.jsx';
 import Konsultasi from './pages/Konsultasi.jsx';
 import { Routes, Route} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 
 function App() {

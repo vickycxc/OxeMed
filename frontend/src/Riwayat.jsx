@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import './App.css';
+import "./App.css";
 import {
   LineChart,
   Line,
@@ -8,62 +8,61 @@ import {
   Tooltip,
   CartesianGrid,
   ResponsiveContainer,
-} from 'recharts';
+} from "recharts";
 
 // Dummy Data for IoT (SpO2 and Heart Rate)
 const iotData = [
-  { time: '08:00', spO2: 96, heartRate: 75 },
-  { time: '08:05', spO2: 95, heartRate: 78 },
-  { time: '08:10', spO2: 94, heartRate: 77 },
-  { time: '08:15', spO2: 96, heartRate: 76 },
-  { time: '08:20', spO2: 97, heartRate: 74 },
-  { time: '08:25', spO2: 96, heartRate: 75 },
-  { time: '08:30', spO2: 95, heartRate: 73 },
+  { time: "08:00", spO2: 96, heartRate: 75 },
+  { time: "08:05", spO2: 95, heartRate: 78 },
+  { time: "08:10", spO2: 94, heartRate: 77 },
+  { time: "08:15", spO2: 96, heartRate: 76 },
+  { time: "08:20", spO2: 97, heartRate: 74 },
+  { time: "08:25", spO2: 96, heartRate: 75 },
+  { time: "08:30", spO2: 95, heartRate: 73 },
 ];
 
 // Dummy Data for Chat Messages
 const chatMessages = [
   {
     fromDoctor: true,
-    text: 'Selamat Pagi Zulfikar, apakah ada yang bisa saya bantu?',
-    time: '8:00 AM',
+    text: "Selamat Pagi Zulfikar, apakah ada yang bisa saya bantu?",
+    time: "8:00 AM",
   },
   {
     fromDoctor: false,
-    text: 'Selamat Pagi Dok, saya memiliki ruam di kulit, lebih tepatnya di bagian dada',
-    time: '8:00 AM',
+    text: "Selamat Pagi Dok, saya memiliki ruam di kulit, lebih tepatnya di bagian dada",
+    time: "8:00 AM",
   },
   {
     fromDoctor: true,
-    text: 'Sejak kapan gejala tersebut muncul? Bisa dibantu juga untuk mengirimkan foto ruam nya',
-    time: '8:00 AM',
+    text: "Sejak kapan gejala tersebut muncul? Bisa dibantu juga untuk mengirimkan foto ruam nya",
+    time: "8:00 AM",
   },
   {
     fromDoctor: false,
-    text: 'Sejak dua minggu yang lalu Dok, awalnya saya mengira cuma ruam biasa, sebentar dok saya foto',
-    time: '8:01 AM',
+    text: "Sejak dua minggu yang lalu Dok, awalnya saya mengira cuma ruam biasa, sebentar dok saya foto",
+    time: "8:01 AM",
   },
   {
     fromDoctor: false,
     image:
-      'https://images.unsplash.com/photo-1588776814546-fcf37b8a8e94?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
-    time: '8:02 AM',
+      "https://images.unsplash.com/photo-1588776814546-fcf37b8a8e94?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+    time: "8:02 AM",
   },
 ];
 
 // Dummy Consultation Summary
 const consultationSummary = {
-  keluhan: 'Pasien mengeluhkan pusing yang terkadang disertai mual.',
+  keluhan: "Pasien mengeluhkan pusing yang terkadang disertai mual.",
   diagnosis:
-    'Pasien didiagnosa Hipertensi dengan gejala tambahan pusing berulang dan mual ringan. Hipertensi adalah kondisi tekanan darah tinggi yang dapat menyebabkan berbagai masalah kesehatan jika tidak ditangani.',
-  obat:
-    'Pasien diresepkan Amlodipine 5 mg, yang merupakan obat untuk menurunkan tekanan darah. Diminum 1 tablet setiap pagi. Selain itu, diresepkan juga Vitamin B1 untuk membantu mengatasi keluhan pusing.',
+    "Pasien didiagnosa Hipertensi dengan gejala tambahan pusing berulang dan mual ringan. Hipertensi adalah kondisi tekanan darah tinggi yang dapat menyebabkan berbagai masalah kesehatan jika tidak ditangani.",
+  obat: "Pasien diresepkan Amlodipine 5 mg, yang merupakan obat untuk menurunkan tekanan darah. Diminum 1 tablet setiap pagi. Selain itu, diresepkan juga Vitamin B1 untuk membantu mengatasi keluhan pusing.",
   rangkuman:
-    'Pasien Budi Santoso (45 tahun) mengeluhkan pusing yang terkadang disertai mual. Dokter mendiagnosa hipertensi dan memberikan resep Amlodipine 5 mg dan Vitamin B1. Dokter menyarankan untuk periksa tekanan darah secara berkala, mengurangi konsumsi garam, dan melakukan kontrol ulang 2 minggu lagi.',
+    "Pasien Budi Santoso (45 tahun) mengeluhkan pusing yang terkadang disertai mual. Dokter mendiagnosa hipertensi dan memberikan resep Amlodipine 5 mg dan Vitamin B1. Dokter menyarankan untuk periksa tekanan darah secara berkala, mengurangi konsumsi garam, dan melakukan kontrol ulang 2 minggu lagi.",
 };
 
 function Riwayat() {
-  const [user] = useState('Zulfikar Satria Allam Syahputra'); // Placeholder for user name
+  const [user] = useState("Zulfikar Satria Allam Syahputra"); // Placeholder for user name
 
   return (
     <div style={styles.page}>
@@ -101,7 +100,7 @@ function Riwayat() {
         {/* IoT Tracking Section */}
         <section style={styles.section}>
           <h2>Data Monitoring Kesehatan (SpO2 & Detak Jantung)</h2>
-          <div style={{ width: '100%', height: 300 }}>
+          <div style={{ width: "100%", height: 300 }}>
             <ResponsiveContainer>
               <LineChart
                 data={iotData}
@@ -111,15 +110,19 @@ function Riwayat() {
                 <XAxis dataKey="time" />
                 <YAxis
                   yAxisId="left"
-                  label={{ value: 'SpO2 (%)', angle: -90, position: 'insideLeft' }}
+                  label={{
+                    value: "SpO2 (%)",
+                    angle: -90,
+                    position: "insideLeft",
+                  }}
                 />
                 <YAxis
                   yAxisId="right"
                   orientation="right"
                   label={{
-                    value: 'Heart Rate (bpm)',
+                    value: "Heart Rate (bpm)",
                     angle: 90,
-                    position: 'insideRight',
+                    position: "insideRight",
                   }}
                 />
                 <Tooltip />
@@ -163,9 +166,9 @@ function Riwayat() {
                   key={i}
                   style={{
                     ...styles.chatMessage,
-                    alignSelf: msg.fromDoctor ? 'flex-start' : 'flex-end',
-                    backgroundColor: msg.fromDoctor ? '#f0f0f0' : '#0d47a1',
-                    color: msg.fromDoctor ? '#000' : '#fff',
+                    alignSelf: msg.fromDoctor ? "flex-start" : "flex-end",
+                    backgroundColor: msg.fromDoctor ? "#f0f0f0" : "#0d47a1",
+                    color: msg.fromDoctor ? "#000" : "#fff",
                   }}
                 >
                   {msg.text && <p style={{ margin: 0 }}>{msg.text}</p>}
@@ -190,7 +193,8 @@ function Riwayat() {
             <strong>Keluhan:</strong> {consultationSummary.keluhan}
           </p>
           <p>
-            <strong>Penjelasan Diagnosis:</strong> {consultationSummary.diagnosis}
+            <strong>Penjelasan Diagnosis:</strong>{" "}
+            {consultationSummary.diagnosis}
           </p>
           <p>
             <strong>Penjelasan Obat:</strong> {consultationSummary.obat}
@@ -207,102 +211,102 @@ function Riwayat() {
 const styles = {
   page: {
     fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-    backgroundColor: '#f9fbfd',
-    minHeight: '100vh',
+    backgroundColor: "#f9fbfd",
+    minHeight: "100vh",
     margin: 0,
   },
   header: {
-    backgroundColor: '#0d2149',
-    color: 'white',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '0.5rem 2rem',
-    flexWrap: 'wrap',
+    backgroundColor: "#0d2149",
+    color: "white",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "0.5rem 2rem",
+    flexWrap: "wrap",
   },
   logoSection: {
-    display: 'flex',
-    alignItems: 'center',
+    display: "flex",
+    alignItems: "center",
   },
   logoImage: {
-    width: '40px',  // Adjust size as per requirement
-    height: '40px',
-    marginRight: '10px',
+    width: "40px", // Adjust size as per requirement
+    height: "40px",
+    marginRight: "10px",
   },
   logo: {
-    fontWeight: 'bold',
-    fontSize: '24px',
-    color: '#4db6ac',
+    fontWeight: "bold",
+    fontSize: "24px",
+    color: "#4db6ac",
   },
   nav: {
-    display: 'flex',
-    alignItems: 'center',
+    display: "flex",
+    alignItems: "center",
     gap: 20,
   },
   navLink: {
-    color: 'white',
-    textDecoration: 'none',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    padding: '0.5rem',
+    color: "white",
+    textDecoration: "none",
+    fontWeight: "bold",
+    cursor: "pointer",
+    padding: "0.5rem",
   },
   main: {
     maxWidth: 900,
-    margin: '2rem auto',
-    padding: '0 1rem',
+    margin: "2rem auto",
+    padding: "0 1rem",
   },
   section: {
-    backgroundColor: 'white',
-    padding: '1.5rem',
+    backgroundColor: "white",
+    padding: "1.5rem",
     borderRadius: 12,
-    marginBottom: '2rem',
-    boxShadow: '0 0 10px rgba(0,0,0,0.05)',
+    marginBottom: "2rem",
+    boxShadow: "0 0 10px rgba(0,0,0,0.05)",
   },
   sectionChat: {
-    backgroundColor: 'white',
-    padding: '1.5rem',
+    backgroundColor: "white",
+    padding: "1.5rem",
     borderRadius: 12,
-    marginBottom: '2rem',
-    boxShadow: '0 0 10px rgba(0,0,0,0.05)',
-    display: 'flex',
+    marginBottom: "2rem",
+    boxShadow: "0 0 10px rgba(0,0,0,0.05)",
+    display: "flex",
     gap: 20,
   },
   chatContainer: {
-    display: 'flex',
-    width: '100%',
+    display: "flex",
+    width: "100%",
   },
   chatLeft: {
-    flex: '0 0 200px',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    flex: "0 0 200px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
     gap: 10,
   },
   doctorAvatar: {
     width: 140,
     height: 140,
     borderRadius: 20,
-    objectFit: 'cover',
+    objectFit: "cover",
   },
   doctorInfo: {
-    textAlign: 'center',
+    textAlign: "center",
   },
   chatBox: {
     flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
+    display: "flex",
+    flexDirection: "column",
     gap: 10,
-    padding: '0.5rem 1rem',
-    border: '1px solid #ccc',
+    padding: "0.5rem 1rem",
+    border: "1px solid #ccc",
     borderRadius: 12,
     maxHeight: 320,
-    overflowY: 'auto',
+    overflowY: "auto",
   },
   chatMessage: {
-    maxWidth: '70%',
+    maxWidth: "70%",
     padding: 10,
     borderRadius: 10,
-    position: 'relative',
+    position: "relative",
   },
   chatTime: {
     fontSize: 10,
@@ -310,11 +314,11 @@ const styles = {
     opacity: 0.7,
   },
   sectionSummary: {
-    backgroundColor: 'white',
-    padding: '1.5rem',
+    backgroundColor: "white",
+    padding: "1.5rem",
     borderRadius: 12,
-    boxShadow: '0 0 10px rgba(0,0,0,0.05)',
-    marginBottom: '4rem',
+    boxShadow: "0 0 10px rgba(0,0,0,0.05)",
+    marginBottom: "4rem",
   },
 };
 

@@ -35,8 +35,8 @@ const Login = () => {
       </main>
 
       {/* Footer */}
-      <footer id="footer" className="footer">
-        <div className="container-fluid container-xl text-center mt-4 py-4">
+      <footer id="footer" className="footer" style={{ marginTop: '40px' }}>
+        <div className="footer-bottom text-center mt-4">
           <p style={{ margin: 0, fontWeight: '700', fontSize: '1.25rem' }}>
             OxeMed<br />
             Teknologi Kedokteran - Kelompok 4

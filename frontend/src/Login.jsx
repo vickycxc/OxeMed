@@ -219,25 +219,23 @@ const handleLogout = () => {
               fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
               letterSpacing: '1px',
             }}>
-              Welcome, Andi Saputra
+              Hello, Andi Saputra!
             </h4>
             <h1>
-              Stay Connected to <br />
-              Your <span className="highlight">Respiratory</span> <br />
-              <span className="highlight">Health </span>and <span className="highlight">Care</span>
+              Your <span className="highlight">Real-Time</span> <br />
+              Respiratory <span className="highlight">Health</span> Companion
             </h1>
             <p className="subheading">
-              Track your respiratory health instantly and connect with medical experts anytime.
+              Monitor your respiratory health effortlessly and access your medical history anytime.
             </p>
             <p className="description">
-              OxeMed offers real-time health tracking, enabling you to monitor your respiratory health and connect instantly with medical professionals for timely consultations. Take control of your health today and prevent complications before they arise.
+              Use our features to review test results, consult with healthcare professionals, and track your health progress seamlessly.
             </p>
           </div>
           <div className="hero-image">
             <img src={mainLogo} alt="Main Logo" className="main-img" />
           </div>
         </section>
-
 
         {/* Features Section */}
         <section id="features" className="features section">
@@ -339,8 +337,8 @@ const handleLogout = () => {
                     </p>
                     <ul className="feature-list">
                       <li>Automatically saved test results.</li>
-                      <li>Easy access to past consultation notes.</li>
                       <li>Visual charts to track your health over time.</li>
+                      <li>Easy access to past consultation notes.</li>
                     </ul>
                     <button className="btn-login" style={{ width: 'fit-content', marginTop: '20px' }} onClick={goToHistory}>
                       View History

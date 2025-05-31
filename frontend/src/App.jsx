@@ -5,6 +5,7 @@ import Dashboard from './Dashboard.jsx'
 import Riwayat from './Riwayat.jsx'
 import Konsultasi from './Konsultasi.jsx'
 import Login from './Login.jsx'
+import LoginDokter from './LoginDokter.jsx'
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
           <Route path="/test" element={<Test />} />
           <Route path="/riwayat" element={<Riwayat />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/logindokter" element={<LoginDokter />} />
         </Routes>
     </div>
   )

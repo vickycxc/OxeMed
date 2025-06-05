@@ -9,7 +9,6 @@ import historyLogo from './assets/history.jpg';
 import { useNavigate } from 'react-router-dom';
 
 const tabs = [
-  { id: 'tab1', label: 'Test' },
   { id: 'tab2', label: 'Consultation' },
   { id: 'tab3', label: 'History' },
 ];
@@ -45,7 +44,7 @@ const handleLogout = () => {
 
   // Simulasi user
   const user = {
-    name: 'Andi Saputra',
+    name: 'dr Andi Saputra',
   };
 
  useEffect(() => {
@@ -101,32 +100,6 @@ const handleLogout = () => {
                   }}
                 >
                   Home
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#features"
-                  className={activeSection === 'features' ? 'active' : ''}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setActiveTab('tab1'); // tampilkan tab Test saat klik Features
-                    document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
-                  }}
-                >
-                  Features
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#tab1"
-                  className={activeTab === 'tab1' ? 'active' : ''}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setActiveTab('tab1');
-                    document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
-                  }}
-                >
-                  Test
                 </a>
               </li>
               <li>
@@ -229,7 +202,7 @@ const handleLogout = () => {
               Manage your appointments efficiently and stay updated with your patients' health status.
             </p>
             <p className="description">
-              Access patient details, review consultation history, and communicate seamlessly to provide the best care.
+              Use our features to review test results, consult with healthcare professionals, and track your health progress seamlessly.
             </p>
           </div>
           <div className="hero-image">
@@ -272,34 +245,6 @@ const handleLogout = () => {
             </div>
 
             <div data-aos="fade-up" data-aos-delay="200">
-              {activeTab === 'tab1' && (
-                <div className="row align-items-center">
-                  <div className="col-lg-6 d-flex flex-column justify-content-center" style={{ marginLeft: '80px' }}>
-                    <h3 className="feature-title">Test</h3>
-                    <p className="feature-description">
-                      Easily perform respiratory health tests using OxeMed’s intuitive and accurate monitoring tools.
-                    </p>
-                    <ul className="feature-list">
-                      <li>Real-time oxygen saturation (SpO2) monitoring.</li>
-                      <li>Track heart rate.</li>
-                      <li>Simple test execution guided step-by-step.</li>
-                    </ul>
-                    <button className="btn-login" style={{ width: 'fit-content', marginTop: '20px' }} onClick={goToTest}>
-                      Start Test
-                    </button>
-                  </div>
-
-                  <div className="col-lg-6 d-flex justify-content-end">
-                    <img
-                      src={testLogo}
-                      alt="Test Logo"
-                      className="test-img"
-                      style={{ width: '450px', height: 'auto', marginLeft: '110px' }}
-                    />
-                  </div>
-                </div>
-              )}
-
               {activeTab === 'tab2' && (
                 <div className="row align-items-center">
                   <div className="col-lg-6 d-flex flex-column justify-content-center" style={{ marginLeft: '80px' }}>

@@ -286,16 +286,16 @@ const Dashboard = () => {
             <h2 style={{ textAlign: 'center', marginBottom: '1rem' }}>Sign Up for OxeMed</h2>
             <form>
               <div className="form-group">
+                <label htmlFor="username">Username</label>
+                <input id="usename" type="username" placeholder="Create a username" required />
+              </div>              
+              <div className="form-group">
                 <label htmlFor="signup-email">Email</label>
                 <input id="signup-email" type="email" placeholder="Your email" required />
               </div>
               <div className="form-group">
                 <label htmlFor="signup-password">Password</label>
                 <input id="signup-password" type="password" placeholder="Create a password" required />
-              </div>
-              <div className="form-group">
-                <label htmlFor="signup-confirm-password">Confirm Password</label>
-                <input id="signup-confirm-password" type="password" placeholder="Confirm password" required />
               </div>
               <button type="submit" className="btn-login">Sign Up</button>
             </form>

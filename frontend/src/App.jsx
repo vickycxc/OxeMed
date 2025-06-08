@@ -6,6 +6,8 @@ import Riwayat from './Riwayat.jsx'
 import Konsultasi from './Konsultasi.jsx'
 import Login from './Login.jsx'
 import LoginDokter from './LoginDokter.jsx'
+import KonsultasiDokter from './KonsultasiDokter.jsx'
+import RiwayatDokter from './RiwayatDokter.jsx'
 
 const App = () => {
   return (
@@ -17,6 +19,8 @@ const App = () => {
           <Route path="/riwayat" element={<Riwayat />} />
           <Route path="/login" element={<Login />} />
           <Route path="/logindokter" element={<LoginDokter />} />
+          <Route path="/konsultasidokter" element={<KonsultasiDokter />} />
+          <Route path="/riwayatdokter" element={<RiwayatDokter />} />
         </Routes>
     </div>
   )

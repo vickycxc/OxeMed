@@ -1345,6 +1345,128 @@ section,
 }
 
 /*--------------------------------------------------------------
+# Pasien Section
+--------------------------------------------------------------*/
+/* Styling untuk Daftar Pasien */
+.pasien-container {
+  padding: 40px 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center; /* Center content */
+}
+
+.pasien-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center; /* Center items */
+}
+
+.pasien-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  width: 80%;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.pasien-card:hover {
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.pasien-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 70%; /* Make the patient info area smaller */
+  text-align: left; /* Align text to left */
+}
+
+.pasien-info h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.pasien-info p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Styling untuk Status (Sedang Berlangsung dan Selesai) */
+.status {
+  font-weight: bold;
+  padding: 8px 20px;
+  border-radius: 20px;
+  text-align: center;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: inline-block;
+  transition: all 0.3s ease;
+  color: white;
+  background-color: #bdbdbd; /* Default gray for neutral */
+  margin-left: auto; /* Align status to the right */
+  margin-right: 0;
+  width: 140px; /* Fixed width for consistency */
+}
+
+/* Sedang Berlangsung (Clickable - Redirect to Konsultasi) */
+.status.ongoing {
+  background-color: #4caf50; /* Calm Green */
+}
+
+.status.ongoing:hover {
+  background-color: #45a049; /* Darker green for hover effect */
+  transform: scale(1.05);
+}
+
+/* Selesai (Finished) */
+.status.finished {
+  background-color: #8e8e8e; /* Soft Grey */
+}
+
+.status.finished:hover {
+  background-color: #7a7a7a; /* Darker grey for hover effect */
+  transform: scale(1.05);
+}
+
+/* Styling untuk Tombol Lihat Lebih Banyak */
+.lihat-lebih-banyak {
+  padding: 12px 24px;
+  background-color: #00796b;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.lihat-lebih-banyak:hover {
+  background-color: #004d40;
+}
+
+/* Responsif untuk Mobile */
+@media (max-width: 768px) {
+  .pasien-card {
+    width: 90%;
+  }
+
+  .pasien-info {
+    width: 100%;
+  }
+}
+
+/*--------------------------------------------------------------
 # Call To Action Section
 --------------------------------------------------------------*/
 .call-to-action .container {

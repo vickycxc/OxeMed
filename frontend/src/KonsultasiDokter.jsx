@@ -1,43 +1,48 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import oxemedLogo from './assets/oxemed.jpg';
 import consultationLogo from './assets/consultation.jpg';  // Fixed the import for this image
 
 const profilePicUrl = "https://randomuser.me/api/portraits/men/75.jpg";
 
-const Test = () => {
-  const [activeTab, setActiveTab] = useState('tab1');  // default active tab for Test
+const KonsultasiDokter = () => {
+  const [activeTab, setActiveTab] = useState('tab1');
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const navigate = useNavigate();
 
+  // Scroll to the top when the page is first loaded
+  useEffect(() => {
+    window.scrollTo(0, 0);  // This will scroll to the top of the page
+  }, []);
+
+  // Handle the scroll to the consultation section
+  useEffect(() => {
+    if (window.location.hash === '#consultation') {
+      const consultationSection = document.getElementById('consultation');
+      if (consultationSection) {
+        consultationSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [window.location.hash]);  // Dependency on the hash to detect changes
+
   // Navigation functions
   const goToHome = () => {
-    navigate('/login');
+    navigate('/logindokter');
     window.scrollTo(0, 0);  // Scroll to top when navigating
   };
 
   const goToConsultation = () => {
-    navigate('/konsultasi');
+    navigate('/logindokter#consultation');  // Navigate to logindokter and scroll to the #consultation section
     setActiveTab('tab2');  // Update the active tab
     window.scrollTo(0, 0);  // Scroll to top when navigating
   };
 
-  const goToTest = () => {
-    navigate('/test');  // Navigate to Test Page
-    setActiveTab('tab1');  // Update the active tab
-    window.scrollTo(0, 0);  // Scroll to top when navigating
-  };
-
-  const goToHistory = () => {
-    navigate('/riwayat');
-    setActiveTab('tab3');  // Update the active tab
-    window.scrollTo(0, 0);  // Scroll to top when navigating
-  };
-
+  // Handle profile menu toggle
   const toggleProfileMenu = () => {
     setShowProfileMenu(!showProfileMenu);
   };
 
+  // Handle logout functionality
   const handleLogout = () => {
     alert("Logged out!");
     setShowProfileMenu(false);
@@ -45,13 +50,8 @@ const Test = () => {
     window.scrollTo(0, 0);  // Scroll to top when logging out
   };
 
-  // Scroll to top on initial mount
-  useEffect(() => {
-    window.scrollTo(0, 0);  // Ensure scrolls to top when the page first loads
-  }, []);
-
   return (
-    <>
+    <div className="container">
       {/* Header */}
       <header
         id="header"
@@ -70,50 +70,18 @@ const Test = () => {
             <ul>
               <li>
                 <a
-                  href="#home"
-                  className={activeTab === 'home' ? 'active' : ''}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    goToHome();  // Navigate to Home
-                  }}
+                  href="#"
+                  onClick={goToHome}  // Navigate to LoginDokter
                 >
                   Home
                 </a>
               </li>
               <li>
                 <a
-                  href="#test"
-                  className={activeTab === 'tab1' ? 'active' : ''}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    goToTest();  // Navigate to Test Page
-                  }}
-                >
-                  Test
-                </a>
-              </li>
-              <li>
-                <a
                   href="#consultation"
-                  className={activeTab === 'tab2' ? 'active' : ''}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    goToConsultation();  // Navigate to Consultation Page
-                  }}
+                  onClick={goToConsultation}  // Navigate to LoginDokter and scroll to consultation
                 >
                   Consultation
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#history"
-                  className={activeTab === 'tab3' ? 'active' : ''}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    goToHistory();  // Navigate to History Page
-                  }}
-                >
-                  History
                 </a>
               </li>
             </ul>
@@ -121,13 +89,19 @@ const Test = () => {
 
           {/* Profile Picture */}
           <div className="user-profile" style={{ position: 'relative' }}>
-            <img 
-              src={profilePicUrl} 
-              alt="User Profile" 
+            <img
+              src={profilePicUrl}
+              alt="User Profile"
               id="profile-img"
-              className="profile-img" 
+              className="profile-img"
               onClick={toggleProfileMenu}
-              style={{ width: '40px', height: '40px', borderRadius: '50%', cursor: 'pointer' }} 
+              style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                cursor: 'pointer',
+                marginLeft: '20px',
+              }}
             />
 
             {showProfileMenu && (
@@ -146,14 +120,14 @@ const Test = () => {
                   zIndex: 1000,
                 }}
               >
-                <button 
-                  onClick={handleLogout} 
+                <button
+                  onClick={handleLogout}
                   style={{
                     background: 'none',
                     border: 'none',
                     color: '#2563eb',
                     fontWeight: '600',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
                   }}
                 >
                   Logout
@@ -163,6 +137,19 @@ const Test = () => {
           </div>
         </div>
       </header>
+
+      {/* Main Content */}
+      <main className="main" style={{ paddingTop: '100px' }}>
+        <h1 className="text-center">DIBUAT MIRIP KONSULTASI, NANTI LANGSUNG POV CHATTAN DENGAN PASIEN</h1>
+        <div className="text-center">
+          <Link to="/konsultasi" className="btn btn-primary m-2">
+            Konsultasi
+          </Link>
+          <Link to="/riwayat" className="btn btn-secondary m-2">
+            Riwayat Konsultasi
+          </Link>
+        </div>
+      </main>
 
       {/* Footer */}
       <footer id="footer" className="footer" style={{ marginTop: '40px' }}>
@@ -176,8 +163,13 @@ const Test = () => {
           </p>
         </div>
       </footer>
-    </>
+
+      {/* Scroll Top Button */}
+      <a href="#header" id="scroll-top" className="scroll-top d-flex align-items-center justify-content-center">
+        <i className="bi bi-arrow-up-short"></i>
+      </a>
+    </div>
   );
 };
 
-export default Test;
+export default KonsultasiDokter;

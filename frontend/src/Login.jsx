@@ -93,10 +93,11 @@ const handleLogout = () => {
             <ul>
               <li>
                 <a
-                  href="#header"
+                  href="#home"
                   className={activeSection === 'home' ? 'active' : ''}
                   onClick={(e) => {
                     e.preventDefault();
+                    setActiveSection('home');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
                 >

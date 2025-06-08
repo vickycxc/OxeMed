@@ -5,17 +5,23 @@ import oxemedLogo from './assets/oxemed.jpg';
 import mainLogo from './assets/main.jpg';
 import consultationLogo from './assets/consultation.jpg';
 import historyLogo from './assets/history.jpg';
-
+import arrow from './assets/arrow.jpg'; // Import the back arrow image
 const profilePicUrl = "https://randomuser.me/api/portraits/men/75.jpg";
 
-const LoginDokter = () => {
+const RiwayatDokter = () => {
   const [activeSection, setActiveSection] = useState('home');
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
+  // Scroll to top when the page is first loaded
+  useEffect(() => {
+    window.scrollTo(0, 0);  // This will scroll to the top of the page
+  }, []);
+
   // Handler untuk navigasi ke masing-masing halaman
-  const goToHome = () => navigate('#home');
-  const goToConsultation = () => navigate('#consultation');
+  const goToHome = () => navigate('/logindokter');
+  const goToConsultation = () => navigate('/logindokter#consultation');
 
   // Fungsi untuk mengarahkan ke halaman konsultasi
   const handleOngoingClick = () => {
@@ -31,7 +37,7 @@ const LoginDokter = () => {
   useEffect(() => {
     const handleScroll = () => {
       const consultationSection = document.getElementById('consultation');
-      const scrollPosition = window.scrollY + 100; 
+      const scrollPosition = window.scrollY + 100;
 
       if (consultationSection && scrollPosition >= consultationSection.offsetTop) {
         setActiveSection('consultation');
@@ -84,6 +90,20 @@ const LoginDokter = () => {
       status: "Selesai",
       waktu: "9 Mei 2025, 13:59",
     },
+    {
+      nama: "Keisha Ayu Lestari",
+      umur: "3 Tahun",
+      penyakit: "Diare Akut",
+      status: "Selesai",
+      waktu: "8 Mei 2025, 17:10",
+    },
+    {
+      nama: "Riko Setiawan",
+      umur: "8 Tahun",
+      penyakit: "Konjungtivitis Bakteri",
+      status: "Selesai",
+      waktu: "8 Mei 2025, 12:20",
+    },
   ];
 
   // Handle link click for smooth scroll and active section update
@@ -92,6 +112,16 @@ const LoginDokter = () => {
     setActiveSection(section); // Set active section to the clicked section
     document.getElementById(section)?.scrollIntoView({ behavior: 'smooth' }); // Smooth scroll to section
   };
+
+  // Handle search query change
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  // Filtered patient data based on search query
+  const filteredPasien = pasienData.filter((pasien) => {
+    return pasien.nama.toLowerCase().includes(searchQuery.toLowerCase());
+  });
 
   return (
     <div className="index-page">
@@ -113,9 +143,8 @@ const LoginDokter = () => {
             <ul>
               <li>
                 <a
-                  href="#home"
-                  className={activeSection === 'home' ? 'active' : ''}
-                  onClick={(e) => handleLinkClick(e, 'home')}
+                  href="#"
+                  onClick={goToHome}  // Navigate to LoginDokter
                 >
                   Home
                 </a>
@@ -123,8 +152,7 @@ const LoginDokter = () => {
               <li>
                 <a
                   href="#consultation"
-                  className={activeSection === 'consultation' ? 'active' : ''}
-                  onClick={(e) => handleLinkClick(e, 'consultation')}
+                  onClick={goToConsultation}  // Navigate to LoginDokter and scroll to consultation
                 >
                   Consultation
                 </a>
@@ -178,77 +206,130 @@ const LoginDokter = () => {
       </header>
 
       {/* Main Content */}
-      <main className="main" style={{ paddingTop: '100px' }}>
-        {/* Hero Section */}
-        <section className="hero-section" id="home">
-          <div className="hero-content" style={{ paddingLeft: '2rem' }}>
-            <h4
-              style={{
-                color: '#2563eb',
-                fontWeight: '700',
-                fontSize: '1.5rem',
-                marginBottom: '0.5rem',
-                fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-                letterSpacing: '1px',
-              }}
-            >
-              Hello, dr. Liem Eremius, Sp.A!
-            </h4>
-            <h1>
-              Effortless <span className="highlight">Medical</span> <br />
-              <span className="highlight">Practice</span> Management
-            </h1>
-            <p className="subheading">
-              Manage your patients' health records, consultations, and appointments seamlessly with our platform.
-            </p>
-            <p className="description">
-              Access real-time health data, review test results, consult with patients, and track their progress—all in one place.
-            </p>
-          </div>
-          <div className="hero-image">
-            <img src={mainLogo} alt="Main Logo" className="main-img" />
-          </div>
+      <main
+        className="main"
+        style={{
+          paddingTop: '100px',
+          maxWidth: '1500px',
+          margin: '0 auto',
+          paddingLeft: '15px',
+          paddingRight: '15px',
+        }}
+      >
+
+        {/* Hero Section with Search Bar */}
+        <section
+          style={{
+            backgroundColor: '#e6eeff',
+            padding: '2rem 23rem',
+            borderRadius: '12px',
+            maxWidth: '1200px',
+            margin: '0 auto',
+            textAlign: 'center',
+            fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+            color: '#334155',
+          }}
+        >
+          <h1
+            style={{
+              fontWeight: '900',
+              fontSize: '3.5rem',
+              lineHeight: '1.1',
+              maxWidth: '2000px',
+              marginBottom: '1rem',
+              color: '#121828',
+              textAlign: 'center',
+            }}
+          >
+            Riwayat Kesehatan Pasien
+          </h1>
+
+          <p
+            style={{
+              fontWeight: '500',
+              fontSize: '1rem',
+              lineHeight: '1.6',
+              maxWidth: '1200px',
+              color: '#475569',
+              textAlign: 'justify',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+            }}
+          >
+            {/* Search Bar */}
+            <div style={{ marginTop: '2rem', marginBottom: '2rem' }}>
+              <input
+                type="text"
+                placeholder="Search Pasien"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                style={{
+                  padding: '10px 20px',
+                  fontSize: '1rem',
+                  borderRadius: '8px',
+                  border: '1px solid #ccc',
+                  width: '100%',
+                  maxWidth: '600px',
+                  margin: '0 auto',
+                  display: 'block',
+                }}
+              />
+            </div>
+          </p>
         </section>
 
         {/* Consultation Section */}
         <section className="consultation section" id="consultation">
-          <div className="pasien-container">
-            <h2>Daftar Pasien Hari Ini</h2>
-            <div className="pasien-list">
-              {pasienData.map((pasien, index) => (
-                <div className="pasien-card" key={index}>
-                  <div className="pasien-info">
-                    <h2>{pasien.nama}</h2>
-                    <p>{pasien.umur}</p>
-                    {pasien.penyakit && <p><strong>Penyakit:</strong> {pasien.penyakit}</p>}
-                    <p><strong>Waktu:</strong> {pasien.waktu}</p>
-                  </div>
-                  <div
-                    className={`status ${pasien.status === "Sedang Berlangsung" ? "ongoing" : "finished"}`}
-                    onClick={pasien.status === "Sedang Berlangsung" ? handleOngoingClick : null}
-                  >
-                    <p>{pasien.status}</p>
-                  </div>
+          <div className="container-fluid container-xl">
+            <div className="pasien-container">
+              {filteredPasien.length > 0 ? (
+                <div className="pasien-list" style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                  {filteredPasien.map((pasien, index) => (
+                    <div className="pasien-card" key={index} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px', border: '1px solid #ddd', borderRadius: '8px' }}>
+                      <div className="pasien-info">
+                        <h2>{pasien.nama}</h2>
+                        <p>{pasien.umur}</p>
+                        {pasien.penyakit && <p><strong>Penyakit:</strong> {pasien.penyakit}</p>}
+                        <p><strong>Waktu:</strong> {pasien.waktu}</p>
+                      </div>
+                      <div
+                        className={`status ${pasien.status === "Sedang Berlangsung" ? "ongoing" : "finished"}`}
+                        onClick={pasien.status === "Sedang Berlangsung" ? handleOngoingClick : null}
+                        style={{
+                          padding: '5px 10px',
+                          borderRadius: '20px',
+                          backgroundColor: pasien.status === 'Sedang Berlangsung' ? 'green' : 'gray',
+                          color: '#fff',
+                          cursor: pasien.status === 'Sedang Berlangsung' ? 'pointer' : 'default',
+                        }}
+                      >
+                        <p>{pasien.status}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              ) : (
+                <p style={{ textAlign: 'center', fontSize: '1.25rem', fontWeight: '500', color: '#FF3B30' }}>
+                  Data Tidak Ditemukan
+                </p>
+              )}
             </div>
-            <button className="lihat-lebih-banyak" onClick={handleViewHistory}>
-              Lihat Riwayat Pasien
-            </button>
           </div>
         </section>
       </main>
 
       {/* Footer */}
       <footer id="footer" className="footer" style={{ marginTop: '40px' }}>
-        <div className="footer-bottom text-center mt-4">
-          <p style={{ margin: 0, fontWeight: '700', fontSize: '1.25rem' }}>
-            OxeMed<br />
-            Teknologi Kedokteran - Kelompok 4
-          </p>
-          <p style={{ marginTop: '8px', fontSize: '0.9rem', fontWeight: '400' }}>
-            © {new Date().getFullYear()}. All Rights Reserved.
-          </p>
+        <div className="container-fluid container-xl">
+          <div className="footer-bottom text-center mt-4">
+            <p style={{ margin: 0, fontWeight: '700', fontSize: '1.25rem' }}>
+              OxeMed<br />
+              Teknologi Kedokteran - Kelompok 4
+            </p>
+            <p style={{ marginTop: '8px', fontSize: '0.9rem', fontWeight: '400' }}>
+              © {new Date().getFullYear()}. All Rights Reserved.
+            </p>
+          </div>
         </div>
       </footer>
 
@@ -260,4 +341,4 @@ const LoginDokter = () => {
   );
 };
 
-export default LoginDokter;
+export default RiwayatDokter;

@@ -11,15 +11,11 @@ const Test = () => {
   const [result, setResult] = useState(null);
   const navigate = useNavigate();
 
-  // Dummy detection function simulating measurement delay
   const startDetection = () => {
-    if (isDetecting) return; // Prevent double start
+    if (isDetecting) return;
     setIsDetecting(true);
     setResult(null);
-
-    // Simulate detection delay (e.g., 5 seconds)
     setTimeout(() => {
-      // Simulated results (could be random or fixed)
       const simulatedSpO2 = (95 + Math.random() * 4).toFixed(1);
       const simulatedHeartRate = Math.floor(65 + Math.random() * 30);
       setResult({
@@ -31,7 +27,6 @@ const Test = () => {
     }, 5000);
   };
 
-  // Navigation handlers
   const goTo = (path, tab) => {
     setActiveTab(tab);
     navigate(path);
@@ -46,76 +41,90 @@ const Test = () => {
     window.scrollTo(0, 0);
   };
 
-  // Scroll top on mount
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   return (
-    <>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+        width: '100vw',
+        backgroundColor: '#f3f4f6'
+      }}
+    >
       {/* Header */}
       <header
         id="header"
-        className="header d-flex align-items-center fixed-top header-home-active"
-        style={{ backgroundColor: '#fff', boxShadow: '0 2px 6px rgba(0,0,0,0.1)', zIndex: 999 }}
+        className={`header d-flex align-items-center fixed-top ${
+          activeSection === 'features'
+            ? 'header-features-active'
+            : 'header-home-active'
+        }`}
       >
         <div className="header-container container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
           {/* Logo */}
-          <div className="logo d-flex align-items-center me-auto me-xl-0" style={{ cursor: 'pointer' }} onClick={() => goTo('/login', 'home')}>
-            <img src={oxemedLogo} alt="Oxemed Logo" className="logo-img" style={{ height: 50 }} />
+          <div className="logo d-flex align-items-center me-auto me-xl-0">
+            <img src={oxemedLogo} alt="Oxemed Logo" className="logo-img" />
           </div>
 
           {/* Navigation Menu */}
           <nav id="navmenu" className="navmenu">
-            <ul style={{ display: 'flex', gap: '1.5rem', listStyle: 'none', margin: 0, padding: 0 }}>
+            <ul>
               <li>
                 <a
                   href="#login"
-                  className={activeTab === 'home' ? 'active' : ''}
-                  onClick={e => {
+                  className={activeSection === 'home' ? 'active' : ''}
+                  onClick={(e) => {
                     e.preventDefault();
-                    goTo('/login', 'home');
+                    setActiveSection('home');
+                    navigate('/login');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  style={{ textDecoration: activeTab === 'home' ? 'underline' : 'none', cursor: 'pointer' }}
                 >
                   Home
                 </a>
               </li>
+
               <li>
                 <a
                   href="#test"
                   className={activeTab === 'tab1' ? 'active' : ''}
-                  onClick={e => {
+                  onClick={(e) => {
                     e.preventDefault();
-                    goTo('/test', 'tab1');
+                    setActiveTab('tab1');
+                    navigate('/test');
                   }}
-                  style={{ textDecoration: activeTab === 'tab1' ? 'underline' : 'none', cursor: 'pointer' }}
                 >
                   Test
                 </a>
               </li>
+
               <li>
                 <a
                   href="#consultation"
                   className={activeTab === 'tab2' ? 'active' : ''}
-                  onClick={e => {
+                  onClick={(e) => {
                     e.preventDefault();
-                    goTo('/konsultasi', 'tab2');
+                    setActiveTab('tab2');
+                    navigate('/konsultasi');
                   }}
-                  style={{ textDecoration: activeTab === 'tab2' ? 'underline' : 'none', cursor: 'pointer' }}
                 >
                   Consultation
                 </a>
               </li>
+
               <li>
                 <a
                   href="#history"
                   className={activeTab === 'tab3' ? 'active' : ''}
-                  onClick={e => {
+                  onClick={(e) => {
                     e.preventDefault();
-                    goTo('/riwayat', 'tab3');
+                    setActiveTab('tab3');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  style={{ textDecoration: activeTab === 'tab3' ? 'underline' : 'none', cursor: 'pointer' }}
                 >
                   History
                 </a>
@@ -138,6 +147,7 @@ const Test = () => {
                 cursor: 'pointer'
               }}
             />
+
             {showProfileMenu && (
               <div
                 id="profile-menu"
@@ -145,13 +155,13 @@ const Test = () => {
                 style={{
                   position: 'absolute',
                   top: '50px',
-                  right: 0,
+                  right: '0',
                   backgroundColor: '#fff',
                   border: '1px solid #ccc',
                   borderRadius: '8px',
                   padding: '10px',
                   boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-                  zIndex: 1000,
+                  zIndex: 1000
                 }}
               >
                 <button
@@ -161,7 +171,7 @@ const Test = () => {
                     border: 'none',
                     color: '#2563eb',
                     fontWeight: '600',
-                    cursor: 'pointer',
+                    cursor: 'pointer'
                   }}
                 >
                   Logout
@@ -175,98 +185,95 @@ const Test = () => {
       {/* Main Content */}
       <main
         style={{
-          paddingTop: '100px',
-          paddingBottom: '40px',
-          minHeight: '80vh',
-          maxWidth: '600px',
-          margin: 'auto',
-          backgroundColor: '#f9fafb',
-          borderRadius: '12px',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+          flex: 1,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
           padding: '2rem',
-          textAlign: 'center',
         }}
       >
-        <h1 style={{ marginBottom: '1rem', color: '#2563eb' }}>Monitoring Kesehatan</h1>
-        <p style={{ marginBottom: '2rem', fontSize: '1.1rem' }}>
-          Tempelkan jari Anda pada alat OxeMed, kemudian tunggu beberapa detik hingga hasil deteksi muncul di bawah.
-        </p>
-
-        {/* Button to start detection */}
-        <button
-          onClick={startDetection}
-          disabled={isDetecting}
+        <div
           style={{
-            padding: '0.75rem 2rem',
-            fontSize: '1.1rem',
-            fontWeight: '600',
-            backgroundColor: isDetecting ? '#9ca3af' : '#2563eb',
-            color: 'white',
-            border: 'none',
-            borderRadius: '8px',
-            cursor: isDetecting ? 'not-allowed' : 'pointer',
-            marginBottom: '2rem',
-            transition: 'background-color 0.3s ease',
+            backgroundColor: '#fff',
+            borderRadius: 12,
+            boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+            maxWidth: 600,
+            width: '100%',
+            padding: '2.5rem',
+            textAlign: 'center',
           }}
-          aria-live="polite"
         >
-          {isDetecting ? 'Mendeteksi...' : 'Mulai Deteksi'}
-        </button>
+          <h1 style={{ marginBottom: '1rem', color: '#2563eb' }}>Monitoring Kesehatan</h1>
+          <p style={{ marginBottom: '2rem', fontSize: '1.1rem', color: '#374151' }}>
+            Tempelkan jari Anda pada alat OxeMed, kemudian tunggu beberapa detik hingga hasil deteksi muncul di bawah.
+          </p>
 
-        {/* Show loading animation or results */}
-        {isDetecting && (
-          <div style={{ marginBottom: '1rem', color: '#6b7280' }}>
-            <em>Harap tetap tenang dan jangan lepaskan jari Anda...</em>
-          </div>
-        )}
-
-        {result && (
-          <div
+          <button
+            onClick={startDetection}
+            disabled={isDetecting}
             style={{
-              backgroundColor: 'white',
-              padding: '1.5rem',
-              borderRadius: '12px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+              padding: '0.75rem 2rem',
               fontSize: '1.1rem',
-              color: '#111827',
+              fontWeight: '600',
+              backgroundColor: isDetecting ? '#9ca3af' : '#2563eb',
+              color: 'white',
+              border: 'none',
+              borderRadius: 8,
+              cursor: isDetecting ? 'not-allowed' : 'pointer',
+              marginBottom: '2rem',
+              transition: 'background-color 0.3s ease',
+              userSelect: 'none',
             }}
+            aria-live="polite"
           >
-            <h2 style={{ marginBottom: '1rem', color: '#10b981' }}>Hasil Deteksi</h2>
-            <p>
-              <strong>SpO2:</strong> {result.spO2}%
-            </p>
-            <p>
-              <strong>Detak Jantung:</strong> {result.heartRate} bpm
-            </p>
-            <p style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: '#6b7280' }}>
-              Terakhir diperbarui pada {result.timestamp}
-            </p>
-          </div>
-        )}
+            {isDetecting ? 'Mendeteksi...' : 'Mulai Deteksi'}
+          </button>
+
+          {isDetecting && (
+            <div style={{ marginBottom: '1rem', color: '#6b7280', fontStyle: 'italic' }}>
+              Harap tetap tenang dan jangan lepaskan jari Anda...
+            </div>
+          )}
+
+          {result && (
+            <div
+              style={{
+                backgroundColor: '#f9fafb',
+                padding: '1.5rem',
+                borderRadius: 12,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                fontSize: '1.1rem',
+                color: '#111827',
+              }}
+            >
+              <h2 style={{ marginBottom: '1rem', color: '#10b981' }}>Hasil Deteksi</h2>
+              <p>
+                <strong>SpO2:</strong> {result.spO2}%
+              </p>
+              <p>
+                <strong>Detak Jantung:</strong> {result.heartRate} bpm
+              </p>
+              <p style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: '#6b7280' }}>
+                Terakhir diperbarui pada {result.timestamp}
+              </p>
+            </div>
+          )}
+        </div>
       </main>
 
       {/* Footer */}
-      <footer
-        id="footer"
-        className="footer"
-        style={{
-          marginTop: '40px',
-          padding: '1.5rem 0',
-          backgroundColor: '#2563eb',
-          color: 'white',
-          textAlign: 'center',
-          fontWeight: '600',
-        }}
-      >
-        <p style={{ margin: 0, fontSize: '1.25rem' }}>
-          OxeMed<br />
-          Teknologi Kedokteran - Kelompok 4
-        </p>
-        <p style={{ marginTop: '8px', fontSize: '0.9rem', fontWeight: '400' }}>
-          © {new Date().getFullYear()}. All Rights Reserved.
-        </p>
+      <footer id="footer" className="footer" style={{ marginTop: '40px' }}>
+        <div className="footer-bottom text-center mt-4">
+          <p style={{ margin: 0, fontWeight: '700', fontSize: '1.25rem' }}>
+            OxeMed<br />
+            Teknologi Kedokteran - Kelompok 4
+          </p>
+          <p style={{ marginTop: '8px', fontSize: '0.9rem', fontWeight: '400' }}>
+            © {new Date().getFullYear()}. All Rights Reserved.
+          </p>
+        </div>
       </footer>
-    </>
+    </div>
   );
 };
 

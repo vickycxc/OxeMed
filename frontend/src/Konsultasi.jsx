@@ -1,38 +1,41 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import oxemedLogo from './assets/oxemed.jpg';
-import consultationLogo from './assets/consultation.jpg';  // Fixed the import for this image
+import consultationLogo from './assets/consultation.jpg';
 
 const profilePicUrl = "https://randomuser.me/api/portraits/men/75.jpg";
 
 const Konsultasi = () => {
-  const [activeTab, setActiveTab] = useState('tab2');  // default active tab for Consultation
+  const [activeTab, setActiveTab] = useState('tab2');
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [chatMessages, setChatMessages] = useState([
+    { sender: 'dokter', text: 'Halo, ada yang bisa saya bantu?' }
+  ]);
+  const [newMessage, setNewMessage] = useState('');
   const navigate = useNavigate();
 
-  // Navigation functions
+  // Navigasi
   const goToHome = () => {
     navigate('/login');
-    window.scrollTo(0, 0);  // Scroll to top when navigating
+    window.scrollTo(0, 0);
   };
 
   const goToConsultation = () => {
     navigate('/konsultasi');
-    setActiveTab('tab2');  // Update the active tab
-    window.scrollTo(0, 0);  // Scroll to top when navigating
+    setActiveTab('tab2');
+    window.scrollTo(0, 0);
   };
 
   const goToTest = () => {
-    navigate('/test');  // Navigate to Test Page
-    setActiveTab('tab1');  // Update the active tab
-    window.scrollTo(0, 0);  // Scroll to top when navigating
+    navigate('/test');
+    setActiveTab('tab1');
+    window.scrollTo(0, 0);
   };
 
   const goToHistory = () => {
     navigate('/riwayat');
-    setActiveTab('tab3');  // Update the active tab
-    window.scrollTo(0, 0);  // Scroll to top when navigating
+    setActiveTab('tab3');
+    window.scrollTo(0, 0);
   };
 
   const toggleProfileMenu = () => {
@@ -43,12 +46,26 @@ const Konsultasi = () => {
     alert("Logged out!");
     setShowProfileMenu(false);
     navigate("/");
-    window.scrollTo(0, 0);  // Scroll to top when logging out
+    window.scrollTo(0, 0);
   };
 
-  // Scroll to top on initial mount
+  const sendMessage = () => {
+    if (newMessage.trim() === '') return;
+
+    setChatMessages(prev => [...prev, { sender: 'pasien', text: newMessage }]);
+
+    setTimeout(() => {
+      setChatMessages(prev => [
+        ...prev,
+        { sender: 'dokter', text: 'Baik, saya akan pelajari lebih lanjut keluhan Anda.' }
+      ]);
+    }, 1000);
+
+    setNewMessage('');
+  };
+
   useEffect(() => {
-    window.scrollTo(0, 0);  // Ensure scrolls to top when the page first loads
+    window.scrollTo(0, 0);
   }, []);
 
   return (
@@ -60,63 +77,31 @@ const Konsultasi = () => {
             <img src={oxemedLogo} alt="Oxemed Logo" className="logo-img" />
           </div>
 
-          {/* Navigation Menu */}
           <nav id="navmenu" className="navmenu">
             <ul>
               <li>
-                <a
-                  href="#"
-                  className={activeTab === 'home' ? 'active' : ''}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    goToHome();  // Navigate to Home Page
-                  }}
-                >
+                <a href="#" className={activeTab === 'home' ? 'active' : ''} onClick={(e) => { e.preventDefault(); goToHome(); }}>
                   Home
                 </a>
               </li>
               <li>
-                <a
-                  href="#"
-                  className={activeTab === 'tab1' ? 'active' : ''}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    goToTest();  // Navigate to Test Page
-                  }}
-                >
+                <a href="#" className={activeTab === 'tab1' ? 'active' : ''} onClick={(e) => { e.preventDefault(); goToTest(); }}>
                   Test
                 </a>
               </li>
-
               <li>
-                <a
-                  href="#"
-                  className={activeTab === 'tab2' ? 'active' : ''}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    goToConsultation();  // Navigate to Consultation Page
-                  }}
-                >
+                <a href="#" className={activeTab === 'tab2' ? 'active' : ''} onClick={(e) => { e.preventDefault(); goToConsultation(); }}>
                   Consultation
                 </a>
               </li>
-
               <li>
-                <a
-                  href="#"
-                  className={activeTab === 'tab3' ? 'active' : ''}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    goToHistory();  // Navigate to History Page
-                  }}
-                >
+                <a href="#" className={activeTab === 'tab3' ? 'active' : ''} onClick={(e) => { e.preventDefault(); goToHistory(); }}>
                   History
                 </a>
               </li>
             </ul>
           </nav>
 
-          {/* Profile Icon */}
           <div className="user-profile" style={{ position: 'relative' }}>
             <img
               src={profilePicUrl}
@@ -166,31 +151,97 @@ const Konsultasi = () => {
         </div>
       </header>
 
-      {/* Main Content */}
+      {/* Main */}
       <main className="main" style={{ paddingTop: '100px' }}>
         <section className="features section">
-          <div className="container section-title" data-aos="fade-up">
-            <h2>DIBUAT LANGSUNG PILIHAN DOKTER BARU CHAT DENGAN DOKTER</h2>
+          <div className="container section-title">
+            <h2>Chat dengan Dokter & Rangkuman Konsultasi</h2>
           </div>
 
-          <div className="container">
-            <div className="row align-items-center">
-              <div className="col-lg-6 d-flex flex-column justify-content-center" style={{ marginLeft: '80px' }}>
-                <h3 className="feature-title">Konsultasi Kesehatan Online</h3>
-                <p className="feature-description">
-                  Dapatkan saran medis langsung dari dokter spesialis pernapasan melalui layanan konsultasi OxeMed.
-                </p>
+          <div className="container" style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
+            {/* Chat Box */}
+            <div style={{
+              flex: 1,
+              minWidth: '300px',
+              maxWidth: '600px',
+              background: '#f8f9ff',
+              padding: '1.5rem',
+              borderRadius: '12px',
+              boxShadow: '0 0 8px rgba(0,0,0,0.05)'
+            }}>
+              <h4 style={{ fontWeight: '700', marginBottom: '1rem' }}>Chat Konsultasi</h4>
+              <div style={{ maxHeight: '300px', overflowY: 'auto', marginBottom: '1rem' }}>
+                {chatMessages.map((msg, index) => (
+                  <div key={index} style={{
+                    textAlign: msg.sender === 'pasien' ? 'right' : 'left',
+                    marginBottom: '0.5rem'
+                  }}>
+                    <span style={{
+                      display: 'inline-block',
+                      backgroundColor: msg.sender === 'pasien' ? '#d1e7dd' : '#e2e6ea',
+                      color: '#111',
+                      padding: '8px 12px',
+                      borderRadius: '10px',
+                      maxWidth: '80%',
+                      fontSize: '0.95rem'
+                    }}>
+                      {msg.text}
+                    </span>
+                  </div>
+                ))}
               </div>
-
-              <div className="col-lg-6 d-flex justify-content-end">
-                <img
-                  src={consultationLogo}
-                  alt="Consultation"
-                  className="consultation-img"
-                  style={{ width: '420px', height: 'auto', marginLeft: '100px' }}
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <input
+                  type="text"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  placeholder="Tulis pesan..."
+                  style={{
+                    flex: 1,
+                    padding: '10px',
+                    borderRadius: '8px',
+                    border: '1px solid #ccc'
+                  }}
                 />
+                <button onClick={sendMessage} style={{
+                  backgroundColor: '#3b60e4',
+                  color: '#fff',
+                  padding: '10px 16px',
+                  border: 'none',
+                  borderRadius: '8px',
+                  fontWeight: '600'
+                }}>
+                  Kirim
+                </button>
               </div>
             </div>
+
+            {/* Rangkuman */}
+            <div style={{
+              flex: 1,
+              minWidth: '300px',
+              maxWidth: '600px',
+              backgroundColor: '#fff',
+              padding: '1.5rem',
+              borderRadius: '12px',
+              boxShadow: '0 0 10px rgba(0,0,0,0.05)'
+            }}>
+              <h4 style={{ fontWeight: '700', color: '#1e293b' }}>Rangkuman Konsultasi Terakhir</h4>
+              <p><strong>Keluhan:</strong> Pasien mengeluhkan pusing yang terkadang disertai mual.</p>
+              <p><strong>Diagnosis:</strong> Pasien didiagnosa Hipertensi dengan gejala tambahan pusing berulang dan mual ringan.</p>
+              <p><strong>Obat:</strong> Amlodipine 5 mg 1x sehari pagi & Vitamin B1.</p>
+              <p><strong>Rangkuman:</strong> Pasien Budi Santoso (45 tahun) mengeluhkan pusing dan mual ringan. Direkomendasikan pemeriksaan tekanan darah rutin, kurangi konsumsi garam, kontrol ulang 2 minggu lagi.</p>
+            </div>
+          </div>
+
+          {/* Gambar samping (opsional) */}
+          <div className="container d-flex justify-content-center mt-5">
+            <img
+              src={consultationLogo}
+              alt="Consultation"
+              className="consultation-img"
+              style={{ width: '420px', height: 'auto' }}
+            />
           </div>
         </section>
       </main>

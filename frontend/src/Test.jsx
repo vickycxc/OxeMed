@@ -6,6 +6,7 @@ const profilePicUrl = "https://randomuser.me/api/portraits/men/75.jpg";
 
 const Test = () => {
   const [activeTab, setActiveTab] = useState('tab1');
+  const [activeSection, setActiveSection] = useState('home');
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [isDetecting, setIsDetecting] = useState(false);
   const [result, setResult] = useState(null);
@@ -27,17 +28,11 @@ const Test = () => {
     }, 5000);
   };
 
-  const goTo = (path, tab) => {
-    setActiveTab(tab);
-    navigate(path);
-    window.scrollTo(0, 0);
-  };
-
   const toggleProfileMenu = () => setShowProfileMenu(!showProfileMenu);
   const handleLogout = () => {
     alert("Logged out!");
     setShowProfileMenu(false);
-    navigate("/");
+    navigate("/login");
     window.scrollTo(0, 0);
   };
 
@@ -186,10 +181,10 @@ const Test = () => {
       <main
         style={{
           flex: 1,
+          marginTop: 80,
+          padding: '2rem 1rem',
           display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: '2rem',
+          justifyContent: 'center'
         }}
       >
         <div

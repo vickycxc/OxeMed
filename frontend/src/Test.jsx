@@ -56,7 +56,9 @@ const Test = () => {
       <header
         id="header"
         className={`header d-flex align-items-center fixed-top ${
-          activeTab === 'tab1' ? 'header-test-active' : activeTab === 'tab2' ? 'header-consultation-active' : 'header-history-active'
+          activeSection === 'features'
+            ? 'header-features-active'
+            : 'header-home-active'
         }`}
       >
         <div className="header-container container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
@@ -70,47 +72,55 @@ const Test = () => {
             <ul>
               <li>
                 <a
-                  href="#home"
-                  className={activeTab === 'home' ? 'active' : ''}
+                  href="#login"
+                  className={activeSection === 'home' ? 'active' : ''}
                   onClick={(e) => {
                     e.preventDefault();
-                    goToHome();  // Navigate to Home
+                    setActiveSection('home');
+                    navigate('/login');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
                 >
                   Home
                 </a>
               </li>
+
               <li>
                 <a
                   href="#test"
                   className={activeTab === 'tab1' ? 'active' : ''}
                   onClick={(e) => {
                     e.preventDefault();
-                    goToTest();  // Navigate to Test Page
+                    setActiveTab('tab1');
+                    navigate('/test');
                   }}
                 >
                   Test
                 </a>
               </li>
+
               <li>
                 <a
                   href="#consultation"
                   className={activeTab === 'tab2' ? 'active' : ''}
                   onClick={(e) => {
                     e.preventDefault();
-                    goToConsultation();  // Navigate to Consultation Page
+                    setActiveTab('tab2');
+                    navigate('/konsultasi');
                   }}
                 >
                   Consultation
                 </a>
               </li>
+
               <li>
                 <a
                   href="#history"
                   className={activeTab === 'tab3' ? 'active' : ''}
                   onClick={(e) => {
                     e.preventDefault();
-                    goToHistory();  // Navigate to History Page
+                    setActiveTab('tab3');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
                 >
                   History
@@ -121,13 +131,18 @@ const Test = () => {
 
           {/* Profile Picture */}
           <div className="user-profile" style={{ position: 'relative' }}>
-            <img 
-              src={profilePicUrl} 
-              alt="User Profile" 
+            <img
+              src={profilePicUrl}
+              alt="User Profile"
               id="profile-img"
-              className="profile-img" 
+              className="profile-img"
               onClick={toggleProfileMenu}
-              style={{ width: '40px', height: '40px', borderRadius: '50%', cursor: 'pointer' }} 
+              style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                cursor: 'pointer'
+              }}
             />
 
             {showProfileMenu && (
@@ -143,11 +158,11 @@ const Test = () => {
                   borderRadius: '8px',
                   padding: '10px',
                   boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-                  zIndex: 1000,
+                  zIndex: 1000
                 }}
               >
-                <button 
-                  onClick={handleLogout} 
+                <button
+                  onClick={handleLogout}
                   style={{
                     background: 'none',
                     border: 'none',

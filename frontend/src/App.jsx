@@ -1,5 +1,5 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Test from "./pages/Test.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Riwayat from "./pages/Riwayat.jsx";
@@ -8,22 +8,71 @@ import Login from "./pages/Login.jsx";
 import LoginDokter from "./pages/LoginDokter.jsx";
 import KonsultasiDokter from "./pages/KonsultasiDokter.jsx";
 import RiwayatDokter from "./pages/RiwayatDokter.jsx";
+import { Toaster } from "react-hot-toast";
+import { useAuthStore } from "./store/useAuthStore.js";
+import oxemedLogo from "./assets/oxemed.jpg";
+import "./styles/app.css";
 
 const App = () => {
-  return (
-    <div>
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/konsultasi" element={<Konsultasi />} />
-        <Route path="/test" element={<Test />} />
-        <Route path="/riwayat" element={<Riwayat />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/logindokter" element={<LoginDokter />} />
-        <Route path="/konsultasidokter" element={<KonsultasiDokter />} />
-        <Route path="/riwayatdokter" element={<RiwayatDokter />} />
-      </Routes>
-    </div>
-  );
+  const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  console.log({ authUser });
+
+  if (isCheckingAuth && !authUser)
+    return (
+      <div className="loader">
+        <img src={oxemedLogo} />
+      </div>
+    );
+
+  if (authUser) {
+    console.log("🚀 ~ App ~ role:", authUser);
+    return (
+      <>
+        <Routes>
+          <Route path="*" element={<Navigate to="/" />} />
+          <Route
+            path="/"
+            element={authUser.role === "Pasien" ? <Login /> : <LoginDokter />}
+          />
+          <Route
+            path="/konsultasi"
+            element={
+              authUser.role === "Pasien" ? <Konsultasi /> : <KonsultasiDokter />
+            }
+          />
+          <Route
+            path="/test"
+            element={
+              authUser.role === "Pasien" ? <Test /> : <Navigate to="/" />
+            }
+          />
+          <Route
+            path="/riwayat"
+            element={
+              authUser.role === "Pasien" ? <Riwayat /> : <RiwayatDokter />
+            }
+          />
+        </Routes>
+        <Toaster />
+      </>
+    );
+  } else {
+    return (
+      <>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="*" element={<Navigate to="/" />} />
+          <Route />
+        </Routes>
+        <Toaster />
+      </>
+    );
+  }
 };
 
 export default App;

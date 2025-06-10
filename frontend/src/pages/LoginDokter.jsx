@@ -12,6 +12,7 @@ const LoginDokter = () => {
   const [activeSection, setActiveSection] = useState("home");
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const navigate = useNavigate();
+  const { logout } = useAuthStore();
 
   // Handler untuk navigasi ke masing-masing halaman
   const goToHome = () => navigate("#home");
@@ -59,9 +60,10 @@ const LoginDokter = () => {
   };
 
   const handleLogout = () => {
-    alert("Logged out!");
+    // alert("Logged out!");
     setShowProfileMenu(false);
-    navigate("/");
+    logout();
+    // navigate("/");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 

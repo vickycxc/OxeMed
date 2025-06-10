@@ -7,6 +7,7 @@ import testLogo from "../assets/test.jpg";
 import consultationLogo from "../assets/consultation.jpg";
 import historyLogo from "../assets/history.jpg";
 import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../store/useAuthStore";
 
 const tabs = [
   { id: "tab1", label: "Test" },
@@ -28,14 +29,17 @@ const Login = () => {
 
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
+  const { logout } = useAuthStore();
+
   const toggleProfileMenu = () => {
     setShowProfileMenu(!showProfileMenu);
   };
 
   const handleLogout = () => {
-    alert("Logged out!");
+    // alert("Logged out!");
     setShowProfileMenu(false);
-    navigate("/");
+    logout();
+    // navigate("/");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 

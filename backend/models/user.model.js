@@ -19,15 +19,15 @@ export const User = sequelize.define(
     },
     birthDate: {
       type: DataTypes.DATEONLY,
-      allowNull: false,
+      // allowNull: false,
     },
     gender: {
       type: DataTypes.ENUM("Laki-Laki", "Perempuan"),
-      allowNull: false,
+      // allowNull: false,
     },
     phoneNumber: {
       type: DataTypes.STRING,
-      allowNull: false,
+      // allowNull: false,
     },
     role: {
       type: DataTypes.ENUM("Pasien", "Dokter"),
@@ -35,7 +35,7 @@ export const User = sequelize.define(
     },
     drugAllergies: {
       type: DataTypes.STRING,
-      allowNull: true,
+      // allowNull: true,
     },
     apiKey: {
       type: DataTypes.STRING,

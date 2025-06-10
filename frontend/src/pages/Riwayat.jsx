@@ -63,6 +63,7 @@ const Riwayat = () => {
   const goToTest = () => navigate("/test");
   const goToConsultation = () => navigate("/konsultasi");
   const goToHistory = () => navigate("/riwayat");
+  const { logout } = useAuthStore();
 
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
@@ -75,9 +76,10 @@ const Riwayat = () => {
   };
 
   const handleLogout = () => {
-    alert("Logged out!");
+    // alert("Logged out!");
     setShowProfileMenu(false);
-    navigate("/");
+    logout();
+    // navigate("/");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 

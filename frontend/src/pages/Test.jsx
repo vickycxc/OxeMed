@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import oxemedLogo from "../assets/oxemed.jpg";
+import { useAuthStore } from "../store/useAuthStore";
 
 const profilePicUrl = "https://randomuser.me/api/portraits/men/75.jpg";
 
@@ -11,6 +12,7 @@ const Test = () => {
   const [isDetecting, setIsDetecting] = useState(false);
   const [result, setResult] = useState(null);
   const navigate = useNavigate();
+  const { logout } = useAuthStore();
 
   const startDetection = () => {
     if (isDetecting) return;
@@ -34,9 +36,10 @@ const Test = () => {
 
   const toggleProfileMenu = () => setShowProfileMenu(!showProfileMenu);
   const handleLogout = () => {
-    alert("Logged out!");
+    // alert("Logged out!");
     setShowProfileMenu(false);
-    navigate("/login");
+    logout();
+    // navigate("/login");
     window.scrollTo(0, 0);
   };
 

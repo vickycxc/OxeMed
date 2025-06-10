@@ -11,10 +11,6 @@ export const generateToken = (userId, res) => {
     sameSite: "strict",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 day
   });
-  console.log(
-    "🚀 ~ generateToken ~ process.env.NODE_ENV :",
-    process.env.NODE_ENV
-  );
 
   return token;
 };

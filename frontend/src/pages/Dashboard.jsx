@@ -5,6 +5,7 @@ import mainLogo from "../assets/main.jpg";
 import testLogo from "../assets/test.jpg";
 import consultationLogo from "../assets/consultation.jpg";
 import historyLogo from "../assets/history.jpg";
+import { useAuthStore } from "../store/useAuthStore";
 
 const tabs = [
   { id: "tab1", label: "Test" },
@@ -17,6 +18,19 @@ const Dashboard = () => {
   const [activeSection, setActiveSection] = useState("home");
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
+  const [registerFormData, setRegisterFormData] = useState({
+    fullName: "",
+    email: "",
+    password: "",
+    role: "Pasien",
+  });
+
+  const [loginFormData, setLoginFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const { signup, isSigningUp, login, isLoggingIn } = useAuthStore();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -49,6 +63,33 @@ const Dashboard = () => {
   const closeModals = () => {
     setShowLoginModal(false);
     setShowSignupModal(false);
+  };
+
+  const validateRegisterForm = () => {
+    if (!registerFormData.fullName.trim())
+      return toast.error("Nama lengkap diperlukan");
+    if (!registerFormData.email.trim()) return toast.error("Email diperlukan");
+    if (!registerFormData.email.trim()) return toast.error("Email diperlukan");
+    if (!/\S+@\S+\.\S+/.test(registerFormData.email))
+      return toast.error("Format email tidak valid");
+    if (!registerFormData.password) return toast.error("Password diperlukan");
+    if (registerFormData.password.length < 6)
+      return toast.error("Password harus minimal 6 karakter");
+
+    return true;
+  };
+
+  const handleRegisterSubmit = (e) => {
+    e.preventDefault();
+
+    const success = validateRegisterForm();
+
+    if (success === true) signup(registerFormData);
+  };
+
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault();
+    login(loginFormData);
   };
 
   return (
@@ -323,13 +364,20 @@ const Dashboard = () => {
             <h2 style={{ textAlign: "center", marginBottom: "1rem" }}>
               Login to OxeMed
             </h2>
-            <form>
+            <form onSubmit={handleLoginSubmit}>
               <div className="form-group">
                 <label htmlFor="email">Email</label>
                 <input
                   id="email"
                   type="email"
                   placeholder="Your email"
+                  value={loginFormData.email}
+                  onChange={(e) =>
+                    setLoginFormData({
+                      ...loginFormData,
+                      email: e.target.value,
+                    })
+                  }
                   required
                 />
               </div>
@@ -339,11 +387,22 @@ const Dashboard = () => {
                   id="password"
                   type="password"
                   placeholder="Your password"
+                  value={loginFormData.password}
+                  onChange={(e) =>
+                    setLoginFormData({
+                      ...loginFormData,
+                      password: e.target.value,
+                    })
+                  }
                   required
                 />
               </div>
-              <button type="submit" className="btn-login">
-                Login
+              <button
+                type="submit"
+                className="btn-login"
+                disabled={isLoggingIn}
+              >
+                {isLoggingIn ? "Logging in..." : "Login"}
               </button>
             </form>
             <p
@@ -369,14 +428,21 @@ const Dashboard = () => {
             <h2 style={{ textAlign: "center", marginBottom: "1rem" }}>
               Sign Up for OxeMed
             </h2>
-            <form>
+            <form onSubmit={handleRegisterSubmit}>
               <div className="form-group">
-                <label htmlFor="username">Username</label>
+                <label htmlFor="username">Full Name</label>
                 <input
-                  id="usename"
-                  type="username"
+                  id="fullname"
+                  type="fullname"
                   placeholder="Create a username"
+                  value={registerFormData.fullName}
                   required
+                  onChange={(e) => {
+                    setRegisterFormData({
+                      ...registerFormData,
+                      fullName: e.target.value,
+                    });
+                  }}
                 />
               </div>
               <div className="form-group">
@@ -385,6 +451,13 @@ const Dashboard = () => {
                   id="signup-email"
                   type="email"
                   placeholder="Your email"
+                  value={registerFormData.email}
+                  onChange={(e) => {
+                    setRegisterFormData({
+                      ...registerFormData,
+                      email: e.target.value,
+                    });
+                  }}
                   required
                 />
               </div>
@@ -394,11 +467,22 @@ const Dashboard = () => {
                   id="signup-password"
                   type="password"
                   placeholder="Create a password"
+                  value={registerFormData.password}
+                  onChange={(e) => {
+                    setRegisterFormData({
+                      ...registerFormData,
+                      password: e.target.value,
+                    });
+                  }}
                   required
                 />
               </div>
-              <button type="submit" className="btn-login">
-                Sign Up
+              <button
+                type="submit"
+                className="btn-login"
+                disabled={isSigningUp}
+              >
+                {isSigningUp ? "Signing Up..." : "Sign Up"}
               </button>
             </form>
             <p

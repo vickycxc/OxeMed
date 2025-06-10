@@ -9,6 +9,7 @@ const KonsultasiDokter = () => {
   const [activeTab, setActiveTab] = useState("tab1");
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const navigate = useNavigate();
+  const { logout } = useAuthStore();
 
   // Scroll to the top when the page is first loaded
   useEffect(() => {
@@ -44,9 +45,10 @@ const KonsultasiDokter = () => {
 
   // Handle logout functionality
   const handleLogout = () => {
-    alert("Logged out!");
+    // alert("Logged out!");
     setShowProfileMenu(false);
-    navigate("/");
+    logout();
+    // navigate("/");
     window.scrollTo(0, 0); // Scroll to top when logging out
   };
 

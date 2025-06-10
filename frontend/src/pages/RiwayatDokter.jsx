@@ -32,6 +32,7 @@ const RiwayatDokter = () => {
   const handleViewHistory = () => {
     navigate("/riwayatdokter"); // Menavigasi ke halaman RiwayatDokter
   };
+  const { logout } = useAuthStore();
 
   // Update active section on scroll
   useEffect(() => {
@@ -65,9 +66,10 @@ const RiwayatDokter = () => {
   };
 
   const handleLogout = () => {
-    alert("Logged out!");
+    // alert("Logged out!");
     setShowProfileMenu(false);
-    navigate("/");
+    logout();
+    // navigate("/");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 

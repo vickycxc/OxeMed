@@ -12,13 +12,15 @@
 --------------------------------------------------------------*/
 /* Fonts */
 :root {
-  --default-font: "Roboto",  system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --heading-font: "Nunito",  sans-serif;
-  --nav-font: "Inter",  sans-serif;
+  --default-font: "Roboto", system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --heading-font: "Nunito", sans-serif;
+  --nav-font: "Inter", sans-serif;
 }
 
 /* Global Colors - The following color variables are used throughout the website. Updating them here will change the color scheme of the entire website */
-:root { 
+:root {
   --background-color: #ffffff; /* Background color for the entire website, including individual sections */
   --default-color: #212529; /* Default color used for the majority of the text content across the entire website */
   --heading-color: #2d465e; /* Color for headings, subheadings and title throughout the website */
@@ -29,7 +31,7 @@
 
 /* Nav Menu Colors - The following color variables are used specifically for the navigation menu. They are separate from the global colors to allow for more customization options */
 :root {
-  --nav-color: #212529;  /* The default color of the main navmenu links */
+  --nav-color: #212529; /* The default color of the main navmenu links */
   --nav-hover-color: #0d83fd; /* Applied to main navmenu links when they are hovered over or active */
   --nav-mobile-background-color: #ffffff; /* Used as the background color for mobile navigation menu */
   --nav-dropdown-background-color: #ffffff; /* Used as the background color for dropdown items that appear when hovering over primary navigation items */
@@ -149,7 +151,7 @@ h6 {
   right: 0;
   z-index: 1030; /* pastikan lebih besar dari konten lain */
   background-color: white; /* atau sesuaikan warna background supaya header jelas */
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* opsional, agar header lebih terlihat */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* opsional, agar header lebih terlihat */
   transition: background-color 0.3s ease;
 }
 
@@ -285,10 +287,11 @@ h6 {
 --------------------------------------------------------------*/
 .modal-overlay {
   position: fixed;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -302,7 +305,7 @@ h6 {
   max-width: 400px;
   width: 90%;
   position: relative;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 
   display: flex;
   flex-direction: column;
@@ -323,7 +326,7 @@ h6 {
   display: block;
   font-weight: 600;
   margin-bottom: 0.5rem;
-  margin-left: 0;  /* hilangkan margin kiri */
+  margin-left: 0; /* hilangkan margin kiri */
   margin-right: 0; /* hilangkan margin kanan */
 }
 
@@ -348,8 +351,6 @@ h6 {
   cursor: pointer;
 }
 
-
-
 .modal-close-btn {
   position: absolute;
   top: 12px;
@@ -359,7 +360,6 @@ h6 {
   border: none;
   cursor: pointer;
 }
-
 
 .btn-login:hover {
   background-color: #1d4ed8;
@@ -383,7 +383,6 @@ h6 {
 .link-button:hover {
   color: #1d4ed8;
 }
-
 
 /*--------------------------------------------------------------
 # Navigation Menu
@@ -432,7 +431,7 @@ h6 {
     padding-right: 0;
   }
 
-  .navmenu li:hover>a,
+  .navmenu li:hover > a,
   .navmenu .active,
   .navmenu .active:focus {
     color: var(--nav-hover-color);
@@ -471,11 +470,11 @@ h6 {
 
   .navmenu .dropdown ul a:hover,
   .navmenu .dropdown ul .active:hover,
-  .navmenu .dropdown ul li:hover>a {
+  .navmenu .dropdown ul li:hover > a {
     color: var(--nav-dropdown-hover-color);
   }
 
-  .navmenu .dropdown:hover>ul {
+  .navmenu .dropdown:hover > ul {
     opacity: 1;
     top: 100%;
     visibility: visible;
@@ -487,7 +486,7 @@ h6 {
     visibility: hidden;
   }
 
-  .navmenu .dropdown .dropdown:hover>ul {
+  .navmenu .dropdown .dropdown:hover > ul {
     opacity: 1;
     top: 0;
     left: -100%;
@@ -590,7 +589,7 @@ h6 {
     background-color: rgba(33, 37, 41, 0.1);
   }
 
-  .navmenu .dropdown>.dropdown-active {
+  .navmenu .dropdown > .dropdown-active {
     display: block;
     background-color: rgba(33, 37, 41, 0.03);
   }
@@ -617,7 +616,7 @@ h6 {
     transition: 0.3s;
   }
 
-  .mobile-nav-active .navmenu>ul {
+  .mobile-nav-active .navmenu > ul {
     display: block;
   }
 }
@@ -633,12 +632,10 @@ h6 {
   font-weight: 600;
 }
 
-
 .footer-bottom {
   text-align: center;
   margin-top: 1rem;
 }
-
 
 /*--------------------------------------------------------------
 # Scroll Top Button
@@ -711,11 +708,11 @@ h6 {
   font-weight: 400;
 }
 
-.page-title .breadcrumbs ol li+li {
+.page-title .breadcrumbs ol li + li {
   padding-left: 10px;
 }
 
-.page-title .breadcrumbs ol li+li::before {
+.page-title .breadcrumbs ol li + li::before {
   content: "/";
   display: inline-block;
   padding-right: 10px;
@@ -735,7 +732,6 @@ section,
 }
 
 @media (max-width: 1199px) {
-
   section,
   .section {
     scroll-margin-top: 66px;
@@ -759,7 +755,6 @@ section,
   position: relative;
 }
 
-
 .section-title p {
   margin-bottom: 0;
 }
@@ -779,7 +774,7 @@ section,
   flex: 1;
   max-width: auto;
   animation: fadeInUp 1s ease forwards;
-  text-align: justify;  /* Justify text for left and right alignment */
+  text-align: justify; /* Justify text for left and right alignment */
 }
 
 .hero-content h1 {
@@ -827,7 +822,7 @@ section,
 }
 
 .hero-image {
-  flex: 0 0 50%;       /* Limit image container width */
+  flex: 0 0 50%; /* Limit image container width */
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -844,13 +839,25 @@ section,
 
 /* Animations */
 @keyframes fadeInUp {
-  0% {opacity: 0; transform: translateY(20px);}
-  100% {opacity: 1; transform: translateY(0);}
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fadeInRight {
-  0% {opacity: 0; transform: translateX(20px);}
-  100% {opacity: 1; transform: translateX(0);}
+  0% {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 /* Responsive */
@@ -860,7 +867,8 @@ section,
     padding: 60px 40px;
     min-height: auto;
   }
-  .hero-content, .hero-image {
+  .hero-content,
+  .hero-image {
     max-width: 100%;
   }
   .hero-content h1 {
@@ -1132,12 +1140,10 @@ section,
   box-shadow: 0 4px 18px rgba(0, 90, 250, 0.2);
 }
 
-
 .features .nav-link:hover {
   background-color: #e3f0ff;
   color: #2563eb;
 }
-
 
 /* Konten tab: layout dua kolom */
 .features .tab-content .row {
@@ -1265,7 +1271,7 @@ section,
 }
 
 .features .feature-list li::before {
-  content: '✔';  /* Icon centang sederhana */
+  content: "✔"; /* Icon centang sederhana */
   color: #2563eb;
   position: absolute;
   left: 0;
@@ -1282,20 +1288,17 @@ section,
   margin-left: auto; /* supaya gambar bergeser ke kanan */
 }
 
-
-
 .row {
   display: flex;
   align-items: center;
   flex-wrap: nowrap; /* jangan sampai wrap */
 }
 
-
 .features .feature-image {
   max-width: 100%;
   height: auto;
   border-radius: 10px;
-  box-shadow: 0 8px 22px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
   max-height: 360px;
   object-fit: contain;
 }
@@ -1341,7 +1344,7 @@ section,
   max-width: 100%;
   height: auto;
   border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 /*--------------------------------------------------------------
@@ -1577,7 +1580,6 @@ section,
 }
 
 @keyframes shapes-float {
-
   0%,
   100% {
     transform: scale(0.8) rotate(45deg) translateY(0);
@@ -2243,7 +2245,7 @@ form#contact-form button {
   letter-spacing: 0.25px;
   border: none;
   outline: none;
-  transition: all .3s;
+  transition: all 0.3s;
 }
 
 form#contact-form button:hover {
@@ -2259,14 +2261,15 @@ form#contact-form button:hover {
   box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.1);
 }
 
-.service-details .service-box+.service-box {
+.service-details .service-box + .service-box {
   margin-top: 30px;
 }
 
 .service-details .service-box h4 {
   font-size: 20px;
   font-weight: 700;
-  border-bottom: 2px solid color-mix(in srgb, var(--default-color), transparent 92%);
+  border-bottom: 2px solid
+    color-mix(in srgb, var(--default-color), transparent 92%);
   padding-bottom: 15px;
   margin-bottom: 15px;
 }
@@ -2315,7 +2318,8 @@ form#contact-form button:hover {
   align-items: center;
   padding: 10px 0;
   transition: 0.3s;
-  border-top: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
+  border-top: 1px solid
+    color-mix(in srgb, var(--default-color), transparent 90%);
 }
 
 .service-details .download-catalog a:first-child {
@@ -2389,4 +2393,17 @@ form#contact-form button:hover {
 --------------------------------------------------------------*/
 .starter-section {
   /* Add your styles here */
+}
+
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+}
+
+.loader img {
+  justify-content: center;
+  align-items: center;
 }

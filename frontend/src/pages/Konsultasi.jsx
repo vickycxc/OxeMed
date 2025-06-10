@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import oxemedLogo from './assets/oxemed.jpg';
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import oxemedLogo from "../assets/oxemed.jpg";
 
 const profilePicUrl = "https://randomuser.me/api/portraits/men/75.jpg";
 const doctor = {
-  name: 'dr. Ika Dwi',
-  specialization: 'Spesialis Penyakit Dalam',
-  image: 'https://randomuser.me/api/portraits/women/65.jpg'
+  name: "dr. Ika Dwi",
+  specialization: "Spesialis Penyakit Dalam",
+  image: "https://randomuser.me/api/portraits/women/65.jpg",
 };
 
 // Hook untuk membuat dan membersihkan Object URL dari file
@@ -39,13 +39,16 @@ const ChatImage = ({ imageFile }) => {
 
 const Konsultasi = () => {
   const [chat, setChat] = useState([
-    { sender: 'dokter', text: 'Selamat pagi! Apakah ada yang bisa saya bantu? Apa keluhan Anda hari ini?' }
+    {
+      sender: "dokter",
+      text: "Selamat pagi! Apakah ada yang bisa saya bantu? Apa keluhan Anda hari ini?",
+    },
   ]);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [image, setImage] = useState(null);
 
   // State untuk navigasi & UI header
-  const [activeSection, setActiveSection] = useState('home');
+  const [activeSection, setActiveSection] = useState("home");
   const [activeTab, setActiveTab] = useState(null);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
@@ -53,37 +56,37 @@ const Konsultasi = () => {
   const chatBoxRef = useRef();
 
   // Toggle menu profil dropdown
-  const toggleProfileMenu = () => setShowProfileMenu(prev => !prev);
+  const toggleProfileMenu = () => setShowProfileMenu((prev) => !prev);
 
   // Logout function
   const handleLogout = () => {
-    localStorage.removeItem('userToken'); // Contoh logout: hapus token
-    navigate('/login');
+    localStorage.removeItem("userToken"); // Contoh logout: hapus token
+    navigate("/login");
   };
 
   // Kirim pesan chat (text dan gambar)
   const sendMessage = () => {
     if (!message && !image) return;
 
-    setChat(prev => [
+    setChat((prev) => [
       ...prev,
       {
-        sender: 'pasien',
+        sender: "pasien",
         text: message,
-        image: image
-      }
+        image: image,
+      },
     ]);
-    setMessage('');
+    setMessage("");
     setImage(null);
 
     // Respon dokter otomatis
     setTimeout(() => {
-      setChat(prev => [
+      setChat((prev) => [
         ...prev,
         {
-          sender: 'dokter',
-          text: 'Terima kasih atas informasinya. Kami akan pelajari dan bantu segera.'
-        }
+          sender: "dokter",
+          text: "Terima kasih atas informasinya. Kami akan pelajari dan bantu segera.",
+        },
       ]);
     }, 1000);
   };
@@ -93,15 +96,15 @@ const Konsultasi = () => {
     const summary = {
       doctor,
       chat,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
-    localStorage.setItem('konsultasi_terakhir', JSON.stringify(summary));
-    navigate('/riwayat');
+    localStorage.setItem("konsultasi_terakhir", JSON.stringify(summary));
+    navigate("/riwayat");
   };
 
   // Scroll to top on mount
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
   // Scroll chat box ke bawah setiap chat bertambah
@@ -114,20 +117,20 @@ const Konsultasi = () => {
   return (
     <div
       style={{
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh',
-        width: '100vw',
-        backgroundColor: '#f3f4f6'
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        width: "100vw",
+        backgroundColor: "#f3f4f6",
       }}
     >
       {/* Header */}
       <header
         id="header"
         className={`header d-flex align-items-center fixed-top ${
-          activeSection === 'features'
-            ? 'header-features-active'
-            : 'header-home-active'
+          activeSection === "features"
+            ? "header-features-active"
+            : "header-home-active"
         }`}
       >
         <div className="header-container container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
@@ -142,12 +145,12 @@ const Konsultasi = () => {
               <li>
                 <a
                   href="#login"
-                  className={activeSection === 'home' ? 'active' : ''}
+                  className={activeSection === "home" ? "active" : ""}
                   onClick={(e) => {
                     e.preventDefault();
-                    setActiveSection('home');
-                    navigate('/login');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    setActiveSection("home");
+                    navigate("/login");
+                    window.scrollTo({ top: 0, behavior: "smooth" });
                   }}
                 >
                   Home
@@ -157,11 +160,11 @@ const Konsultasi = () => {
               <li>
                 <a
                   href="#test"
-                  className={activeTab === 'tab1' ? 'active' : ''}
+                  className={activeTab === "tab1" ? "active" : ""}
                   onClick={(e) => {
                     e.preventDefault();
-                    setActiveTab('tab1');
-                    navigate('/test');
+                    setActiveTab("tab1");
+                    navigate("/test");
                   }}
                 >
                   Test
@@ -171,11 +174,11 @@ const Konsultasi = () => {
               <li>
                 <a
                   href="#consultation"
-                  className={activeTab === 'tab2' ? 'active' : ''}
+                  className={activeTab === "tab2" ? "active" : ""}
                   onClick={(e) => {
                     e.preventDefault();
-                    setActiveTab('tab2');
-                    navigate('/konsultasi');
+                    setActiveTab("tab2");
+                    navigate("/konsultasi");
                   }}
                 >
                   Consultation
@@ -185,11 +188,11 @@ const Konsultasi = () => {
               <li>
                 <a
                   href="#history"
-                  className={activeTab === 'tab3' ? 'active' : ''}
+                  className={activeTab === "tab3" ? "active" : ""}
                   onClick={(e) => {
                     e.preventDefault();
-                    setActiveTab('tab3');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    setActiveTab("tab3");
+                    window.scrollTo({ top: 0, behavior: "smooth" });
                   }}
                 >
                   History
@@ -199,7 +202,7 @@ const Konsultasi = () => {
           </nav>
 
           {/* Profile Picture */}
-          <div className="user-profile" style={{ position: 'relative' }}>
+          <div className="user-profile" style={{ position: "relative" }}>
             <img
               src={profilePicUrl}
               alt="User Profile"
@@ -207,10 +210,10 @@ const Konsultasi = () => {
               className="profile-img"
               onClick={toggleProfileMenu}
               style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '50%',
-                cursor: 'pointer'
+                width: "40px",
+                height: "40px",
+                borderRadius: "50%",
+                cursor: "pointer",
               }}
             />
 
@@ -219,25 +222,25 @@ const Konsultasi = () => {
                 id="profile-menu"
                 className="profile-menu"
                 style={{
-                  position: 'absolute',
-                  top: '50px',
-                  right: '0',
-                  backgroundColor: '#fff',
-                  border: '1px solid #ccc',
-                  borderRadius: '8px',
-                  padding: '10px',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-                  zIndex: 1000
+                  position: "absolute",
+                  top: "50px",
+                  right: "0",
+                  backgroundColor: "#fff",
+                  border: "1px solid #ccc",
+                  borderRadius: "8px",
+                  padding: "10px",
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                  zIndex: 1000,
                 }}
               >
                 <button
                   onClick={handleLogout}
                   style={{
-                    background: 'none',
-                    border: 'none',
-                    color: '#2563eb',
-                    fontWeight: '600',
-                    cursor: 'pointer'
+                    background: "none",
+                    border: "none",
+                    color: "#2563eb",
+                    fontWeight: "600",
+                    cursor: "pointer",
                   }}
                 >
                   Logout
@@ -253,34 +256,34 @@ const Konsultasi = () => {
         style={{
           flex: 1,
           marginTop: 80,
-          padding: '2rem 1rem',
-          display: 'flex',
-          justifyContent: 'center'
+          padding: "2rem 1rem",
+          display: "flex",
+          justifyContent: "center",
         }}
       >
         <section
           style={{
-            backgroundColor: '#fff',
+            backgroundColor: "#fff",
             borderRadius: 16,
-            padding: '2rem',
-            boxShadow: '0 0 12px rgba(0,0,0,0.05)',
-            width: '100%',
-            maxWidth: '900px'
+            padding: "2rem",
+            boxShadow: "0 0 12px rgba(0,0,0,0.05)",
+            width: "100%",
+            maxWidth: "900px",
           }}
         >
           {/* Doctor Info */}
           <div
             style={{
-              display: 'flex',
-              alignItems: 'center',
+              display: "flex",
+              alignItems: "center",
               gap: 16,
-              marginBottom: 24
+              marginBottom: 24,
             }}
           >
             <img
               src={doctor.image}
               alt={doctor.name}
-              style={{ width: 50, borderRadius: '50%' }}
+              style={{ width: 50, borderRadius: "50%" }}
             />
             <div>
               <h5 style={{ margin: 0 }}>{doctor.name}</h5>
@@ -289,13 +292,13 @@ const Konsultasi = () => {
             <button
               onClick={handleFinish}
               style={{
-                marginLeft: 'auto',
-                padding: '8px 20px',
+                marginLeft: "auto",
+                padding: "8px 20px",
                 borderRadius: 10,
-                background: '#3b60e4',
-                color: 'white',
-                border: 'none',
-                cursor: 'pointer'
+                background: "#3b60e4",
+                color: "white",
+                border: "none",
+                cursor: "pointer",
               }}
             >
               Selesai
@@ -306,33 +309,33 @@ const Konsultasi = () => {
           <div
             ref={chatBoxRef}
             style={{
-              backgroundColor: '#f8fafc',
+              backgroundColor: "#f8fafc",
               padding: 16,
               borderRadius: 12,
-              height: '50vh',
-              overflowY: 'auto',
-              border: '1px solid #eee',
-              marginBottom: 16
+              height: "50vh",
+              overflowY: "auto",
+              border: "1px solid #eee",
+              marginBottom: 16,
             }}
           >
             {chat.map((item, index) => (
               <div
                 key={index}
                 style={{
-                  display: 'flex',
+                  display: "flex",
                   justifyContent:
-                    item.sender === 'pasien' ? 'flex-end' : 'flex-start',
-                  marginBottom: 12
+                    item.sender === "pasien" ? "flex-end" : "flex-start",
+                  marginBottom: 12,
                 }}
               >
                 <div
                   style={{
                     backgroundColor:
-                      item.sender === 'pasien' ? '#d1e7dd' : '#e2e6ea',
+                      item.sender === "pasien" ? "#d1e7dd" : "#e2e6ea",
                     padding: 12,
                     borderRadius: 12,
-                    maxWidth: '70%',
-                    wordBreak: 'break-word'
+                    maxWidth: "70%",
+                    wordBreak: "break-word",
                   }}
                 >
                   <p style={{ margin: 0 }}>{item.text}</p>
@@ -343,12 +346,17 @@ const Konsultasi = () => {
           </div>
 
           {/* Input */}
-          <div style={{ display: 'flex', gap: 10 }}>
+          <div style={{ display: "flex", gap: 10 }}>
             <input
               type="file"
               accept="image/*"
               onChange={(e) => setImage(e.target.files[0])}
-              style={{ flexBasis: '30%', borderRadius: 8, border: '1px solid #ccc', padding: '6px' }}
+              style={{
+                flexBasis: "30%",
+                borderRadius: 8,
+                border: "1px solid #ccc",
+                padding: "6px",
+              }}
             />
 
             <input
@@ -359,8 +367,8 @@ const Konsultasi = () => {
               style={{
                 flex: 1,
                 borderRadius: 8,
-                border: '1px solid #ccc',
-                padding: '6px 12px'
+                border: "1px solid #ccc",
+                padding: "6px 12px",
               }}
             />
 
@@ -368,11 +376,11 @@ const Konsultasi = () => {
               onClick={sendMessage}
               style={{
                 borderRadius: 8,
-                backgroundColor: '#3b60e4',
-                color: 'white',
-                border: 'none',
-                padding: '8px 16px',
-                cursor: 'pointer'
+                backgroundColor: "#3b60e4",
+                color: "white",
+                border: "none",
+                padding: "8px 16px",
+                cursor: "pointer",
               }}
             >
               Kirim
@@ -382,13 +390,16 @@ const Konsultasi = () => {
       </main>
 
       {/* Footer */}
-      <footer id="footer" className="footer" style={{ marginTop: '40px' }}>
+      <footer id="footer" className="footer" style={{ marginTop: "40px" }}>
         <div className="footer-bottom text-center mt-4">
-          <p style={{ margin: 0, fontWeight: '700', fontSize: '1.25rem' }}>
-            OxeMed<br />
+          <p style={{ margin: 0, fontWeight: "700", fontSize: "1.25rem" }}>
+            OxeMed
+            <br />
             Teknologi Kedokteran - Kelompok 4
           </p>
-          <p style={{ marginTop: '8px', fontSize: '0.9rem', fontWeight: '400' }}>
+          <p
+            style={{ marginTop: "8px", fontSize: "0.9rem", fontWeight: "400" }}
+          >
             © {new Date().getFullYear()}. All Rights Reserved.
           </p>
         </div>

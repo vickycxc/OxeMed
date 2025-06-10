@@ -1,54 +1,57 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './app.css';
-import oxemedLogo from './assets/oxemed.jpg';
-import mainLogo from './assets/main.jpg';
-import consultationLogo from './assets/consultation.jpg';
-import historyLogo from './assets/history.jpg';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import "../styles/app.css";
+import oxemedLogo from "../assets/oxemed.jpg";
+import mainLogo from "../assets/main.jpg";
+import consultationLogo from "../assets/consultation.jpg";
+import historyLogo from "../assets/history.jpg";
 
 const profilePicUrl = "https://randomuser.me/api/portraits/men/75.jpg";
 
 const LoginDokter = () => {
-  const [activeSection, setActiveSection] = useState('home');
+  const [activeSection, setActiveSection] = useState("home");
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const navigate = useNavigate();
 
   // Handler untuk navigasi ke masing-masing halaman
-  const goToHome = () => navigate('#home');
-  const goToConsultation = () => navigate('#consultation');
+  const goToHome = () => navigate("#home");
+  const goToConsultation = () => navigate("#consultation");
 
   // Fungsi untuk mengarahkan ke halaman konsultasi
   const handleOngoingClick = () => {
-    navigate('/konsultasidokter');
+    navigate("/konsultasidokter");
   };
 
   // Fungsi untuk mengarahkan ke halaman RiwayatDokter.jsx
   const handleViewHistory = () => {
-    navigate('/riwayatdokter');  // Menavigasi ke halaman RiwayatDokter
+    navigate("/riwayatdokter"); // Menavigasi ke halaman RiwayatDokter
   };
 
   // Update active section on scroll
   useEffect(() => {
     const handleScroll = () => {
-      const consultationSection = document.getElementById('consultation');
-      const scrollPosition = window.scrollY + 100; 
+      const consultationSection = document.getElementById("consultation");
+      const scrollPosition = window.scrollY + 100;
 
-      if (consultationSection && scrollPosition >= consultationSection.offsetTop) {
-        setActiveSection('consultation');
+      if (
+        consultationSection &&
+        scrollPosition >= consultationSection.offsetTop
+      ) {
+        setActiveSection("consultation");
       } else {
-        setActiveSection('home');
+        setActiveSection("home");
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
     handleScroll();
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // Simulasi user
   const user = {
-    name: 'dr. Liem Eremius, Sp.A',
+    name: "dr. Liem Eremius, Sp.A",
   };
 
   const toggleProfileMenu = () => {
@@ -90,7 +93,7 @@ const LoginDokter = () => {
   const handleLinkClick = (e, section) => {
     e.preventDefault();
     setActiveSection(section); // Set active section to the clicked section
-    document.getElementById(section)?.scrollIntoView({ behavior: 'smooth' }); // Smooth scroll to section
+    document.getElementById(section)?.scrollIntoView({ behavior: "smooth" }); // Smooth scroll to section
   };
 
   return (
@@ -99,7 +102,11 @@ const LoginDokter = () => {
       <header
         id="header"
         className={`header d-flex align-items-center fixed-top ${
-          activeSection === 'home' ? 'header-home-active' : activeSection === 'consultation' ? 'header-consultation-active' : 'header-history-active'
+          activeSection === "home"
+            ? "header-home-active"
+            : activeSection === "consultation"
+            ? "header-consultation-active"
+            : "header-history-active"
         }`}
       >
         <div className="header-container container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
@@ -114,8 +121,8 @@ const LoginDokter = () => {
               <li>
                 <a
                   href="#home"
-                  className={activeSection === 'home' ? 'active' : ''}
-                  onClick={(e) => handleLinkClick(e, 'home')}
+                  className={activeSection === "home" ? "active" : ""}
+                  onClick={(e) => handleLinkClick(e, "home")}
                 >
                   Home
                 </a>
@@ -123,8 +130,8 @@ const LoginDokter = () => {
               <li>
                 <a
                   href="#consultation"
-                  className={activeSection === 'consultation' ? 'active' : ''}
-                  onClick={(e) => handleLinkClick(e, 'consultation')}
+                  className={activeSection === "consultation" ? "active" : ""}
+                  onClick={(e) => handleLinkClick(e, "consultation")}
                 >
                   Consultation
                 </a>
@@ -133,14 +140,19 @@ const LoginDokter = () => {
           </nav>
 
           {/* Profile Picture */}
-          <div className="user-profile" style={{ position: 'relative' }}>
+          <div className="user-profile" style={{ position: "relative" }}>
             <img
               src={profilePicUrl}
               alt="User Profile"
               id="profile-img"
               className="profile-img"
               onClick={toggleProfileMenu}
-              style={{ width: '40px', height: '40px', borderRadius: '50%', cursor: 'pointer' }}
+              style={{
+                width: "40px",
+                height: "40px",
+                borderRadius: "50%",
+                cursor: "pointer",
+              }}
             />
 
             {showProfileMenu && (
@@ -148,25 +160,25 @@ const LoginDokter = () => {
                 id="profile-menu"
                 className="profile-menu"
                 style={{
-                  position: 'absolute',
-                  top: '50px',
-                  right: '0',
-                  backgroundColor: '#fff',
-                  border: '1px solid #ccc',
-                  borderRadius: '8px',
-                  padding: '10px',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                  position: "absolute",
+                  top: "50px",
+                  right: "0",
+                  backgroundColor: "#fff",
+                  border: "1px solid #ccc",
+                  borderRadius: "8px",
+                  padding: "10px",
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
                   zIndex: 1000,
                 }}
               >
                 <button
                   onClick={handleLogout}
                   style={{
-                    background: 'none',
-                    border: 'none',
-                    color: '#2563eb',
-                    fontWeight: '600',
-                    cursor: 'pointer',
+                    background: "none",
+                    border: "none",
+                    color: "#2563eb",
+                    fontWeight: "600",
+                    cursor: "pointer",
                   }}
                 >
                   Logout
@@ -178,18 +190,18 @@ const LoginDokter = () => {
       </header>
 
       {/* Main Content */}
-      <main className="main" style={{ paddingTop: '100px' }}>
+      <main className="main" style={{ paddingTop: "100px" }}>
         {/* Hero Section */}
         <section className="hero-section" id="home">
-          <div className="hero-content" style={{ paddingLeft: '2rem' }}>
+          <div className="hero-content" style={{ paddingLeft: "2rem" }}>
             <h4
               style={{
-                color: '#2563eb',
-                fontWeight: '700',
-                fontSize: '1.5rem',
-                marginBottom: '0.5rem',
+                color: "#2563eb",
+                fontWeight: "700",
+                fontSize: "1.5rem",
+                marginBottom: "0.5rem",
                 fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-                letterSpacing: '1px',
+                letterSpacing: "1px",
               }}
             >
               Hello, dr. Liem Eremius, Sp.A!
@@ -199,10 +211,12 @@ const LoginDokter = () => {
               <span className="highlight">Practice</span> Management
             </h1>
             <p className="subheading">
-              Manage your patients' health records, consultations, and appointments seamlessly with our platform.
+              Manage your patients' health records, consultations, and
+              appointments seamlessly with our platform.
             </p>
             <p className="description">
-              Access real-time health data, review test results, consult with patients, and track their progress—all in one place.
+              Access real-time health data, review test results, consult with
+              patients, and track their progress—all in one place.
             </p>
           </div>
           <div className="hero-image">
@@ -220,12 +234,26 @@ const LoginDokter = () => {
                   <div className="pasien-info">
                     <h2>{pasien.nama}</h2>
                     <p>{pasien.umur}</p>
-                    {pasien.penyakit && <p><strong>Penyakit:</strong> {pasien.penyakit}</p>}
-                    <p><strong>Waktu:</strong> {pasien.waktu}</p>
+                    {pasien.penyakit && (
+                      <p>
+                        <strong>Penyakit:</strong> {pasien.penyakit}
+                      </p>
+                    )}
+                    <p>
+                      <strong>Waktu:</strong> {pasien.waktu}
+                    </p>
                   </div>
                   <div
-                    className={`status ${pasien.status === "Sedang Berlangsung" ? "ongoing" : "finished"}`}
-                    onClick={pasien.status === "Sedang Berlangsung" ? handleOngoingClick : null}
+                    className={`status ${
+                      pasien.status === "Sedang Berlangsung"
+                        ? "ongoing"
+                        : "finished"
+                    }`}
+                    onClick={
+                      pasien.status === "Sedang Berlangsung"
+                        ? handleOngoingClick
+                        : null
+                    }
                   >
                     <p>{pasien.status}</p>
                   </div>
@@ -240,20 +268,27 @@ const LoginDokter = () => {
       </main>
 
       {/* Footer */}
-      <footer id="footer" className="footer" style={{ marginTop: '40px' }}>
+      <footer id="footer" className="footer" style={{ marginTop: "40px" }}>
         <div className="footer-bottom text-center mt-4">
-          <p style={{ margin: 0, fontWeight: '700', fontSize: '1.25rem' }}>
-            OxeMed<br />
+          <p style={{ margin: 0, fontWeight: "700", fontSize: "1.25rem" }}>
+            OxeMed
+            <br />
             Teknologi Kedokteran - Kelompok 4
           </p>
-          <p style={{ marginTop: '8px', fontSize: '0.9rem', fontWeight: '400' }}>
+          <p
+            style={{ marginTop: "8px", fontSize: "0.9rem", fontWeight: "400" }}
+          >
             © {new Date().getFullYear()}. All Rights Reserved.
           </p>
         </div>
       </footer>
 
       {/* Scroll Top Button */}
-      <a href="#header" id="scroll-top" className="scroll-top d-flex align-items-center justify-content-center">
+      <a
+        href="#header"
+        id="scroll-top"
+        className="scroll-top d-flex align-items-center justify-content-center"
+      >
         <i className="bi bi-arrow-up-short"></i>
       </a>
     </div>

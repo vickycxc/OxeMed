@@ -14,6 +14,7 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
+import { useAuthStore } from "../store/useAuthStore";
 
 const tabs = [
   { id: "tab1", label: "Test" },

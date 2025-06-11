@@ -9,30 +9,30 @@ export const register = async (req, res) => {
     fullName,
     email,
     password,
-    birthDate,
-    gender,
-    phoneNumber,
+    // birthDate,
+    // gender,
+    // phoneNumber,
     role,
-    drugAllergies,
-    profilePicture,
-    strNumber,
-    sipNumber,
-    specialization,
-    practiceStartYear,
-    practiceLocation,
-    practiceCity,
-    offScheduleFee,
-    doctorEducations,
-    doctorSchedules,
+    // drugAllergies,
+    // profilePicture,
+    // strNumber,
+    // sipNumber,
+    // specialization,
+    // practiceStartYear,
+    // practiceLocation,
+    // practiceCity,
+    // offScheduleFee,
+    // doctorEducations,
+    // doctorSchedules,
   } = req.body;
   try {
     if (
       !fullName ||
       !email ||
       !password ||
-      !birthDate ||
-      !gender ||
-      !phoneNumber ||
+      // !birthDate ||
+      // !gender ||
+      // !phoneNumber ||
       !role
     ) {
       return res.status(400).json({ message: "Semua field harus diisi" });
@@ -61,67 +61,67 @@ export const register = async (req, res) => {
       fullName,
       email,
       password: hashedPassword,
-      birthDate,
-      gender,
-      phoneNumber,
+      // birthDate,
+      // gender,
+      // phoneNumber,
       role,
-      drugAllergies,
+      // drugAllergies,
       apiKey,
     });
 
-    if (newUser && role === "Pasien") {
-      generateToken(newUser.id, res);
-      return res.status(201).json({ message: "Registrasi Pasien berhasil" });
-    }
+    // if (newUser && role === "Pasien") {
+    generateToken(newUser.id, res);
+    return res.status(201).json({ message: "Registrasi Pasien berhasil" });
+    // }
 
-    if (role === "Dokter") {
-      if (
-        !profilePicture ||
-        !strNumber ||
-        !sipNumber ||
-        !practiceStartYear ||
-        !practiceLocation ||
-        !practiceCity ||
-        !offScheduleFee
-      ) {
-        return res.status(400).json({
-          message: "Semua field harus diisi",
-        });
-      }
+    // if (role === "Dokter") {
+    //   if (
+    //     !profilePicture ||
+    //     !strNumber ||
+    //     !sipNumber ||
+    //     !practiceStartYear ||
+    //     !practiceLocation ||
+    //     !practiceCity ||
+    //     !offScheduleFee
+    //   ) {
+    //     return res.status(400).json({
+    //       message: "Semua field harus diisi",
+    //     });
+    //   }
 
-      const uploadResponse = await cloudinary.uploader.upload(profilePicture);
-      const profilePictureUrl = uploadResponse.secure_url;
+    //   const uploadResponse = await cloudinary.uploader.upload(profilePicture);
+    //   const profilePictureUrl = uploadResponse.secure_url;
 
-      const newDoctor = await newUser.createDoctor({
-        profilePictureUrl,
-        strNumber,
-        sipNumber,
-        specialization,
-        practiceStartYear,
-        practiceLocation,
-        practiceCity,
-        offScheduleFee,
-      });
+    //   const newDoctor = await newUser.createDoctor({
+    //     profilePictureUrl,
+    //     strNumber,
+    //     sipNumber,
+    //     specialization,
+    //     practiceStartYear,
+    //     practiceLocation,
+    //     practiceCity,
+    //     offScheduleFee,
+    //   });
 
-      const educations = doctorEducations.map((edu) => ({
-        ...edu,
-        doctorId: newDoctor.id,
-      }));
-      const newDoctorEducations = await DoctorEducation.bulkCreate(educations);
+    //   const educations = doctorEducations.map((edu) => ({
+    //     ...edu,
+    //     doctorId: newDoctor.id,
+    //   }));
+    //   const newDoctorEducations = await DoctorEducation.bulkCreate(educations);
 
-      const schedules = doctorSchedules.map((schedule) => ({
-        ...schedule,
-        doctorId: newDoctor.id,
-      }));
-      const newDoctorSchedules = await DoctorSchedule.bulkCreate(schedules);
+    //   const schedules = doctorSchedules.map((schedule) => ({
+    //     ...schedule,
+    //     doctorId: newDoctor.id,
+    //   }));
+    //   const newDoctorSchedules = await DoctorSchedule.bulkCreate(schedules);
 
-      if (newUser && newDoctor && newDoctorEducations && newDoctorSchedules) {
-        generateToken(newUser.id, res);
-        return res.status(201).json({ message: "Registrasi Dokter berhasil" });
-      } else {
-        return res.status(500).json({ message: "error" });
-      }
-    }
+    //   if (newUser && newDoctor && newDoctorEducations && newDoctorSchedules) {
+    //     generateToken(newUser.id, res);
+    //     return res.status(201).json({ message: "Registrasi Dokter berhasil" });
+    //   } else {
+    //     return res.status(500).json({ message: "error" });
+    //   }
+    // }
   } catch (error) {
     console.error("Error di register controller", error);
     return res.status(500).json({
@@ -140,19 +140,26 @@ export const login = async (req, res) => {
       },
     });
 
+    const { password: userPassword, ...userWithoutPassword } = user.dataValues;
+
     if (!user) {
       return res.status(400).json({ message: "Email tidak valid" });
     }
 
-    const isPasswordCorrect = await bcryptjs.compare(password, user.password);
+    const isPasswordCorrect = await bcryptjs.compare(password, userPassword);
     if (!isPasswordCorrect) {
       return res.status(400).json({ message: "Password tidak valid" });
     }
 
-    generateToken(user.id, res);
+    generateToken(userWithoutPassword.id, res);
 
+    console.log(
+      "🚀 ~ returnres.status ~ userWithoutPassword:",
+      userWithoutPassword
+    );
     return res.status(200).json({
       message: "Login berhasil",
+      user: userWithoutPassword,
     });
   } catch (error) {
     console.error("Error di login controller", error);
@@ -178,6 +185,7 @@ export const checkAuth = async (req, res) => {
   try {
     res.status(200).json({
       message: "Token valid",
+      user: req.user,
     });
   } catch (error) {
     console.error("Error di checkAuth controller", error);

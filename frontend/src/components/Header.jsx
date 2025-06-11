@@ -8,7 +8,7 @@ import MKButton from "components/MKButton";
 import MKTypography from "components/MKTypography";
 
 // Replace with your OxeMed logo image
-import bgImage from "assets/images/oxemed-bg.jpeg";
+import bgImage from "../assets/images/oxemed-bg.jpeg";
 
 function Header() {
   return (
@@ -134,7 +134,11 @@ function Header() {
                   p={1}
                   onClick={(e) => e.preventDefault()}
                 >
-                  <MKBox component="i" color="white" className="fab fa-twitter" />
+                  <MKBox
+                    component="i"
+                    color="white"
+                    className="fab fa-twitter"
+                  />
                 </MKTypography>
               </MKBox>
               <MKBox component="li">
@@ -145,7 +149,11 @@ function Header() {
                   p={1}
                   onClick={(e) => e.preventDefault()}
                 >
-                  <MKBox component="i" color="white" className="fab fa-facebook" />
+                  <MKBox
+                    component="i"
+                    color="white"
+                    className="fab fa-facebook"
+                  />
                 </MKTypography>
               </MKBox>
               <MKBox component="li">
@@ -156,7 +164,11 @@ function Header() {
                   p={1}
                   onClick={(e) => e.preventDefault()}
                 >
-                  <MKBox component="i" color="white" className="fab fa-instagram" />
+                  <MKBox
+                    component="i"
+                    color="white"
+                    className="fab fa-instagram"
+                  />
                 </MKTypography>
               </MKBox>
             </MKBox>
@@ -170,14 +182,28 @@ function Header() {
         alignItems="center"
         minHeight="100vh"
         sx={{
-          backgroundImage: ({ palette: { gradients }, functions: { linearGradient, rgba } }) =>
-            `${linearGradient(rgba(gradients.dark.main, 0.5), rgba(gradients.dark.state, 0.5))}, url(${bgImage})`,
+          backgroundImage: ({
+            palette: { gradients },
+            functions: { linearGradient, rgba },
+          }) =>
+            `${linearGradient(
+              rgba(gradients.dark.main, 0.5),
+              rgba(gradients.dark.state, 0.5)
+            )}, url(${bgImage})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       >
         <Container>
-          <Grid container item xs={12} md={7} lg={6} flexDirection="column" justifyContent="center">
+          <Grid
+            container
+            item
+            xs={12}
+            md={7}
+            lg={6}
+            flexDirection="column"
+            justifyContent="center"
+          >
             <MKTypography
               variant="h1"
               color="white"
@@ -190,8 +216,15 @@ function Header() {
             >
               OxeMed
             </MKTypography>
-            <MKTypography variant="body1" color="white" opacity={0.8} pr={6} mr={6}>
-              Your health, our priority. Offering convenient online consultations and personalized care.
+            <MKTypography
+              variant="body1"
+              color="white"
+              opacity={0.8}
+              pr={6}
+              mr={6}
+            >
+              Your health, our priority. Offering convenient online
+              consultations and personalized care.
             </MKTypography>
             <Stack direction="row" spacing={1} mt={3}>
               <MKButton color="white">Get Started</MKButton>
@@ -207,4 +240,3 @@ function Header() {
 }
 
 export default Header;
-

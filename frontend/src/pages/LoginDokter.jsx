@@ -5,6 +5,7 @@ import oxemedLogo from "../assets/oxemed.jpg";
 import mainLogo from "../assets/main.jpg";
 import consultationLogo from "../assets/consultation.jpg";
 import historyLogo from "../assets/history.jpg";
+import { useAuthStore } from "../store/useAuthStore";
 
 const profilePicUrl = "https://randomuser.me/api/portraits/men/75.jpg";
 

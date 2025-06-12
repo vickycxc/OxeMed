@@ -4,8 +4,10 @@ import oxemedLogo from "../assets/oxemed.jpg";
 
 const profilePicUrl = "https://randomuser.me/api/portraits/men/75.jpg";
 const doctors = [
-  { id: 1, name: 'dr. Ika Dwi', specialization: 'Spesialis Penyakit Dalam', image: 'https://randomuser.me/api/portraits/women/65.jpg' },
-  { id: 2, name: 'dr. Budi Santoso', specialization: 'Spesialis Jantung', image: 'https://randomuser.me/api/portraits/men/45.jpg' },
+  { id: 1, name: "dr. Ika Dwi", specialization: "Spesialis Penyakit Dalam", image: "https://randomuser.me/api/portraits/women/65.jpg" },
+  { id: 2, name: "dr. Budi Santoso", specialization: "Spesialis Penyakit Dalam", image: "https://randomuser.me/api/portraits/men/45.jpg" },
+  { id: 3, name: "dr. Citra Lestari", specialization: "Spesialis Penyakit Dalam", image: "https://randomuser.me/api/portraits/women/70.jpg" },
+  { id: 4, name: "dr. David Wijaya", specialization: "Spesialis Penyakit Dalam", image: "https://randomuser.me/api/portraits/men/80.jpg" },
 ];
 
 function useObjectURL(file) {
@@ -32,14 +34,11 @@ const ChatImage = ({ imageFile }) => {
 };
 
 const Konsultasi = () => {
-  const [chat, setChat] = useState([
-    {
-      sender: "dokter",
-      text: "Selamat pagi! Apakah ada yang bisa saya bantu? Apa keluhan Anda hari ini?",
-    },
-  ]);
+  const [chat, setChat] = useState([]); // Start with an empty chat
   const [message, setMessage] = useState("");
   const [image, setImage] = useState(null);
+  const [selectedDoctor, setSelectedDoctor] = useState(null); // Initialize as null
+  const [isDoctorSelectionVisible, setIsDoctorSelectionVisible] = useState(true); // Control visibility of doctor selection
 
   // State untuk navigasi & UI header
   const [activeSection, setActiveSection] = useState("home");
@@ -50,7 +49,12 @@ const Konsultasi = () => {
 
   const handleDoctorSelect = (doctor) => {
     setSelectedDoctor(doctor);
-    setChat([{ sender: 'dokter', text: `Selamat pagi! Saya ${doctor.name}. Apa keluhan Anda hari ini?` }]);
+    setChat([
+      { sender: "dokter", text: `Selamat pagi! Saya ${doctor.name}, ${doctor.specialization}. Ada yang bisa saya bantu?` }
+    ]);
+    setIsDoctorSelectionVisible(false); // Hide doctor selection after selection
+  };
+
   // Toggle menu profil dropdown
   const toggleProfileMenu = () => setShowProfileMenu((prev) => !prev);
 
@@ -87,7 +91,7 @@ const Konsultasi = () => {
 
   const handleFinish = () => {
     const summary = {
-      doctor,
+      doctor: selectedDoctor,
       chat,
       timestamp: new Date().toISOString(),
     };
@@ -106,7 +110,7 @@ const Konsultasi = () => {
     }
   }, [chat]);
 
-   return (
+  return (
     <div
       style={{
         display: "flex",
@@ -120,9 +124,7 @@ const Konsultasi = () => {
       <header
         id="header"
         className={`header d-flex align-items-center fixed-top ${
-          activeSection === "features"
-            ? "header-features-active"
-            : "header-home-active"
+          activeSection === "features" ? "header-features-active" : "header-home-active"
         }`}
       >
         <div className="header-container container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
@@ -263,121 +265,166 @@ const Konsultasi = () => {
             maxWidth: "900px",
           }}
         >
-          {/* Doctor Info */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 16,
-              marginBottom: 24,
-            }}
-          >
-            <img
-              src={doctor.image}
-              alt={doctor.name}
-              style={{ width: 50, borderRadius: "50%" }}
-            />
-            <div>
-              <h5 style={{ margin: 0 }}>{doctor.name}</h5>
-              <small>{doctor.specialization}</small>
-            </div>
-            <button
-              onClick={handleFinish}
-              style={{
-                marginLeft: "auto",
-                padding: "8px 20px",
-                borderRadius: 10,
-                background: "#3b60e4",
-                color: "white",
-                border: "none",
-                cursor: "pointer",
-              }}
-            >
-              Selesai
-            </button>
-          </div>
-
-          {/* Chat Box */}
-          <div
-            ref={chatBoxRef}
-            style={{
-              backgroundColor: "#f8fafc",
-              padding: 16,
-              borderRadius: 12,
-              height: "50vh",
-              overflowY: "auto",
-              border: "1px solid #eee",
-              marginBottom: 16,
-            }}
-          >
-            {chat.map((item, index) => (
+          {isDoctorSelectionVisible ? (
+            <div style={{ textAlign: "center" }}>
+              <h3 style={{ marginBottom: 20 }}>Pilih Dokter untuk Konsultasi</h3>
               <div
-                key={index}
                 style={{
-                  display: "flex",
-                  justifyContent:
-                    item.sender === "pasien" ? "flex-end" : "flex-start",
-                  marginBottom: 12,
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+                  gap: 20,
+                  justifyContent: "center",
                 }}
               >
-                <div
+                {doctors.map((doctor) => (
+                  <div
+                    key={doctor.id}
+                    onClick={() => handleDoctorSelect(doctor)}
+                    style={{
+                      border: "1px solid #eee",
+                      borderRadius: 12,
+                      padding: 20,
+                      cursor: "pointer",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      transition: "all 0.3s ease",
+                      "&:hover": {
+                        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                        transform: "translateY(-5px)",
+                      },
+                    }}
+                  >
+                    <img
+                      src={doctor.image}
+                      alt={doctor.name}
+                      style={{ width: 80, height: 80, borderRadius: "50%", marginBottom: 10, objectFit: "cover" }}
+                    />
+                    <h5 style={{ margin: "0 0 5px 0" }}>{doctor.name}</h5>
+                    <p style={{ margin: 0, fontSize: "0.9em", color: "#666" }}>{doctor.specialization}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <>
+              {/* Doctor Info */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 16,
+                  marginBottom: 24,
+                }}
+              >
+                <img
+                  src={selectedDoctor.image}
+                  alt={selectedDoctor.name}
+                  style={{ width: 50, borderRadius: "50%" }}
+                />
+                <div>
+                  <h5 style={{ margin: 0 }}>{selectedDoctor.name}</h5>
+                  <small>{selectedDoctor.specialization}</small>
+                </div>
+                <button
+                  onClick={handleFinish}
                   style={{
-                    backgroundColor:
-                      item.sender === "pasien" ? "#d1e7dd" : "#e2e6ea",
-                    padding: 12,
-                    borderRadius: 12,
-                    maxWidth: "70%",
-                    wordBreak: "break-word",
+                    marginLeft: "auto",
+                    padding: "8px 20px",
+                    borderRadius: 10,
+                    background: "#3b60e4",
+                    color: "white",
+                    border: "none",
+                    cursor: "pointer",
                   }}
                 >
-                  <p style={{ margin: 0 }}>{item.text}</p>
-                  {item.image && <ChatImage imageFile={item.image} />}
-                </div>
+                  Selesai
+                </button>
               </div>
-            ))}
-          </div>
 
-          {/* Input */}
-          <div style={{ display: "flex", gap: 10 }}>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setImage(e.target.files[0])}
-              style={{
-                flexBasis: "30%",
-                borderRadius: 8,
-                border: "1px solid #ccc",
-                padding: "6px",
-              }}
-            />
+              {/* Chat Box */}
+              <div
+                ref={chatBoxRef}
+                style={{
+                  backgroundColor: "#f8fafc",
+                  padding: 16,
+                  borderRadius: 12,
+                  height: "50vh",
+                  overflowY: "auto",
+                  border: "1px solid #eee",
+                  marginBottom: 16,
+                }}
+              >
+                {chat.map((item, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      display: "flex",
+                      justifyContent:
+                        item.sender === "pasien" ? "flex-end" : "flex-start",
+                      marginBottom: 12,
+                    }}
+                  >
+                    <div
+                      style={{
+                        backgroundColor:
+                          item.sender === "pasien" ? "#d1e7dd" : "#e2e6ea",
+                        padding: 12,
+                        borderRadius: 12,
+                        maxWidth: "70%",
+                        wordBreak: "break-word",
+                      }}
+                    >
+                      <p style={{ margin: 0 }}>{item.text}</p>
+                      {item.image && <ChatImage imageFile={item.image} />}
+                    </div>
+                  </div>
+                ))}
+              </div>
 
-            <input
-              type="text"
-              placeholder="Tulis pesan..."
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              style={{
-                flex: 1,
-                borderRadius: 8,
-                border: "1px solid #ccc",
-                padding: "6px 12px",
-              }}
-            />
+              {/* Input */}
+              <div style={{ display: "flex", gap: 10 }}>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setImage(e.target.files[0])}
+                  style={{
+                    flexBasis: "30%",
+                    borderRadius: 8,
+                    border: "1px solid #ccc",
+                    padding: "6px",
+                  }}
+                />
 
-            <button
-              onClick={sendMessage}
-              style={{
-                borderRadius: 8,
-                backgroundColor: "#3b60e4",
-                color: "white",
-                border: "none",
-                padding: "8px 16px",
-                cursor: "pointer",
-              }}
-            >
-              Kirim
-            </button>
-          </div>
+                <input
+                  type="text"
+                  placeholder="Tulis pesan..."
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  style={{
+                    flex: 1,
+                    borderRadius: 8,
+                    border: "1px solid #ccc",
+                    padding: "6px 12px",
+                  }}
+                />
+
+                <button
+                  onClick={handleSend}
+                  style={{
+                    borderRadius: 8,
+                    backgroundColor: "#3b60e4",
+                    color: "white",
+                    border: "none",
+                    padding: "8px 16px",
+                    cursor: "pointer",
+                  }}
+                >
+                  Kirim
+                </button>
+              </div>
+            </>
+          )}
         </section>
       </main>
 
@@ -399,6 +446,5 @@ const Konsultasi = () => {
     </div>
   );
 };
-}
 
 export default Konsultasi;

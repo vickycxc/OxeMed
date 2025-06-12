@@ -26,12 +26,12 @@ const RiwayatDokter = () => {
 
   // Fungsi untuk mengarahkan ke halaman konsultasi
   const handleOngoingClick = () => {
-    navigate("/konsultasidokter");
+    navigate("/konsultasi");
   };
 
   // Fungsi untuk mengarahkan ke halaman RiwayatDokter.jsx
   const handleViewHistory = () => {
-    navigate("/riwayatdokter"); // Menavigasi ke halaman RiwayatDokter
+    navigate("/riwayat"); // Menavigasi ke halaman RiwayatDokter
   };
   const { logout } = useAuthStore();
 

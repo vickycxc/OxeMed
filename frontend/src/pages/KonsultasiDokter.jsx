@@ -19,7 +19,7 @@ const loggedInDoctor = doctors[0]; // Mengambil dokter pertama dari daftar sebag
 // Data pasien dummy untuk simulasi chat
 const dummyPatient = {
   id: 1,
-  name: "Pasien A (Dummy)",
+  name: "Aisyah Ramadhani",
   image: "https://randomuser.me/api/portraits/men/30.jpg", // Gambar profil pasien dummy
 };
 
@@ -278,7 +278,7 @@ const KonsultasiDokter = () => {
             />
             <div>
               <h5 style={{ margin: 0 }}>{dummyPatient.name}</h5>
-              <small>Konsultasi Aktif</small>
+              <small>11 Tahun</small>
             </div>
             <button
               onClick={handleFinish}

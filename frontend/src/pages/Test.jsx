@@ -237,7 +237,7 @@ const Test = () => {
             }}
             aria-live="polite"
           >
-            {isDetecting ? "Mendeteksi..." : "Mulai Deteksi"}
+            {isDetecting ? "Mendeteksi..." : "Hasil test"}
           </button>
 
           {isDetecting && (

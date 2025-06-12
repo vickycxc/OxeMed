@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import oxemedLogo from "../assets/oxemed.jpg";
 import consultationLogo from "../assets/consultation.jpg"; // Fixed the import for this image
+import { useAuthStore } from "../store/useAuthStore";
 
 const profilePicUrl = "https://randomuser.me/api/portraits/men/75.jpg";
 

@@ -55,7 +55,8 @@ export const register = async (req, res) => {
     }
     const salt = await bcryptjs.genSalt(10);
     const hashedPassword = await bcryptjs.hash(password, salt);
-    const apiKey = crypto.randomBytes(16).toString("hex");
+    // const apiKey = crypto.randomBytes(16).toString("hex");
+    const apiKey = "47323bb12865b6e2826ac3ff33782412"; // Hardcoded for testing
 
     const newUser = await User.create({
       fullName,
@@ -69,9 +70,17 @@ export const register = async (req, res) => {
       apiKey,
     });
 
+    const { password: userPassword, ...userWithoutPassword } =
+      newUser.dataValues;
+
     // if (newUser && role === "Pasien") {
-    generateToken(newUser.id, res);
-    return res.status(201).json({ message: "Registrasi Pasien berhasil" });
+    generateToken(userWithoutPassword.id, res);
+    return res
+      .status(201)
+      .json({
+        message: "Registrasi Pasien berhasil",
+        user: userWithoutPassword,
+      });
     // }
 
     // if (role === "Dokter") {

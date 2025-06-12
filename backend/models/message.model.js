@@ -14,7 +14,7 @@ export const Message = sequelize.define(
     },
     consultationId: {
       type: DataTypes.STRING,
-      allowNull: false,
+      // allowNull: false,
     },
     message: {
       type: DataTypes.TEXT,
@@ -35,7 +35,7 @@ export const Message = sequelize.define(
         "Catatan Dokter",
         "Resep Digital"
       ),
-      allowNull: false,
+      // allowNull: false,
     },
     isRead: {
       type: DataTypes.BOOLEAN,

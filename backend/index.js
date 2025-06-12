@@ -1,7 +1,7 @@
 import authRoutes from "./routes/auth.route.js";
 import consultationRoutes from "./routes/consultation.route.js";
 import messageRoutes from "./routes/message.route.js";
-import doctorRoutes from "./routes/doctor.route.js";
+import userRoutes from "./routes/user.route.js";
 import cors from "cors";
 import iotRoutes from "./routes/iot.route.js";
 import express from "express";
@@ -25,7 +25,7 @@ app.use(
 app.use("/api/auth", authRoutes);
 app.use("/api/consultations", consultationRoutes);
 app.use("/api/messages", messageRoutes);
-app.use("/api/doctors", doctorRoutes);
+app.use("/api/users", userRoutes);
 app.use("/api/iot", iotRoutes);
 server.listen(port, () => {
   console.log(`Listening on port ${port}`);

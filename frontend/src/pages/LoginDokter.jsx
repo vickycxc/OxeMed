@@ -13,7 +13,7 @@ const LoginDokter = () => {
   const [activeSection, setActiveSection] = useState("home");
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const navigate = useNavigate();
-  const { logout } = useAuthStore();
+  const { user, logout } = useAuthStore();
 
   // Handler untuk navigasi ke masing-masing halaman
   const goToHome = () => navigate("#home");
@@ -50,11 +50,6 @@ const LoginDokter = () => {
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  // Simulasi user
-  const user = {
-    name: "dr. Liem Eremius, Sp.A",
-  };
 
   const toggleProfileMenu = () => {
     setShowProfileMenu(!showProfileMenu);
@@ -207,7 +202,7 @@ const LoginDokter = () => {
                 letterSpacing: "1px",
               }}
             >
-              Hello, dr. Liem Eremius, Sp.A!
+              {`Hello, ${user.fullName}!`}
             </h4>
             <h1>
               Effortless <span className="highlight">Medical</span> <br />

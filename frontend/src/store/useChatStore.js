@@ -5,10 +5,37 @@ import { useAuthStore } from "./useAuthStore";
 
 export const useChatStore = create((set, get) => ({
   messages: [],
-  users: [],
+  doctors: [],
+  patients: [],
   selectedUser: null,
   isUsersLoading: false,
   isMessagesLoading: false,
+
+  getDoctors: async () => {
+    set({ isUsersLoading: true });
+    try {
+      const res = await axiosInstance.get("/users/doctors");
+      set({ doctors: res.data });
+    } catch (error) {
+      toast.error(error.response.data.message);
+      console.log("Error in getUsers: ", error);
+    } finally {
+      set({ isUsersLoading: false });
+    }
+  },
+
+  getPatients: async () => {
+    set({ isUsersLoading: true });
+    try {
+      const res = await axiosInstance.get("/patients");
+      set({ patients: res.data });
+    } catch (error) {
+      toast.error(error.response.data.message);
+      console.log("Error in getUsers: ", error);
+    } finally {
+      set({ isUsersLoading: false });
+    }
+  },
 
   getMessages: async (userId) => {
     set({ isMessage: true });
@@ -25,11 +52,12 @@ export const useChatStore = create((set, get) => ({
     const { selectedUser, messages } = get();
     try {
       const res = await axiosInstance.post(
-        `/messages/send/${selectedUser._id}`,
+        `/messages/send/${selectedUser.id}`,
         messageData
       );
-      set({ messages: [...messages, res.data] });
+      set({ messages: [...messages, res.data.data] });
     } catch (error) {
+      console.log("🚀 ~ sendMessage: ~ error:", error);
       toast.error(error.response.data.message);
     }
   },

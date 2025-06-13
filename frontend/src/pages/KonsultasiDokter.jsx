@@ -1,16 +1,37 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import oxemedLogo from "../assets/oxemed.jpg";
+import { useAuthStore } from "../store/useAuthStore";
 
 // URL profil dokter yang sedang "login" (misal dr. Ika Dwi)
 const doctorProfilePicUrl = "https://randomuser.me/api/portraits/women/65.jpg";
 
 // Data dokter (digunakan untuk informasi dokter yang "login")
 const doctors = [
-  { id: 1, name: "dr. Ika Dwi", specialization: "Spesialis Penyakit Dalam", image: "https://randomuser.me/api/portraits/women/65.jpg" },
-  { id: 2, name: "dr. Budi Santoso", specialization: "Spesialis Jantung", image: "https://randomuser.me/api/portraits/men/45.jpg" },
-  { id: 3, name: "dr. Citra Lestari", specialization: "Spesialis Anak", image: "https://randomuser.me/api/portraits/women/70.jpg" },
-  { id: 4, name: "dr. David Wijaya", specialization: "Spesialis Kulit", image: "https://randomuser.me/api/portraits/men/80.jpg" },
+  {
+    id: 1,
+    name: "dr. Ika Dwi",
+    specialization: "Spesialis Penyakit Dalam",
+    image: "https://randomuser.me/api/portraits/women/65.jpg",
+  },
+  {
+    id: 2,
+    name: "dr. Budi Santoso",
+    specialization: "Spesialis Jantung",
+    image: "https://randomuser.me/api/portraits/men/45.jpg",
+  },
+  {
+    id: 3,
+    name: "dr. Citra Lestari",
+    specialization: "Spesialis Anak",
+    image: "https://randomuser.me/api/portraits/women/70.jpg",
+  },
+  {
+    id: 4,
+    name: "dr. David Wijaya",
+    specialization: "Spesialis Kulit",
+    image: "https://randomuser.me/api/portraits/men/80.jpg",
+  },
 ];
 
 // Asumsikan dokter yang sedang 'login' adalah dr. Ika Dwi
@@ -49,8 +70,14 @@ const ChatImage = ({ imageFile }) => {
 const KonsultasiDokter = () => {
   const [chat, setChat] = useState([
     // Contoh chat awal dari pasien untuk simulasi
-    { sender: "pasien", text: "Selamat pagi, Dokter. Saya merasa demam dan batuk sejak kemarin." },
-    { sender: "dokter", text: "Selamat pagi, bagaimana kabarnya? Sudah minum obat apa?" },
+    {
+      sender: "pasien",
+      text: "Selamat pagi, Dokter. Saya merasa demam dan batuk sejak kemarin.",
+    },
+    {
+      sender: "dokter",
+      text: "Selamat pagi, bagaimana kabarnya? Sudah minum obat apa?",
+    },
   ]);
   const [message, setMessage] = useState("");
   const [image, setImage] = useState(null);
@@ -63,14 +90,14 @@ const KonsultasiDokter = () => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const navigate = useNavigate();
   const chatBoxRef = useRef();
+  const { logout } = useAuthStore(); // Asumsikan ada hook useAuth untuk mengelola autentikasi
 
   // Toggle menu profil dropdown
   const toggleProfileMenu = () => setShowProfileMenu((prev) => !prev);
 
   // Logout function
   const handleLogout = () => {
-    localStorage.removeItem("userToken"); // Contoh logout: hapus token
-    navigate("/login");
+    logout();
   };
 
   const handleSend = () => {
@@ -132,7 +159,9 @@ const KonsultasiDokter = () => {
       <header
         id="header"
         className={`header d-flex align-items-center fixed-top ${
-          activeSection === "features" ? "header-features-active" : "header-home-active"
+          activeSection === "features"
+            ? "header-features-active"
+            : "header-home-active"
         }`}
       >
         <div className="header-container container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
@@ -274,7 +303,12 @@ const KonsultasiDokter = () => {
             <img
               src={dummyPatient.image}
               alt={dummyPatient.name}
-              style={{ width: 50, height:50, borderRadius: "50%", objectFit: "cover" }}
+              style={{
+                width: 50,
+                height: 50,
+                borderRadius: "50%",
+                objectFit: "cover",
+              }}
             />
             <div>
               <h5 style={{ margin: 0 }}>{dummyPatient.name}</h5>

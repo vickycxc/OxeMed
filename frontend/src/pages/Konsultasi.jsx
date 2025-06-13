@@ -1,44 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import oxemedLogo from "../assets/oxemed.jpg";
+import { useChatStore } from "../store/useChatStore";
+import { useAuthStore } from "../store/useAuthStore";
 
 const profilePicUrl = "https://randomuser.me/api/portraits/men/75.jpg";
-const doctors = [
-  { id: 1, name: "dr. Ika Dwi", specialization: "Spesialis Penyakit Dalam", image: "https://randomuser.me/api/portraits/women/65.jpg" },
-  { id: 2, name: "dr. Budi Santoso", specialization: "Spesialis Penyakit Dalam", image: "https://randomuser.me/api/portraits/men/45.jpg" },
-  { id: 3, name: "dr. Citra Lestari", specialization: "Spesialis Penyakit Dalam", image: "https://randomuser.me/api/portraits/women/70.jpg" },
-  { id: 4, name: "dr. David Wijaya", specialization: "Spesialis Penyakit Dalam", image: "https://randomuser.me/api/portraits/men/80.jpg" },
-];
-
-function useObjectURL(file) {
-  const [url, setUrl] = useState(null);
-  useEffect(() => {
-    if (!file) return;
-    const objectUrl = URL.createObjectURL(file);
-    setUrl(objectUrl);
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [file]);
-  return url;
-}
-
-const ChatImage = ({ imageFile }) => {
-  const url = useObjectURL(imageFile);
-  if (!url) return null;
-  return (
-    <img
-      src={url}
-      alt="Upload"
-      style={{ marginTop: 10, maxWidth: 120, borderRadius: 8 }}
-    />
-  );
-};
 
 const Konsultasi = () => {
-  const [chat, setChat] = useState([]); // Start with an empty chat
+  // const [chat, setChat] = useState([]); // Start with an empty chat
   const [message, setMessage] = useState("");
   const [image, setImage] = useState(null);
-  const [selectedDoctor, setSelectedDoctor] = useState(null); // Initialize as null
-  const [isDoctorSelectionVisible, setIsDoctorSelectionVisible] = useState(true); // Control visibility of doctor selection
+  // const [selectedDoctor, setSelectedDoctor] = useState(null); // Initialize as null
+  const [isDoctorSelectionVisible, setIsDoctorSelectionVisible] =
+    useState(true); // Control visibility of doctor selection
 
   // State untuk navigasi & UI header
   const [activeSection, setActiveSection] = useState("home");
@@ -47,52 +21,78 @@ const Konsultasi = () => {
   const navigate = useNavigate();
   const chatBoxRef = useRef();
 
+  const {
+    doctors,
+    getDoctors,
+    isUsersLoading,
+    isMessagesLoading,
+    messages,
+    sendMessage,
+  } = useChatStore(); // Assuming getDoctors is a function that fetches doctors
+
   const handleDoctorSelect = (doctor) => {
-    setSelectedDoctor(doctor);
-    setChat([
-      { sender: "dokter", text: `Selamat pagi! Saya ${doctor.name}, ${doctor.specialization}. Ada yang bisa saya bantu?` }
-    ]);
+    setSelectedUser(doctor);
+    console.log("Selected Doctor: ", doctor);
     setIsDoctorSelectionVisible(false); // Hide doctor selection after selection
   };
 
   // Toggle menu profil dropdown
   const toggleProfileMenu = () => setShowProfileMenu((prev) => !prev);
+  const { logout, user } = useAuthStore(); // Assuming logout is a function in your store
+  const {
+    selectedUser,
+    setSelectedUser,
+    getMessages,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+  } = useChatStore(); // Assuming these are functions in your store
 
   // Logout function
   const handleLogout = () => {
-    localStorage.removeItem("userToken"); // Contoh logout: hapus token
-    navigate("/login");
+    logout();
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImage(reader.result);
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSend = () => {
+    console.log("🚀 ~ handleSend ~ image:", image);
     if (!message && !image) return;
 
-    setChat((prev) => [
-      ...prev,
-      {
-        sender: "pasien",
-        text: message,
-        image: image,
-      },
-    ]);
+    sendMessage({
+      message,
+      image,
+    });
     setMessage("");
     setImage(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
 
-    setTimeout(() => {
-      setChat((prev) => [
-        ...prev,
-        {
-          sender: "dokter",
-          text: "Terima kasih atas informasinya. Kami akan pelajari dan bantu segera.",
-        },
-      ]);
-    }, 1000);
+    // setTimeout(() => {
+    //   // setChat((prev) => [
+    //   //   ...prev,
+    //   //   {
+    //   //     sender: "dokter",
+    //   //     text: "Terima kasih atas informasinya. Kami akan pelajari dan bantu segera.",
+    //   //   },
+    //   // ]);
+    // }, 1000);
   };
 
   const handleFinish = () => {
     const summary = {
-      doctor: selectedDoctor,
-      chat,
+      doctor: selectedUser,
+      messages,
       timestamp: new Date().toISOString(),
     };
     localStorage.setItem("konsultasi_terakhir", JSON.stringify(summary));
@@ -108,7 +108,29 @@ const Konsultasi = () => {
     if (chatBoxRef.current) {
       chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
     }
-  }, [chat]);
+  }, [messages]);
+
+  useEffect(() => {
+    getDoctors();
+  }, [getDoctors]);
+
+  useEffect(() => {
+    if (selectedUser) {
+      getMessages(selectedUser.id);
+      subscribeToMessages();
+    }
+    return () => unsubscribeFromMessages();
+  }, [selectedUser, getMessages]);
+
+  if (isUsersLoading || isMessagesLoading) {
+    return (
+      <div className="loader">
+        <img src={oxemedLogo} />
+      </div>
+    );
+  }
+
+  console.log("Doctors: ", doctors);
 
   return (
     <div
@@ -124,7 +146,9 @@ const Konsultasi = () => {
       <header
         id="header"
         className={`header d-flex align-items-center fixed-top ${
-          activeSection === "features" ? "header-features-active" : "header-home-active"
+          activeSection === "features"
+            ? "header-features-active"
+            : "header-home-active"
         }`}
       >
         <div className="header-container container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
@@ -267,7 +291,9 @@ const Konsultasi = () => {
         >
           {isDoctorSelectionVisible ? (
             <div style={{ textAlign: "center" }}>
-              <h3 style={{ marginBottom: 20 }}>Pilih Dokter untuk Konsultasi</h3>
+              <h3 style={{ marginBottom: 20 }}>
+                Pilih Dokter untuk Konsultasi
+              </h3>
               <div
                 style={{
                   display: "grid",
@@ -296,12 +322,20 @@ const Konsultasi = () => {
                     }}
                   >
                     <img
-                      src={doctor.image}
-                      alt={doctor.name}
-                      style={{ width: 80, height: 80, borderRadius: "50%", marginBottom: 10, objectFit: "cover" }}
+                      src="https://randomuser.me/api/portraits/women/65.jpg"
+                      alt={doctor.fullName}
+                      style={{
+                        width: 80,
+                        height: 80,
+                        borderRadius: "50%",
+                        marginBottom: 10,
+                        objectFit: "cover",
+                      }}
                     />
-                    <h5 style={{ margin: "0 0 5px 0" }}>{doctor.name}</h5>
-                    <p style={{ margin: 0, fontSize: "0.9em", color: "#666" }}>{doctor.specialization}</p>
+                    <h5 style={{ margin: "0 0 5px 0" }}>{doctor.fullName}</h5>
+                    <p style={{ margin: 0, fontSize: "0.9em", color: "#666" }}>
+                      Spesialis Penyakit Dalam
+                    </p>
                   </div>
                 ))}
               </div>
@@ -318,13 +352,13 @@ const Konsultasi = () => {
                 }}
               >
                 <img
-                  src={selectedDoctor.image}
-                  alt={selectedDoctor.name}
+                  src="https://randomuser.me/api/portraits/women/65.jpg"
+                  alt={selectedUser.fullName}
                   style={{ width: 50, borderRadius: "50%" }}
                 />
                 <div>
-                  <h5 style={{ margin: 0 }}>{selectedDoctor.name}</h5>
-                  <small>{selectedDoctor.specialization}</small>
+                  <h5 style={{ margin: 0 }}>{selectedUser.fullName}</h5>
+                  <small>Spesialis Penyakit Dalam</small>
                 </div>
                 <button
                   onClick={handleFinish}
@@ -355,31 +389,45 @@ const Konsultasi = () => {
                   marginBottom: 16,
                 }}
               >
-                {chat.map((item, index) => (
-                  <div
-                    key={index}
-                    style={{
-                      display: "flex",
-                      justifyContent:
-                        item.sender === "pasien" ? "flex-end" : "flex-start",
-                      marginBottom: 12,
-                    }}
-                  >
+                {messages.map((item, index) => {
+                  console.log("🚀 ~ {messages.map ~ item:", item);
+
+                  return (
                     <div
+                      key={index}
                       style={{
-                        backgroundColor:
-                          item.sender === "pasien" ? "#d1e7dd" : "#e2e6ea",
-                        padding: 12,
-                        borderRadius: 12,
-                        maxWidth: "70%",
-                        wordBreak: "break-word",
+                        display: "flex",
+                        justifyContent:
+                          item.senderId === user.id ? "flex-end" : "flex-start",
+                        marginBottom: 12,
                       }}
                     >
-                      <p style={{ margin: 0 }}>{item.text}</p>
-                      {item.image && <ChatImage imageFile={item.image} />}
+                      <div
+                        style={{
+                          backgroundColor:
+                            item.senderId === user.id ? "#d1e7dd" : "#e2e6ea",
+                          padding: 12,
+                          borderRadius: 12,
+                          maxWidth: "70%",
+                          wordBreak: "break-word",
+                        }}
+                      >
+                        <p style={{ margin: 0 }}>{item.message}</p>
+                        {item.imageUrl && (
+                          <img
+                            src={item.imageUrl}
+                            alt="Upload"
+                            style={{
+                              marginTop: 10,
+                              maxWidth: 120,
+                              borderRadius: 8,
+                            }}
+                          />
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               {/* Input */}
@@ -387,7 +435,7 @@ const Konsultasi = () => {
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={(e) => setImage(e.target.files[0])}
+                  onChange={handleImageChange}
                   style={{
                     flexBasis: "30%",
                     borderRadius: 8,

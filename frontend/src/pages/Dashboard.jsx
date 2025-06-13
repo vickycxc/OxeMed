@@ -477,7 +477,7 @@ const Dashboard = () => {
                   required
                 />
               </div>
-              
+
               {/* Add Dropdown for Role Selection */}
               <div className="form-group">
                 <label htmlFor="role">Select Role</label>
@@ -493,11 +493,11 @@ const Dashboard = () => {
                   required
                 >
                   <option value="">Select Role</option>
-                  <option value="pasien">Pasien</option>
-                  <option value="dokter">Dokter</option>
+                  <option value="Pasien">Pasien</option>
+                  <option value="Dokter">Dokter</option>
                 </select>
               </div>
-              
+
               <button
                 type="submit"
                 className="btn-login"
@@ -519,7 +519,6 @@ const Dashboard = () => {
               ×
             </button>
           </div>
-
         </div>
       )}
     </div>

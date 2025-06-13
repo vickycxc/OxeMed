@@ -29,7 +29,7 @@ const Login = () => {
 
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
-  const { logout } = useAuthStore();
+  const { user, logout } = useAuthStore();
 
   const toggleProfileMenu = () => {
     setShowProfileMenu(!showProfileMenu);
@@ -41,11 +41,6 @@ const Login = () => {
     logout();
     // navigate("/");
     window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  // Simulasi user
-  const user = {
-    name: "Andi Saputra",
   };
 
   useEffect(() => {
@@ -232,7 +227,7 @@ const Login = () => {
                 letterSpacing: "1px",
               }}
             >
-              Hello, Andi Saputra!
+              {`Hello, ${user.fullName}!`}
             </h4>
             <h1>
               Your <span className="highlight">Real-Time</span> <br />

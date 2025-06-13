@@ -14,13 +14,13 @@ import oxemedLogo from "./assets/oxemed.jpg";
 import "./styles/app.css";
 
 const App = () => {
-  const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
+  const { user, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
 
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
 
-  console.log({ authUser });
+  console.log({ user });
 
   if(isCheckingAuth && !authUser) 
     return (
@@ -29,33 +29,29 @@ const App = () => {
       </div>
     );
 
-  if (authUser) {
-    console.log("🚀 ~ App ~ role:", authUser);
+  if (user) {
+    console.log("🚀 ~ App ~ role:", user);
     return (
       <>
         <Routes>
           <Route path="*" element={<Navigate to="/" />} />
           <Route
             path="/"
-            element={authUser.role === "Pasien" ? <Login /> : <LoginDokter />}
+            element={user.role === "Pasien" ? <Login /> : <LoginDokter />}
           />
           <Route
             path="/konsultasi"
             element={
-              authUser.role === "Pasien" ? <Konsultasi /> : <KonsultasiDokter />
+              user.role === "Pasien" ? <Konsultasi /> : <KonsultasiDokter />
             }
           />
           <Route
             path="/test"
-            element={
-              authUser.role === "Pasien" ? <Test /> : <Navigate to="/" />
-            }
+            element={user.role === "Pasien" ? <Test /> : <Navigate to="/" />}
           />
           <Route
             path="/riwayat"
-            element={
-              authUser.role === "Pasien" ? <Riwayat /> : <RiwayatDokter />
-            }
+            element={user.role === "Pasien" ? <Riwayat /> : <RiwayatDokter />}
           />
         </Routes>
         <Toaster />

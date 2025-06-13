@@ -22,7 +22,7 @@ const App = () => {
 
   console.log({ authUser });
 
-  if (isCheckingAuth && !authUser)
+  if(isCheckingAuth && !authUser) 
     return (
       <div className="loader">
         <img src={oxemedLogo} />

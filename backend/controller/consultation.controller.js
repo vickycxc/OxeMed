@@ -9,19 +9,35 @@ import {
   Prescription,
 } from "../models/index.js";
 import genai, { geminiConfig } from "../lib/genai.js";
-import { generateConsultationId } from "../lib/consultation_id.js";
+import {
+  generateConsultationId,
+  parseConsultationId,
+} from "../lib/consultation_id.js";
 
 export const addConsultation = async (req, res) => {
-  const consultation = req.body;
+  const { consultation, doctorName } = req.body;
+  consultation.patientId = req.user.id;
+  console.log("🚀 ~ addConsultation ~ consultation:", consultation);
   const dateStart = new Date(consultation.timeStart);
-  consultation.id = generateConsultationId(
-    req.user.id,
-    consultation.patientId,
-    dateStart
-  );
+  consultation.id = generateConsultationId({
+    patientId: consultation.patientId,
+    doctorId: consultation.doctorId,
+    dateStart,
+  });
+  consultation.status = "Aktif";
   try {
-    await Consultation.create(consultation);
-    res.status(201).json({ messages: "Konsultasi baru berhasil dibuat" });
+    const newConsultation = await Consultation.create(consultation);
+    const greetingMessage = await Message.create({
+      senderId: newConsultation.doctorId,
+      receiverId: newConsultation.patientId,
+      consultationId: newConsultation.id,
+      message: `Selamat pagi! Saya ${doctorName}, Dokter Spesialis Penyakit Dalam. Ada yang bisa saya bantu?`,
+    });
+    res.status(201).json({
+      messages: "Konsultasi baru berhasil dibuat",
+      consultation: newConsultation.dataValues,
+      message: greetingMessage.dataValues,
+    });
   } catch (error) {
     console.log("Error di addConsultation controller", error);
     res.status(500).json({
@@ -74,6 +90,8 @@ export const getConsultations = async (req, res) => {
         [Op.or]: [{ patientId: userId }, { doctorId: userId }],
       },
     });
+
+    console.log("🚀 ~ getConsultations ~ consultations:", consultations);
     res.status(200).json(consultations);
   } catch (error) {
     console.log("Error di getConsultations controller", error);
@@ -140,40 +158,13 @@ export const addPrescription = async (req, res) => {
 
 export const summarizeConsultation = async (req, res) => {
   const consultationId = req.params.id;
+  const { patientId } = parseConsultationId(consultationId);
   try {
     const consultationMessages = await Message.findAll({
       where: {
         consultationId: consultationId,
       },
       order: [["createdAt", "ASC"]],
-    });
-
-    const doctorNote = await DoctorNote.findOne({
-      attributes: { exclude: ["createdAt", "updatedAt", "id"] },
-      where: {
-        id: consultationId,
-      },
-      include: {
-        model: Diagnosis,
-        attributes: {
-          exclude: ["createdAt", "updatedAt", "consultationId", "id"],
-        },
-      },
-    });
-
-    const prescription = await Prescription.findAll({
-      attributes: {
-        exclude: ["createdAt", "updatedAt", "consultationId", "id"],
-      },
-      where: {
-        consultationId: consultationId,
-      },
-      include: {
-        model: CompoundedMedication,
-        attributes: {
-          exclude: ["createdAt", "updatedAt", "consultationId", "id"],
-        },
-      },
     });
 
     if (consultationMessages.length !== 0) {
@@ -190,9 +181,7 @@ export const summarizeConsultation = async (req, res) => {
 
       const prompt = `Saya memiliki transkrip konsultasi antara dokter dan pasien. Tolong jelaskan sejelas jelasnya tentang definisi diagnosis pasien, kegunaan obat yang diresepkan dokter, serta buatlah rangkuman mengenai sesi konsultasi tersebut
 
-Transkrip Chat: ${JSON.stringify(filteredMessages)}
-Catatan Dokter: ${doctorNote ? JSON.stringify(doctorNote) : ""}
-Resep: ${prescription ? JSON.stringify(prescription) : ""}`;
+Transkrip Chat: ${JSON.stringify(filteredMessages)}`;
 
       console.log("🚀 ~ summarizeConsultation ~ prompt:", prompt);
 
@@ -212,6 +201,7 @@ Resep: ${prescription ? JSON.stringify(prescription) : ""}`;
         } = kesimpulan;
         const summary = {
           id: consultationId,
+          patientId,
           chiefComplaint: keluhan,
           medicationExplanation: penjelasanTentangObat,
           diagnosisExplanation: penjelasanTentangDiagnosis,

@@ -384,7 +384,6 @@ h6 {
   color: #1d4ed8;
 }
 
-
 /*--------------------------------------------------------------
 # Navigation Menu
 --------------------------------------------------------------*/
@@ -2399,12 +2398,12 @@ form#contact-form button:hover {
 /* File: index.css atau App.css (atau di file CSS global Anda) */
 
 /* Reset dasar untuk memastikan tidak ada margin/padding default browser */
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   width: 100%; /* Penting untuk memastikan lebar penuh */
   height: 100%; /* Penting untuk memastikan tinggi penuh */
-  overflow: hidden; /* Mencegah scrollbar muncul jika ada konten di luar viewport */
 }
 
 /* Pastikan root DOM element (tempat React me-mount aplikasi) juga mengisi penuh */
@@ -2419,13 +2418,13 @@ html, body {
 .loader {
   display: flex;
   justify-content: center; /* Pusat horizontal */
-  align-items: center;   /* Pusat vertikal */
-  height: 100vh;         /* Pastikan mengambil tinggi penuh viewport */
-  width: 100vw;          /* **Gunakan 100vw untuk memastikan mengambil lebar penuh viewport** */
-  position: fixed;       /* Memastikan loader berada di atas konten lain dan mengambil seluruh viewport */
+  align-items: center; /* Pusat vertikal */
+  height: 100vh; /* Pastikan mengambil tinggi penuh viewport */
+  width: 100vw; /* **Gunakan 100vw untuk memastikan mengambil lebar penuh viewport** */
+  position: fixed; /* Memastikan loader berada di atas konten lain dan mengambil seluruh viewport */
   top: 0;
   left: 0;
-  z-index: 9999;         /* Pastikan loader muncul di lapisan paling atas */
+  z-index: 9999; /* Pastikan loader muncul di lapisan paling atas */
   background-color: white; /* Opsional: Warna latar belakang loader, sesuaikan */
   /* Untuk debugging: */
   /* border: 2px solid red; */

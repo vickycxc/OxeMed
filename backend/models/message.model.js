@@ -14,7 +14,7 @@ export const Message = sequelize.define(
     },
     consultationId: {
       type: DataTypes.STRING,
-      // allowNull: false,
+      allowNull: false,
     },
     message: {
       type: DataTypes.TEXT,

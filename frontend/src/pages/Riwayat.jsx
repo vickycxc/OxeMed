@@ -15,6 +15,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useAuthStore } from "../store/useAuthStore";
+import { useChatStore } from "../store/useChatStore";
 
 const tabs = [
   { id: "tab1", label: "Test" },
@@ -65,12 +66,17 @@ const Riwayat = () => {
   const goToConsultation = () => navigate("/konsultasi");
   const goToHistory = () => navigate("/riwayat");
   const { logout } = useAuthStore();
+  const { getSummary, isSummaryLoading, summary } = useChatStore();
 
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []); // pastikan ini hanya dipanggil sekali saat mount
+
+  useEffect(() => {
+    getSummary();
+  }, [getSummary]);
 
   const toggleProfileMenu = () => {
     setShowProfileMenu(!showProfileMenu);
@@ -461,51 +467,54 @@ const Riwayat = () => {
           }}
         >
           <h2>Rangkuman Konsultasi Terakhir</h2>
+          {isSummaryLoading
+            ? "Loading..."
+            : summary.length > 0
+            ? summary.map((summaryItem) => {
+                return (
+                  <div key={summaryItem.id}>
+                    {/* Tanggal dan jam yang tampil menarik dan terpisah */}
+                    <div
+                      style={{
+                        fontStyle: "normal",
+                        fontFamily: "Arial, sans-serif",
+                        padding: "5px",
+                        color: "#555",
+                        marginBottom: "0.8rem",
+                        fontWeight: "500",
+                        fontSize: "0.9rem",
+                        borderLeft: "4px solid #2563eb",
+                        paddingLeft: "12px",
+                        backgroundColor: "#f0f7ff",
+                        display: "inline-block",
+                        borderRadius: "4px",
+                      }}
+                    >
+                      {new Intl.DateTimeFormat("id-ID", {
+                        dateStyle: "full",
+                        timeStyle: "long",
+                      }).format(new Date(summaryItem.createdAt))}
+                    </div>
 
-          {/* Tanggal dan jam yang tampil menarik dan terpisah */}
-          <div
-            style={{
-              fontStyle: "normal",
-              fontFamily: "Arial, sans-serif",
-              padding: "5px",
-              color: "#555",
-              marginBottom: "0.8rem",
-              fontWeight: "500",
-              fontSize: "0.9rem",
-              borderLeft: "4px solid #2563eb",
-              paddingLeft: "12px",
-              backgroundColor: "#f0f7ff",
-              display: "inline-block",
-              borderRadius: "4px",
-            }}
-          >
-            Senin, 27 Mei 2024. 09:30 WIB
-          </div>
-
-          <p>
-            <strong>Keluhan:</strong> Pasien mengeluhkan pusing yang terkadang
-            disertai mual.
-          </p>
-          <p>
-            <strong>Penjelasan Diagnosis:</strong> Pasien didiagnosa Hipertensi
-            dengan gejala tambahan pusing berulang dan mual ringan. Hipertensi
-            adalah kondisi tekanan darah tinggi yang dapat menyebabkan berbagai
-            masalah kesehatan jika tidak ditangani.
-          </p>
-          <p>
-            <strong>Penjelasan Obat:</strong> Pasien diresepkan Amlodipine 5 mg,
-            yang merupakan obat untuk menurunkan tekanan darah. Diminum 1 tablet
-            setiap pagi. Selain itu, diresepkan juga Vitamin B1 untuk membantu
-            mengatasi keluhan pusing.
-          </p>
-          <p>
-            <strong>Rangkuman:</strong> Pasien Budi Santoso (45 tahun)
-            mengeluhkan pusing yang terkadang disertai mual. Dokter mendiagnosa
-            hipertensi dan memberikan resep Amlodipine 5 mg dan Vitamin B1.
-            Dokter menyarankan untuk periksa tekanan darah secara berkala,
-            mengurangi konsumsi garam, dan melakukan kontrol ulang 2 minggu
-            lagi.
-          </p>
+                    <p>
+                      <strong>Keluhan: </strong>
+                      {summaryItem.chiefComplaint}
+                    </p>
+                    <p>
+                      <strong>Penjelasan Diagnosis: </strong>
+                      {summaryItem.diagnosisExplanation}
+                    </p>
+                    <p>
+                      <strong>Penjelasan Obat: </strong>{" "}
+                      {summaryItem.medicationExplanation}
+                    </p>
+                    <p>
+                      <strong>Rangkuman: </strong> {summaryItem.summary}
+                    </p>
+                  </div>
+                );
+              })
+            : "Belum ada rangkuman konsultasi"}
         </section>
       </main>
 

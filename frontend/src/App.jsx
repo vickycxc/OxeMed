@@ -22,7 +22,7 @@ const App = () => {
 
   console.log({ user });
 
-  if(isCheckingAuth && !authUser) 
+  if (isCheckingAuth && !user)
     return (
       <div className="loader">
         <img src={oxemedLogo} />
@@ -30,7 +30,6 @@ const App = () => {
     );
 
   if (user) {
-    console.log("🚀 ~ App ~ role:", user);
     return (
       <>
         <Routes>

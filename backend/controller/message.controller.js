@@ -24,7 +24,7 @@ export const getMessages = async (req, res) => {
 };
 export const sendMessage = async (req, res) => {
   try {
-    const { message, image } = req.body;
+    const { message, image, consultationId } = req.body;
     const { id: senderId } = req.user;
     const { id: receiverId } = req.params;
 
@@ -39,8 +39,11 @@ export const sendMessage = async (req, res) => {
       senderId,
       receiverId,
       message,
+      consultationId,
       imageUrl: imageUrl,
     });
+
+    console.log("🚀 ~ sendMessage ~ data:", data);
 
     res.status(201).json({
       message: "Pesan berhasil dikirim",

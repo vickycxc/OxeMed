@@ -57,10 +57,10 @@ Consultation.belongsTo(User, {
 });
 
 // Doctor - Consultation (1:N)
-Doctor.hasMany(Consultation, {
+User.hasMany(Consultation, {
   foreignKey: "doctorId",
 });
-Consultation.belongsTo(Doctor, {
+Consultation.belongsTo(User, {
   foreignKey: "doctorId",
 });
 
@@ -104,6 +104,14 @@ Consultation.hasOne(ConsultationSummary, {
 });
 ConsultationSummary.belongsTo(Consultation, {
   foreignKey: "id",
+});
+
+// Consultation Summary - User (1:1)
+User.hasMany(ConsultationSummary, {
+  foreignKey: "patientId",
+});
+ConsultationSummary.belongsTo(User, {
+  foreignKey: "patientId",
 });
 
 // Consultation - Message (1:N)

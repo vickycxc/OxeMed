@@ -25,48 +25,49 @@ const tabs = [
 
 const profilePicUrl = "https://randomuser.me/api/portraits/men/75.jpg";
 
-const iotData = [
-  { datetime: "2024-05-27T08:00:00", spO2: 96, heartRate: 75 },
-  { datetime: "2024-05-27T12:00:00", spO2: 95, heartRate: 78 },
-  { datetime: "2024-05-27T18:00:00", spO2: 94, heartRate: 77 },
+// const iotData = [
+//   { datetime: "2024-05-27T08:00:00", spO2: 96, heartRate: 75 },
+//   { datetime: "2024-05-27T12:00:00", spO2: 95, heartRate: 78 },
+//   { datetime: "2024-05-27T18:00:00", spO2: 94, heartRate: 77 },
 
-  { datetime: "2024-05-28T08:00:00", spO2: 96, heartRate: 76 },
-  { datetime: "2024-05-28T12:00:00", spO2: 97, heartRate: 74 },
-  { datetime: "2024-05-28T18:00:00", spO2: 96, heartRate: 75 },
+//   { datetime: "2024-05-28T08:00:00", spO2: 96, heartRate: 76 },
+//   { datetime: "2024-05-28T12:00:00", spO2: 97, heartRate: 74 },
+//   { datetime: "2024-05-28T18:00:00", spO2: 96, heartRate: 75 },
 
-  { datetime: "2024-05-29T08:00:00", spO2: 95, heartRate: 73 },
-  { datetime: "2024-05-29T12:00:00", spO2: 96, heartRate: 74 },
-  { datetime: "2024-05-29T18:00:00", spO2: 95, heartRate: 72 },
-];
+//   { datetime: "2024-05-29T08:00:00", spO2: 95, heartRate: 73 },
+//   { datetime: "2024-05-29T12:00:00", spO2: 96, heartRate: 74 },
+//   { datetime: "2024-05-29T18:00:00", spO2: 95, heartRate: 72 },
+// ];
 
 const groupDataByDate = (data) => {
   return data.reduce((acc, cur) => {
-    const date = cur.datetime.split("T")[0];
+    const date = cur.timestamp.split("T")[0];
     if (!acc[date]) acc[date] = [];
     acc[date].push(cur);
     return acc;
   }, {});
 };
 
-const consultationSummary = {
-  keluhan: "Pasien mengeluhkan sesak napas dan batuk berkepanjangan.",
-  diagnosis:
-    "Pasien didiagnosa bronkitis kronis dengan rekomendasi pengobatan lanjutan.",
-  obat: "Diberikan resep bronkodilator dan antibiotik selama 7 hari.",
-  rangkuman:
-    "Pasien dalam pemantauan dengan jadwal kontrol setiap bulan dan edukasi untuk menghindari faktor pemicu.",
-};
-
 const Riwayat = () => {
   const [activeTab, setActiveTab] = useState("tab1");
   const [activeSection, setActiveSection] = useState("home");
+  const [dates, setDates] = useState([]);
+  const [dailyData, setDailyData] = useState([]);
+  const [groupedData, setGroupedData] = useState([]);
   const navigate = useNavigate();
 
   const goToTest = () => navigate("/test");
   const goToConsultation = () => navigate("/konsultasi");
   const goToHistory = () => navigate("/riwayat");
   const { logout } = useAuthStore();
-  const { getSummary, isSummaryLoading, summary } = useChatStore();
+  const {
+    getSummary,
+    isSummaryLoading,
+    summary,
+    getIotReadings,
+    isIotLoading,
+    iotReadings,
+  } = useChatStore();
 
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
@@ -76,7 +77,30 @@ const Riwayat = () => {
 
   useEffect(() => {
     getSummary();
-  }, [getSummary]);
+    getIotReadings();
+  }, [getSummary, getIotReadings]);
+
+  useEffect(() => {
+    if (iotReadings) {
+      let newSelectedDates = null;
+      const grouped = groupDataByDate(iotReadings);
+      const newDates = Object.keys(grouped).sort().reverse();
+      if (newDates.length > 0 && selectedDate === null) {
+        newSelectedDates = dates[0];
+      }
+      setGroupedData(grouped);
+      setDates(newDates);
+      if (newSelectedDates) {
+        setSelectedDate(newSelectedDates);
+        setDailyData(
+          newSelectedDates ? groupedData[newSelectedDates] || [] : []
+        );
+        setSelectedDateObj(
+          newSelectedDates ? parseISO(newSelectedDates) : null
+        );
+      }
+    }
+  }, [iotReadings]);
 
   const toggleProfileMenu = () => {
     setShowProfileMenu(!showProfileMenu);
@@ -90,27 +114,19 @@ const Riwayat = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const groupedData = groupDataByDate(iotData);
-  const dates = Object.keys(groupedData).sort().reverse();
-
   const [selectedDate, setSelectedDate] = useState(null);
-  const selectedDateObj = selectedDate ? parseISO(selectedDate) : null;
-
-  useEffect(() => {
-    if (dates.length > 0 && !selectedDate) {
-      setSelectedDate(dates[0]);
-    }
-  }, [dates, selectedDate]);
+  const [selectedDateObj, setSelectedDateObj] = useState(null);
 
   const handleDateChange = (date) => {
     if (!date) return;
+    date.setHours(7);
     const dateStr = date.toISOString().split("T")[0];
     if (dates.includes(dateStr)) {
       setSelectedDate(dateStr);
+      setSelectedDateObj(dateStr ? parseISO(dateStr) : null);
+      setDailyData(dateStr ? groupedData[dateStr] || [] : []);
     }
   };
-
-  const dailyData = selectedDate ? groupedData[selectedDate] || [] : [];
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -350,111 +366,122 @@ const Riwayat = () => {
         </section>
 
         {/* Data Monitoring Section */}
-        <section
-          style={{
-            backgroundColor: "#fff",
-            padding: "2rem",
-            borderRadius: "12px",
-            boxShadow: "0 0 10px rgba(0,0,0,0.05)",
-            marginBottom: "2rem",
-          }}
-        >
-          <h2>Data Monitoring Kesehatan (SpO2 & Detak Jantung)</h2>
-
-          {/* Kalender Pemilih Tanggal */}
-          <div style={{ marginBottom: "1rem" }}>
-            <label
-              htmlFor="date-picker"
-              style={{ fontWeight: "600", marginRight: "1rem" }}
-            >
-              Pilih Tanggal:
-            </label>
-            <DatePicker
-              id="date-picker"
-              selected={selectedDateObj}
-              onChange={handleDateChange}
-              dateFormat="EEEE, dd MMMM yyyy"
-              locale={id}
-              placeholderText="Klik untuk pilih tanggal"
-              className="date-picker-input"
-              maxDate={new Date()}
-              showPopperArrow={false}
-              isClearable={false}
-              filterDate={(date) => {
-                const d = date.toISOString().split("T")[0];
-                return dates.includes(d);
+        {!isIotLoading ? (
+          groupedData ? (
+            <section
+              style={{
+                backgroundColor: "#fff",
+                padding: "2rem",
+                borderRadius: "12px",
+                boxShadow: "0 0 10px rgba(0,0,0,0.05)",
+                marginBottom: "2rem",
               }}
-            />
-          </div>
+            >
+              <h2>Data Monitoring Kesehatan (SpO2 & Detak Jantung)</h2>
 
-          <div style={{ width: "100%", height: 300 }}>
-            <ResponsiveContainer>
-              <LineChart
-                data={dailyData}
-                margin={{ top: 20, right: 30, left: 0, bottom: 0 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis
-                  dataKey="datetime"
-                  tickFormatter={(val) => {
-                    const date = new Date(val);
-                    return date.toLocaleTimeString("id-ID", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    });
+              {/* Kalender Pemilih Tanggal */}
+              <div style={{ marginBottom: "1rem" }}>
+                <label
+                  htmlFor="date-picker"
+                  style={{ fontWeight: "600", marginRight: "1rem" }}
+                >
+                  Pilih Tanggal:
+                </label>
+                <DatePicker
+                  id="date-picker"
+                  selected={selectedDateObj}
+                  onChange={handleDateChange}
+                  dateFormat="EEEE, dd MMMM yyyy"
+                  locale={id}
+                  placeholderText="Klik untuk pilih tanggal"
+                  className="date-picker-input"
+                  maxDate={new Date()}
+                  showPopperArrow={false}
+                  isClearable={false}
+                  filterDate={(date) => {
+                    date.setHours(7);
+                    const d = date.toISOString().split("T")[0];
+                    return dates.includes(d);
                   }}
                 />
-                <YAxis
-                  yAxisId="left"
-                  label={{
-                    value: "SpO2 (%)",
-                    angle: -90,
-                    position: "insideLeft",
-                    offset: 10,
-                    dy: 20,
-                    style: { fontSize: "12px", fontWeight: "600" },
-                  }}
-                  domain={[90, 100]}
-                />
-                <YAxis
-                  yAxisId="right"
-                  orientation="right"
-                  label={{
-                    value: "Detak Jantung (bpm)",
-                    angle: 90,
-                    position: "insideRight",
-                    offset: 15,
-                    dy: 40,
-                    style: { fontSize: "12px", fontWeight: "600" },
-                  }}
-                  domain={[60, 100]}
-                />
-                <Tooltip
-                  labelFormatter={(label) => {
-                    const date = new Date(label);
-                    return date.toLocaleTimeString("id-ID", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    });
-                  }}
-                />
-                <Line
-                  yAxisId="left"
-                  type="monotone"
-                  dataKey="spO2"
-                  stroke="#8884d8"
-                  activeDot={{ r: 8 }}
-                />
-                <Line
-                  yAxisId="right"
-                  type="monotone"
-                  dataKey="heartRate"
-                  stroke="#82ca9d"
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </section>
+              </div>
+
+              <div style={{ width: "100%", height: 300 }}>
+                <ResponsiveContainer>
+                  <LineChart
+                    data={dailyData}
+                    margin={{ top: 20, right: 30, left: 0, bottom: 0 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis
+                      dataKey="timestamp"
+                      tickFormatter={(val) => {
+                        const date = new Date(val);
+                        const hour = date.getHours();
+                        date.setHours(hour - 7);
+                        return date.toLocaleTimeString("id-ID", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        });
+                      }}
+                    />
+                    <YAxis
+                      yAxisId="left"
+                      label={{
+                        value: "SpO2 (%)",
+                        angle: -90,
+                        position: "insideLeft",
+                        offset: 10,
+                        dy: 20,
+                        style: { fontSize: "12px", fontWeight: "600" },
+                      }}
+                      domain={[90, 100]}
+                    />
+                    <YAxis
+                      yAxisId="right"
+                      orientation="right"
+                      label={{
+                        value: "Detak Jantung (bpm)",
+                        angle: 90,
+                        position: "insideRight",
+                        offset: 15,
+                        dy: 40,
+                        style: { fontSize: "12px", fontWeight: "600" },
+                      }}
+                      domain={[60, 150]}
+                    />
+                    <Tooltip
+                      labelFormatter={(label) => {
+                        const date = new Date(label);
+                        return date.toLocaleTimeString("id-ID", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        });
+                      }}
+                    />
+                    <Line
+                      yAxisId="left"
+                      type="monotone"
+                      dataKey="spo2"
+                      stroke="#8884d8"
+                      activeDot={{ r: 8 }}
+                    />
+                    <Line
+                      yAxisId="right"
+                      type="monotone"
+                      dataKey="pulse"
+                      stroke="#82ca9d"
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </section>
+          ) : (
+            <div>Loading...</div>
+          )
+        ) : (
+          <div>Belum ada Data Ditemukan</div>
+        )}
 
         {/* Consultation Summary Section */}
         <section

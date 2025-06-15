@@ -1,15 +1,16 @@
 import { SensorReading } from "../models/index.js";
 
 export const addSensorReading = async (req, res) => {
-  const { timestamp, spo2, pulse } = req.body;
+  const { spo2, pulse } = req.body;
   const userId = req.userId;
   try {
     await SensorReading.create({
-      timestamp,
+      timestamp: new Date(),
       spo2,
       pulse,
       userId,
     });
+    console.log("🚀 ~ addSensorReading ~ userId:", userId);
     res
       .status(201)
       .json({ messages: "Pembacaan Sensor Baru Berhasil Ditambahkan" });
@@ -22,15 +23,14 @@ export const addSensorReading = async (req, res) => {
 };
 
 export const getSensorReadings = async (req, res) => {
-  const { userId } = req.params;
+  // console.log("🚀 ~ getSensorReadings ~ req:", req);
+  // const userId = req.user.id;
+  // console.log("🚀 ~ getSensorReadings ~ userId:", userId);
   try {
     const sensorReadings = await SensorReading.findAll({
-      where: {
-        userId: userId,
-      },
-      order: [["timestamp", "DESC"]],
+      order: [["timestamp", "ASC"]],
     });
-    res.status(200).json(sensorReadings);
+    res.status(200).json(sensorReadings ? sensorReadings : []);
   } catch (error) {
     console.log("Error di getSensorReadings controller", error);
     res.status(500).json({

@@ -20,8 +20,6 @@ const App = () => {
     checkAuth();
   }, [checkAuth]);
 
-  console.log({ user });
-
   if (isCheckingAuth && !user)
     return (
       <div className="loader">

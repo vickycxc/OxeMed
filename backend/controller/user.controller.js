@@ -22,7 +22,6 @@ export const getDoctors = async (req, res) => {
 
 export const getSummaries = async (req, res) => {
   const patientId = req.user.id;
-  console.log("🚀 ~ getSummaries ~ patientId:", patientId);
   try {
     const summaries = await ConsultationSummary.findAll({
       where: {
@@ -30,7 +29,6 @@ export const getSummaries = async (req, res) => {
       },
       order: [["createdAt", "DESC"]],
     });
-    console.log("🚀 ~ getSummaries ~ summaries:", summaries);
 
     res.status(200).json(summaries);
   } catch (error) {

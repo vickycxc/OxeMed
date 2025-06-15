@@ -9,6 +9,8 @@ export const useChatStore = create((set, get) => ({
   patients: [],
   consultations: [],
   summary: [],
+  iotReadings: [],
+  isIotLoading: false,
   isSummaryLoading: false,
   selectedUser: null,
   selectedConsultation: null,
@@ -46,7 +48,7 @@ export const useChatStore = create((set, get) => ({
   },
 
   getMessages: async (userId) => {
-    set({ isMessageLoading: true });
+    set({ isMessagesLoading: true });
     try {
       const res = await axiosInstance.get(`/messages/${userId}`);
       set({ messages: res.data });
@@ -156,13 +158,25 @@ export const useChatStore = create((set, get) => ({
     set({ isSummaryLoading: true });
     try {
       const res = await axiosInstance.get("/users/summaries");
-      console.log("🚀 ~ getSummary: ~ data:", res.data);
       set({ summary: res.data });
     } catch (error) {
       console.log("error di getSummary: ", error),
         toast.error(error.response.data.message);
     } finally {
       set({ isSummaryLoading: false });
+    }
+  },
+
+  getIotReadings: async () => {
+    set({ isIotLoading: true });
+    try {
+      const res = await axiosInstance.get("/iot");
+      set({ iotReadings: res.data });
+    } catch (error) {
+      console.log("🚀 ~ iotReadings: ~ error:", error);
+      toast.error(error.response.data.message);
+    } finally {
+      set({ isIotLoading: false });
     }
   },
 

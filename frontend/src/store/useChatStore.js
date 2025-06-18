@@ -240,5 +240,22 @@ export const useChatStore = create((set, get) => ({
     console.log("Unsubscribed from newMessage event");
   },
 
+  subscribeToTest: () => {
+    const socket = useAuthStore.getState().socket;
+    socket.on("newSensorReading", (newSensorReading) => {
+      console.log("New sensor reading received:", newSensorReading);
+      set((state) => ({
+        iotReadings: [...state.iotReadings, newSensorReading],
+        testResult: newSensorReading,
+      }));
+    });
+  },
+
+  unsubscribeToTest: () => {
+    const socket = useAuthStore.getState().socket;
+    socket.off("newSensorReading");
+    console.log("Unsubscribed from newSensorReading event");
+  },
+
   setSelectedUser: (selectedUser) => set({ selectedUser }),
 }));

@@ -8,7 +8,7 @@ import historyLogo from "../assets/history.jpg";
 import { useAuthStore } from "../store/useAuthStore";
 import { useChatStore } from "../store/useChatStore";
 
-const profilePicUrl = "https://randomuser.me/api/portraits/men/75.jpg";
+const profilePicUrl = "https://randomuser.me/api/portraits/women/65.jpg";
 
 const LoginDokter = () => {
   const [activeSection, setActiveSection] = useState("home");

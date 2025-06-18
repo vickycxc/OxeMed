@@ -33,6 +33,19 @@ export const useChatStore = create((set, get) => ({
     }
   },
 
+  getPatient: async (patientId) => {
+    set({ isUsersLoading: true });
+    try {
+      const res = await axiosInstance.get(`/users/patient/${patientId}`);
+      set({ selectedUser: res.data });
+    } catch (error) {
+      console.log("Error in getUsers: ", error);
+      toast.error(error.response.data.message);
+    } finally {
+      set({ isUsersLoading: false });
+    }
+  },
+
   getConsultations: async (todayOnly = false) => {
     set({ isUsersLoading: true });
     try {
@@ -62,10 +75,16 @@ export const useChatStore = create((set, get) => ({
 
   setSelectedConsultation: async () => {
     const { selectedUser, consultations } = get();
+    console.log(
+      "🚀 ~ setSelectedConsultation: ~ consultations:",
+      consultations
+    );
+
     if (selectedUser && consultations.length > 0) {
       const consultation = consultations.find(
         (consultation) =>
-          consultation.doctorId === selectedUser.id &&
+          (consultation.doctorId === selectedUser.id ||
+            consultation.patientId === selectedUser.id) &&
           consultation.status === "Aktif"
       );
       set({
@@ -190,7 +209,7 @@ export const useChatStore = create((set, get) => ({
         { ...messageData, consultationId: selectedConsultation.id }
       );
       set({ messages: [...messages, res.data.data] });
-      toast.success("Pesan berhasil dikirim");
+      // toast.success("Pesan berhasil dikirim");
     } catch (error) {
       console.log("🚀 ~ sendMessage: ~ error:", error);
       toast.error(error.response.data.message);
@@ -198,14 +217,16 @@ export const useChatStore = create((set, get) => ({
   },
 
   subscribeToMessages: () => {
+    console.log("Subscribing to newMessage event");
     const { selectedUser } = get();
     if (!selectedUser) return;
 
     const socket = useAuthStore.getState().socket;
 
+    console.log("bimmm");
     socket.on("newMessage", (newMessage) => {
-      const isMessageFromSelectedUser =
-        newMessage.senderId === selectedUser._id;
+      console.log("bammm");
+      const isMessageFromSelectedUser = newMessage.senderId === selectedUser.id;
       if (!isMessageFromSelectedUser) return;
       set({
         messages: [...get().messages, newMessage],
@@ -216,6 +237,7 @@ export const useChatStore = create((set, get) => ({
   unsubscribeFromMessages: () => {
     const socket = useAuthStore.getState().socket;
     socket.off("newMessage");
+    console.log("Unsubscribed from newMessage event");
   },
 
   setSelectedUser: (selectedUser) => set({ selectedUser }),

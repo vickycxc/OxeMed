@@ -8,7 +8,7 @@ import historyLogo from "../assets/history.jpg";
 import arrow from "../assets/arrow.jpg"; // Import the back arrow image
 import { useAuthStore } from "../store/useAuthStore";
 import { useChatStore } from "../store/useChatStore";
-const profilePicUrl = "https://randomuser.me/api/portraits/men/75.jpg";
+const profilePicUrl = "https://randomuser.me/api/portraits/women/65.jpg";
 
 const RiwayatDokter = () => {
   const [activeSection, setActiveSection] = useState("home");

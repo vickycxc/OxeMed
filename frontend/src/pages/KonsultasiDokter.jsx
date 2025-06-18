@@ -1,139 +1,88 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import oxemedLogo from "../assets/oxemed.jpg";
+import { useChatStore } from "../store/useChatStore";
 import { useAuthStore } from "../store/useAuthStore";
 
-// URL profil dokter yang sedang "login" (misal dr. Ika Dwi)
-const doctorProfilePicUrl = "https://randomuser.me/api/portraits/women/65.jpg";
+const profilePicUrl = "https://randomuser.me/api/portraits/women/65.jpg";
 
-// Data dokter (digunakan untuk informasi dokter yang "login")
-const doctors = [
-  {
-    id: 1,
-    name: "dr. Ika Dwi",
-    specialization: "Spesialis Penyakit Dalam",
-    image: "https://randomuser.me/api/portraits/women/65.jpg",
-  },
-  {
-    id: 2,
-    name: "dr. Budi Santoso",
-    specialization: "Spesialis Jantung",
-    image: "https://randomuser.me/api/portraits/men/45.jpg",
-  },
-  {
-    id: 3,
-    name: "dr. Citra Lestari",
-    specialization: "Spesialis Anak",
-    image: "https://randomuser.me/api/portraits/women/70.jpg",
-  },
-  {
-    id: 4,
-    name: "dr. David Wijaya",
-    specialization: "Spesialis Kulit",
-    image: "https://randomuser.me/api/portraits/men/80.jpg",
-  },
-];
-
-// Asumsikan dokter yang sedang 'login' adalah dr. Ika Dwi
-const loggedInDoctor = doctors[0]; // Mengambil dokter pertama dari daftar sebagai contoh
-
-// Data pasien dummy untuk simulasi chat
-const dummyPatient = {
-  id: 1,
-  name: "Aisyah Ramadhani",
-  image: "https://randomuser.me/api/portraits/men/30.jpg", // Gambar profil pasien dummy
-};
-
-function useObjectURL(file) {
-  const [url, setUrl] = useState(null);
-  useEffect(() => {
-    if (!file) return;
-    const objectUrl = URL.createObjectURL(file);
-    setUrl(objectUrl);
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [file]);
-  return url;
-}
-
-const ChatImage = ({ imageFile }) => {
-  const url = useObjectURL(imageFile);
-  if (!url) return null;
-  return (
-    <img
-      src={url}
-      alt="Upload"
-      style={{ marginTop: 10, maxWidth: 120, borderRadius: 8 }}
-    />
-  );
-};
-
-const KonsultasiDokter = () => {
-  const [chat, setChat] = useState([
-    // Contoh chat awal dari pasien untuk simulasi
-    {
-      sender: "pasien",
-      text: "Selamat pagi, Dokter. Saya merasa demam dan batuk sejak kemarin.",
-    },
-    {
-      sender: "dokter",
-      text: "Selamat pagi, bagaimana kabarnya? Sudah minum obat apa?",
-    },
-  ]);
+const Konsultasi = () => {
+  const { id: patientId } = useParams();
+  console.log("ID Pasien dari URL:", patientId);
+  // const [chat, setChat] = useState([]); // Start with an empty chat
   const [message, setMessage] = useState("");
   const [image, setImage] = useState(null);
-  // Di POV dokter, kita tidak perlu selectedDoctor dari pilihan, langsung dari loggedInDoctor
-  const doctor = loggedInDoctor;
+  // const [selectedDoctor, setSelectedDoctor] = useState(null); // Initialize as null
+  const [isDoctorSelectionVisible, setIsDoctorSelectionVisible] =
+    useState(true); // Control visibility of doctor selection
 
-  // State untuk navigasi & UI header (sama seperti POV pasien)
+  // State untuk navigasi & UI header
   const [activeSection, setActiveSection] = useState("home");
   const [activeTab, setActiveTab] = useState(null);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+
   const navigate = useNavigate();
   const chatBoxRef = useRef();
-  const { logout } = useAuthStore(); // Asumsikan ada hook useAuth untuk mengelola autentikasi
+
+  const {
+    getPatient,
+    isUsersLoading,
+    isMessagesLoading,
+    messages,
+    sendMessage,
+    createConsultation,
+    selectedConsultation,
+    setSelectedConsultation,
+    endConsultation,
+    selectedUser,
+    getMessages,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+    isUpdatingConsultation,
+    getConsultations,
+  } = useChatStore();
 
   // Toggle menu profil dropdown
   const toggleProfileMenu = () => setShowProfileMenu((prev) => !prev);
-
+  const { logout, user } = useAuthStore(); // Assuming logout is a function in your store
   // Logout function
   const handleLogout = () => {
     logout();
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImage(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleSend = () => {
+    console.log("🚀 ~ handleSend ~ image:", image);
     if (!message && !image) return;
 
-    setChat((prev) => [
-      ...prev,
-      {
-        sender: "dokter", // Pengirimnya adalah dokter
-        text: message,
-        image: image,
-      },
-    ]);
+    sendMessage({
+      message,
+      image,
+    });
     setMessage("");
     setImage(null);
-
-    // Simulasi balasan pasien (opsional, bisa dihapus jika tidak perlu simulasi)
-    setTimeout(() => {
-      setChat((prev) => [
-        ...prev,
-        {
-          sender: "pasien",
-          text: "Baik, Dokter. Saya mengerti. Terima kasih atas sarannya.",
-        },
-      ]);
-    }, 1500); // Balasan dari pasien setelah 1.5 detik
   };
 
   const handleFinish = () => {
-    // Di sini, Anda bisa menyimpan riwayat chat ini ke database dokter
-    // Untuk contoh, kita hanya akan mencetak ke konsol atau navigasi
-    console.log("Konsultasi selesai. Riwayat chat:", chat);
-    // Mungkin ada navigasi ke halaman riwayat konsultasi dokter
-    navigate("/dokter/riwayat-konsultasi"); // Contoh navigasi
+    endConsultation();
   };
 
+  const handleStartConsultation = () => {
+    createConsultation();
+  };
   // Scroll to top on mount
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -143,7 +92,33 @@ const KonsultasiDokter = () => {
     if (chatBoxRef.current) {
       chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
     }
-  }, [chat]);
+  }, [messages]);
+
+  useEffect(() => {
+    getConsultations();
+    getPatient(patientId);
+    getMessages(patientId);
+  }, []);
+
+  useEffect(() => {
+    setSelectedConsultation();
+    subscribeToMessages();
+    return () => unsubscribeFromMessages();
+  }, [selectedUser]);
+
+  if (isUsersLoading || isMessagesLoading) {
+    return (
+      <div className="loader">
+        <img src={oxemedLogo} />
+      </div>
+    );
+  }
+
+  if (!selectedUser && !isUsersLoading) {
+    return <div className="loader">Pengguna tidak ditemukan.</div>;
+  }
+
+  console.log("Selected consultation:", selectedConsultation);
 
   return (
     <div
@@ -155,7 +130,7 @@ const KonsultasiDokter = () => {
         backgroundColor: "#f3f4f6",
       }}
     >
-      {/* Header (Sama seperti POV pasien, hanya foto profil dokter yang diganti) */}
+      {/* Header */}
       <header
         id="header"
         className={`header d-flex align-items-center fixed-top ${
@@ -175,12 +150,12 @@ const KonsultasiDokter = () => {
             <ul>
               <li>
                 <a
-                  href="#home"
+                  href="#login"
                   className={activeSection === "home" ? "active" : ""}
                   onClick={(e) => {
                     e.preventDefault();
                     setActiveSection("home");
-                    navigate("/dokter/dashboard"); // Contoh navigasi untuk dokter
+                    navigate("/login");
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   }}
                 >
@@ -190,40 +165,53 @@ const KonsultasiDokter = () => {
 
               <li>
                 <a
-                  href="#konsultasi"
-                  className={activeTab === "tab2" ? "active" : ""}
+                  href="#test"
+                  className={activeTab === "tab1" ? "active" : ""}
                   onClick={(e) => {
                     e.preventDefault();
-                    setActiveTab("tab2");
-                    navigate("/dokter/konsultasi"); // Contoh navigasi untuk dokter
+                    setActiveTab("tab1");
+                    navigate("/test");
                   }}
                 >
-                  Konsultasi
+                  Test
                 </a>
               </li>
 
               <li>
                 <a
-                  href="#riwayat"
+                  href="#consultation"
+                  className={activeTab === "tab2" ? "active" : ""}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setActiveTab("tab2");
+                    navigate("/konsultasi");
+                  }}
+                >
+                  Consultation
+                </a>
+              </li>
+
+              <li>
+                <a
+                  href="#history"
                   className={activeTab === "tab3" ? "active" : ""}
                   onClick={(e) => {
                     e.preventDefault();
                     setActiveTab("tab3");
-                    navigate("/dokter/riwayat"); // Contoh navigasi untuk dokter
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   }}
                 >
-                  Riwayat
+                  History
                 </a>
               </li>
             </ul>
           </nav>
 
-          {/* Profile Picture (Dokter) */}
+          {/* Profile Picture */}
           <div className="user-profile" style={{ position: "relative" }}>
             <img
-              src={doctorProfilePicUrl} // Menggunakan URL profil dokter yang "login"
-              alt="Doctor Profile"
+              src={profilePicUrl}
+              alt="User Profile"
               id="profile-img"
               className="profile-img"
               onClick={toggleProfileMenu}
@@ -269,7 +257,7 @@ const KonsultasiDokter = () => {
         </div>
       </header>
 
-      {/* MAIN CONTENT */}
+      {/* MAIN */}
       <main
         style={{
           flex: 1,
@@ -289,128 +277,164 @@ const KonsultasiDokter = () => {
             maxWidth: "900px",
           }}
         >
-          {/* Patient Info (Di sini menampilkan info pasien yang sedang diajak chat) */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 16,
-              marginBottom: 24,
-              borderBottom: "1px solid #eee",
-              paddingBottom: 15,
-            }}
-          >
-            <img
-              src={dummyPatient.image}
-              alt={dummyPatient.name}
-              style={{
-                width: 50,
-                height: 50,
-                borderRadius: "50%",
-                objectFit: "cover",
-              }}
-            />
-            <div>
-              <h5 style={{ margin: 0 }}>{dummyPatient.name}</h5>
-              <small>11 Tahun</small>
-            </div>
-            <button
-              onClick={handleFinish}
-              style={{
-                marginLeft: "auto",
-                padding: "8px 20px",
-                borderRadius: 10,
-                background: "#dc3545", // Warna merah untuk "Selesai"
-                color: "white",
-                border: "none",
-                cursor: "pointer",
-              }}
-            >
-              Akhiri Konsultasi
-            </button>
-          </div>
-
-          {/* Chat Box */}
-          <div
-            ref={chatBoxRef}
-            style={{
-              backgroundColor: "#f8fafc",
-              padding: 16,
-              borderRadius: 12,
-              height: "50vh",
-              overflowY: "auto",
-              border: "1px solid #eee",
-              marginBottom: 16,
-            }}
-          >
-            {chat.map((item, index) => (
+          {
+            <>
+              {/* Doctor Info */}
               <div
-                key={index}
                 style={{
                   display: "flex",
-                  justifyContent:
-                    item.sender === "dokter" ? "flex-end" : "flex-start", // Dokter di kanan, pasien di kiri
-                  marginBottom: 12,
+                  alignItems: "center",
+                  gap: 16,
+                  marginBottom: 24,
                 }}
               >
-                <div
+                <img
+                  src="https://randomuser.me/api/portraits/men/30.jpg"
+                  alt={selectedUser.fullName}
+                  style={{ width: 50, borderRadius: "50%" }}
+                />
+                <div>
+                  <h5 style={{ margin: 0 }}>{selectedUser.fullName}</h5>
+                </div>
+                <button
+                  disabled={isUpdatingConsultation || !selectedConsultation}
+                  onClick={handleFinish}
                   style={{
-                    backgroundColor:
-                      item.sender === "dokter" ? "#d1e7dd" : "#e2e6ea", // Warna chat dokter hijau muda
-                    padding: 12,
-                    borderRadius: 12,
-                    maxWidth: "70%",
-                    wordBreak: "break-word",
+                    marginLeft: "auto",
+                    padding: "8px 20px",
+                    borderRadius: 10,
+                    background: selectedConsultation ? "#3b60e4" : "#8e8e8e",
+                    color: "white",
+                    border: "none",
+                    cursor:
+                      !isUpdatingConsultation && selectedConsultation
+                        ? "pointer"
+                        : "auto",
                   }}
                 >
-                  <p style={{ margin: 0 }}>{item.text}</p>
-                  {item.image && <ChatImage imageFile={item.image} />}
-                </div>
+                  {isUpdatingConsultation
+                    ? "Loading..."
+                    : selectedConsultation
+                    ? "Selesai"
+                    : "Konsultasi telah berakhir"}
+                </button>
               </div>
-            ))}
-          </div>
 
-          {/* Input */}
-          <div style={{ display: "flex", gap: 10 }}>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setImage(e.target.files[0])}
-              style={{
-                flexBasis: "30%",
-                borderRadius: 8,
-                border: "1px solid #ccc",
-                padding: "6px",
-              }}
-            />
+              {/* Chat Box */}
+              <div
+                ref={chatBoxRef}
+                style={{
+                  backgroundColor: "#f8fafc",
+                  padding: 16,
+                  borderRadius: 12,
+                  height: "50vh",
+                  overflowY: "auto",
+                  border: "1px solid #eee",
+                  marginBottom: 16,
+                }}
+              >
+                {messages.length > 0 ? (
+                  messages.map((item, index) => {
+                    return (
+                      <div
+                        key={index}
+                        style={{
+                          display: "flex",
+                          justifyContent:
+                            item.senderId === user.id
+                              ? "flex-end"
+                              : "flex-start",
+                          marginBottom: 12,
+                        }}
+                      >
+                        <div
+                          style={{
+                            backgroundColor:
+                              item.senderId === user.id ? "#d1e7dd" : "#e2e6ea",
+                            padding: 12,
+                            borderRadius: 12,
+                            maxWidth: "70%",
+                            wordBreak: "break-word",
+                          }}
+                        >
+                          <p style={{ margin: 0 }}>{item.message}</p>
+                          {item.imageUrl && (
+                            <img
+                              src={item.imageUrl}
+                              alt="Upload"
+                              style={{
+                                marginTop: 10,
+                                maxWidth: 120,
+                                borderRadius: 8,
+                              }}
+                            />
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div
+                    style={{
+                      textAlign: "center",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      height: "100%",
+                      color: "#666",
+                      fontSize: "16px",
+                    }}
+                  >
+                    Konsultasi sudah berakhir.
+                  </div>
+                )}
+              </div>
+              {/* Input */}
+              <div style={{ display: "flex", gap: 10 }}>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  disabled={!selectedConsultation}
+                  style={{
+                    flexBasis: "30%",
+                    borderRadius: 8,
+                    border: "1px solid #ccc",
+                    padding: "6px",
+                  }}
+                />
 
-            <input
-              type="text"
-              placeholder="Ketik balasan Anda..."
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              style={{
-                flex: 1,
-                borderRadius: 8,
-                border: "1px solid #ccc",
-                padding: "6px 12px",
-              }}
-            />
+                <input
+                  type="text"
+                  placeholder="Tulis pesan..."
+                  value={message}
+                  disabled={!selectedConsultation}
+                  onChange={(e) => setMessage(e.target.value)}
+                  style={{
+                    flex: 1,
+                    borderRadius: 8,
+                    border: "1px solid #ccc",
+                    padding: "6px 12px",
+                  }}
+                />
 
-            <button
-              onClick={handleSend}
-              style={{
-                borderRadius: 8,
-                backgroundColor: "#3b60e4",
-                color: "white",
-                border: "none",
-                padding: "8px 16px",
-                cursor: "pointer",
-              }}
-            >
-              Kirim Balasan
-            </button>
-          </div>
+                <button
+                  onClick={handleSend}
+                  disabled={!selectedConsultation}
+                  style={{
+                    borderRadius: 8,
+                    backgroundColor: !selectedConsultation ? "#ccc" : "#3b60e4",
+                    color: "white",
+                    border: "none",
+                    padding: "8px 16px",
+                    cursor: selectedConsultation ? "pointer" : "auto",
+                  }}
+                >
+                  Kirim
+                </button>
+              </div>
+            </>
+          }
         </section>
       </main>
 
@@ -433,4 +457,4 @@ const KonsultasiDokter = () => {
   );
 };
 
-export default KonsultasiDokter;
+export default Konsultasi;

@@ -20,6 +20,23 @@ export const getDoctors = async (req, res) => {
   }
 };
 
+export const getPatient = async (req, res) => {
+  const { id: patientId } = req.params;
+  try {
+    const patient = await User.findByPk(patientId, {
+      attributes: {
+        exclude: ["password", "createdAt", "updatedAt", "role"],
+      },
+    });
+    res.status(200).json(patient);
+  } catch (error) {
+    console.log("Error di getPatient controller", error);
+    res.status(500).json({
+      message: "Terjadi kesalahan pada server",
+    });
+  }
+};
+
 export const getSummaries = async (req, res) => {
   const patientId = req.user.id;
   try {

@@ -82,7 +82,6 @@ const Konsultasi = () => {
     });
     setMessage("");
     setImage(null);
-    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const handleFinish = () => {

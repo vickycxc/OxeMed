@@ -1,16 +1,18 @@
+import { io } from "../lib/socket.js";
 import { SensorReading } from "../models/index.js";
 
 export const addSensorReading = async (req, res) => {
   const { spo2, pulse } = req.body;
   const userId = req.userId;
   try {
-    await SensorReading.create({
+    const newSensorReading = await SensorReading.create({
       timestamp: new Date(),
       spo2,
       pulse,
       userId,
     });
-    console.log("🚀 ~ addSensorReading ~ userId:", userId);
+
+    io.emit("newSensorReading", newSensorReading.dataValues);
     res
       .status(201)
       .json({ messages: "Pembacaan Sensor Baru Berhasil Ditambahkan" });

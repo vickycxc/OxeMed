@@ -91,12 +91,8 @@ export const getConsultations = async (req, res) => {
       where: {
         [Op.or]: [{ patientId: userId }, { doctorId: userId }],
       },
+      order: [["createdAt", "DESC"]],
     });
-
-    console.log(
-      "🚀 ~ getConsultations ~ consultations:",
-      JSON.stringify(consultations, null, 2)
-    );
     res.status(200).json(consultations);
   } catch (error) {
     console.log("Error di getConsultations controller", error);
@@ -119,6 +115,7 @@ export const getConsultationsToday = async (req, res) => {
           [Op.lte]: new Date(new Date().setHours(23, 59, 59, 999)), // Hingga akhir hari ini
         },
       },
+      order: [["createdAt", "DESC"]],
     });
 
     console.log("🚀 ~ getConsultationsToday ~ consultations:", consultations);

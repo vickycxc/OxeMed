@@ -33,10 +33,12 @@ export const useChatStore = create((set, get) => ({
     }
   },
 
-  getConsultations: async () => {
+  getConsultations: async (todayOnly = false) => {
     set({ isUsersLoading: true });
     try {
-      const res = await axiosInstance.get("/consultations");
+      const res = await axiosInstance.get(
+        !todayOnly ? "/consultations" : "consultations/today"
+      );
       set({ consultations: res.data });
       console.log("🚀 ~ getConsultations: ~ data:", res.data);
     } catch (error) {

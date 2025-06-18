@@ -6,6 +6,7 @@ import mainLogo from "../assets/main.jpg";
 import consultationLogo from "../assets/consultation.jpg";
 import historyLogo from "../assets/history.jpg";
 import { useAuthStore } from "../store/useAuthStore";
+import { useChatStore } from "../store/useChatStore";
 
 const profilePicUrl = "https://randomuser.me/api/portraits/men/75.jpg";
 
@@ -14,14 +15,15 @@ const LoginDokter = () => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const navigate = useNavigate();
   const { user, logout } = useAuthStore();
+  const { consultations, getConsultations, isUsersLoading } = useChatStore();
 
   // Handler untuk navigasi ke masing-masing halaman
   const goToHome = () => navigate("#home");
   const goToConsultation = () => navigate("#consultation");
 
   // Fungsi untuk mengarahkan ke halaman konsultasi
-  const handleOngoingClick = () => {
-    navigate("/konsultasi");
+  const handleOngoingClick = (patientId) => {
+    navigate(`/konsultasi/${patientId}`);
   };
 
   // Fungsi untuk mengarahkan ke halaman RiwayatDokter.jsx
@@ -50,6 +52,10 @@ const LoginDokter = () => {
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    getConsultations(true);
+  }, [getConsultations]);
 
   const toggleProfileMenu = () => {
     setShowProfileMenu(!showProfileMenu);
@@ -223,46 +229,43 @@ const LoginDokter = () => {
         </section>
 
         {/* Consultation Section */}
-        <section className="consultation section" id="consultation">
-          <div className="pasien-container">
-            <h2>Daftar Pasien Hari Ini</h2>
-            <div className="pasien-list">
-              {pasienData.map((pasien, index) => (
-                <div className="pasien-card" key={index}>
-                  <div className="pasien-info">
-                    <h2>{pasien.nama}</h2>
-                    <p>{pasien.umur}</p>
-                    {pasien.penyakit && (
+        {!isUsersLoading && (
+          <section className="consultation section" id="consultation">
+            <div className="pasien-container">
+              <h2>Daftar Pasien Hari Ini</h2>
+              <div className="pasien-list">
+                {consultations.map((consultation, index) => (
+                  <div className="pasien-card" key={index}>
+                    <div className="pasien-info">
+                      <h2>{consultation.patient.fullName}</h2>
                       <p>
-                        <strong>Penyakit:</strong> {pasien.penyakit}
+                        <strong>Waktu:</strong>{" "}
+                        {new Intl.DateTimeFormat("id-ID", {
+                          dateStyle: "full",
+                          timeStyle: "long",
+                        }).format(new Date(consultation.timeStart))}
                       </p>
-                    )}
-                    <p>
-                      <strong>Waktu:</strong> {pasien.waktu}
-                    </p>
+                    </div>
+                    <div
+                      className={`status ${consultation.status}`}
+                      onClick={() => {
+                        handleOngoingClick(consultation.patientId);
+                      }}
+                    >
+                      <p>{consultation.status}</p>
+                    </div>
                   </div>
-                  <div
-                    className={`status ${
-                      pasien.status === "Sedang Berlangsung"
-                        ? "ongoing"
-                        : "finished"
-                    }`}
-                    onClick={
-                      pasien.status === "Sedang Berlangsung"
-                        ? handleOngoingClick
-                        : null
-                    }
-                  >
-                    <p>{pasien.status}</p>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
+              <button
+                className="lihat-lebih-banyak"
+                onClick={handleViewHistory}
+              >
+                Lihat Riwayat Pasien
+              </button>
             </div>
-            <button className="lihat-lebih-banyak" onClick={handleViewHistory}>
-              Lihat Riwayat Pasien
-            </button>
-          </div>
-        </section>
+          </section>
+        )}
       </main>
 
       {/* Footer */}

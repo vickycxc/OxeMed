@@ -1422,12 +1422,11 @@ section,
 }
 
 /* Sedang Berlangsung (Clickable - Redirect to Konsultasi) */
-.status.ongoing {
+.status.Aktif {
   background-color: #4caf50; /* Calm Green */
 }
 
-.status.ongoing:hover {
-  background-color: #45a049; /* Darker green for hover effect */
+.status:hover {
   transform: scale(1.05);
 }
 

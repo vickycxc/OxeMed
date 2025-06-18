@@ -35,7 +35,13 @@ const Konsultasi = () => {
     setSelectedConsultation,
     getConsultations,
     endConsultation,
-  } = useChatStore(); // Assuming getDoctors is a function that fetches doctors
+    selectedUser,
+    setSelectedUser,
+    getMessages,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+    isUpdatingConsultation,
+  } = useChatStore();
 
   const handleDoctorSelect = (doctor) => {
     setSelectedUser(doctor);
@@ -47,15 +53,6 @@ const Konsultasi = () => {
   // Toggle menu profil dropdown
   const toggleProfileMenu = () => setShowProfileMenu((prev) => !prev);
   const { logout, user } = useAuthStore(); // Assuming logout is a function in your store
-  const {
-    selectedUser,
-    setSelectedUser,
-    getMessages,
-    subscribeToMessages,
-    unsubscribeFromMessages,
-    isUpdatingConsultation,
-  } = useChatStore(); // Assuming these are functions in your store
-
   // Logout function
   const handleLogout = () => {
     logout();

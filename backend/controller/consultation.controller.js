@@ -7,6 +7,7 @@ import {
   DoctorNote,
   Message,
   Prescription,
+  User,
 } from "../models/index.js";
 import genai, { geminiConfig } from "../lib/genai.js";
 import {
@@ -86,15 +87,44 @@ export const getConsultations = async (req, res) => {
 
   try {
     const consultations = await Consultation.findAll({
+      include: { model: User, as: "patient", attributes: ["fullName"] },
       where: {
         [Op.or]: [{ patientId: userId }, { doctorId: userId }],
       },
     });
 
-    console.log("🚀 ~ getConsultations ~ consultations:", consultations);
+    console.log(
+      "🚀 ~ getConsultations ~ consultations:",
+      JSON.stringify(consultations, null, 2)
+    );
     res.status(200).json(consultations);
   } catch (error) {
     console.log("Error di getConsultations controller", error);
+    res.status(500).json({
+      message: "Terjadi kesalahan pada server",
+    });
+  }
+};
+
+export const getConsultationsToday = async (req, res) => {
+  const { id: userId } = req.user;
+
+  try {
+    const consultations = await Consultation.findAll({
+      include: { model: User, as: "patient", attributes: ["fullName"] },
+      where: {
+        [Op.or]: [{ patientId: userId }, { doctorId: userId }],
+        timeStart: {
+          [Op.gte]: new Date(new Date().setHours(0, 0, 0, 0)), // Mulai hari ini
+          [Op.lte]: new Date(new Date().setHours(23, 59, 59, 999)), // Hingga akhir hari ini
+        },
+      },
+    });
+
+    console.log("🚀 ~ getConsultationsToday ~ consultations:", consultations);
+    res.status(200).json(consultations);
+  } catch (error) {
+    console.log("Error di getConsultationsToday controller", error);
     res.status(500).json({
       message: "Terjadi kesalahan pada server",
     });

@@ -54,6 +54,7 @@ User.hasMany(Consultation, {
 });
 Consultation.belongsTo(User, {
   foreignKey: "patientId",
+  as: "patient",
 });
 
 // Doctor - Consultation (1:N)
@@ -62,6 +63,7 @@ User.hasMany(Consultation, {
 });
 Consultation.belongsTo(User, {
   foreignKey: "doctorId",
+  as: "doctor",
 });
 
 // Doctor - Education (1:N)

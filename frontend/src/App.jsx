@@ -36,12 +36,11 @@ const App = () => {
             path="/"
             element={user.role === "Pasien" ? <Login /> : <LoginDokter />}
           />
-          <Route
-            path="/konsultasi"
-            element={
-              user.role === "Pasien" ? <Konsultasi /> : <KonsultasiDokter />
-            }
-          />
+          {user.role === "Pasien" ? (
+            <Route path="/konsultasi" element={<Konsultasi />} />
+          ) : (
+            <Route path="/konsultasi/:id" element={<KonsultasiDokter />} />
+          )}
           <Route
             path="/test"
             element={user.role === "Pasien" ? <Test /> : <Navigate to="/" />}

@@ -417,8 +417,8 @@ const Riwayat = () => {
                       dataKey="timestamp"
                       tickFormatter={(val) => {
                         const date = new Date(val);
-                        const hour = date.getHours();
-                        date.setHours(hour - 7);
+                        // const hour = date.getHours();
+                        // date.setHours(hour - 7);
                         return date.toLocaleTimeString("id-ID", {
                           hour: "2-digit",
                           minute: "2-digit",

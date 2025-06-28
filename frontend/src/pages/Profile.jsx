@@ -7,6 +7,7 @@ const Profile = () => {
   // State untuk menampung nilai dari setiap input form
 
   const profilePicUrl = "https://randomuser.me/api/portraits/men/75.jpg";
+  const profilePicUrl2 = "https://randomuser.me/api/portraits/women/65.jpg";
 
   const { user, updateProfile, isUpdatingProfile, deleteAccount } =
     useAuthStore();
@@ -129,7 +130,7 @@ const Profile = () => {
         <h2 style={styles.title}>Update Profile</h2>
         <div style={{ textAlign: "center", marginBottom: "20px" }}>
           <img
-            src={profilePicUrl}
+            src={user.role === "Dokter" ? profilePicUrl2 : profilePicUrl}
             style={styles.image}
             alt="Profile"
             className="profile-image"

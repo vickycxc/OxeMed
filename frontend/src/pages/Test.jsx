@@ -48,6 +48,11 @@ const Test = () => {
     window.scrollTo(0, 0);
   };
 
+  const handleProfile = () => {
+    setShowProfileMenu(false);
+    navigate("/profile");
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -171,6 +176,18 @@ const Test = () => {
                   zIndex: 1000,
                 }}
               >
+                <button
+                  onClick={handleProfile}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "#2563eb",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                  }}
+                >
+                  Profile
+                </button>
                 <button
                   onClick={handleLogout}
                   style={{

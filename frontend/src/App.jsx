@@ -12,6 +12,7 @@ import { Toaster } from "react-hot-toast";
 import { useAuthStore } from "./store/useAuthStore.js";
 import oxemedLogo from "./assets/oxemed.jpg";
 import "./styles/app.css";
+import Profile from "./pages/Profile.jsx";
 
 const App = () => {
   const { user, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
@@ -49,6 +50,7 @@ const App = () => {
             path="/riwayat"
             element={user.role === "Pasien" ? <Riwayat /> : <RiwayatDokter />}
           />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
         <Toaster />
       </>

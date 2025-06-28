@@ -69,6 +69,11 @@ const LoginDokter = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const handleProfile = () => {
+    setShowProfileMenu(false);
+    navigate("/profile");
+  };
+
   const pasienData = [
     {
       nama: "Aisyah Ramadhani",
@@ -175,6 +180,18 @@ const LoginDokter = () => {
                   zIndex: 1000,
                 }}
               >
+                <button
+                  onClick={handleProfile}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "#2563eb",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                  }}
+                >
+                  Profile
+                </button>
                 <button
                   onClick={handleLogout}
                   style={{

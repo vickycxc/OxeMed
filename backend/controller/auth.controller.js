@@ -75,12 +75,10 @@ export const register = async (req, res) => {
 
     // if (newUser && role === "Pasien") {
     generateToken(userWithoutPassword.id, res);
-    return res
-      .status(201)
-      .json({
-        message: "Registrasi Pasien berhasil",
-        user: userWithoutPassword,
-      });
+    return res.status(201).json({
+      message: "Registrasi Pasien berhasil",
+      user: userWithoutPassword,
+    });
     // }
 
     // if (role === "Dokter") {
@@ -149,12 +147,11 @@ export const login = async (req, res) => {
       },
     });
 
-    const { password: userPassword, ...userWithoutPassword } = user.dataValues;
-
     if (!user) {
       return res.status(400).json({ message: "Email tidak valid" });
     }
 
+    const { password: userPassword, ...userWithoutPassword } = user.dataValues;
     const isPasswordCorrect = await bcryptjs.compare(password, userPassword);
     if (!isPasswordCorrect) {
       return res.status(400).json({ message: "Password tidak valid" });
@@ -204,123 +201,177 @@ export const checkAuth = async (req, res) => {
   }
 };
 
+// export const updateProfile = async (req, res) => {
+//   const {
+//     fullName,
+//     email,
+//     password,
+//     birthDate,
+//     gender,
+//     phoneNumber,
+//     role,
+//     drugAllergies,
+//     profilePicture,
+//     strNumber,
+//     sipNumber,
+//     specialization,
+//     practiceStartYear,
+//     practiceLocation,
+//     practiceCity,
+//     offScheduleFee,
+//     doctorEducations,
+//     doctorSchedules,
+//   } = req.body;
+//   try {
+//     if (
+//       !fullName ||
+//       !email ||
+//       !password ||
+//       !birthDate ||
+//       !gender ||
+//       !phoneNumber ||
+//       !role
+//     ) {
+//       return res.status(400).json({ message: "Semua field harus diisi" });
+//     }
+
+//     const user = await User.findByPk(decoded.id, {
+//       attributes: { exclude: ["password"] },
+//     });
+
+//     if (!user) {
+//       return res.status(404).json({ message: "Pengguna tidak ditemukan" });
+//     }
+
+//     user.fullName = fullName;
+//     user.email = email;
+//     user.password = password;
+//     user.birthDate = birthDate;
+//     user.gender = gender;
+//     user.phoneNumber = phoneNumber;
+//     user.drugAllergies = drugAllergies;
+
+//     await user.save();
+
+//     if (role === "Dokter") {
+//       if (
+//         !profilePicture ||
+//         !strNumber ||
+//         !sipNumber ||
+//         !practiceStartYear ||
+//         !practiceLocation ||
+//         !practiceCity ||
+//         !offScheduleFee
+//       ) {
+//         return res.status(400).json({
+//           message: "Semua field harus diisi",
+//         });
+//       }
+//       const doctor = await user.getDoctor();
+//       if (!doctor) {
+//         return res.status(404).json({ message: "Dokter Tidak Ditemukan" });
+//       }
+
+//       const uploadResponse = await cloudinary.uploader.upload(profilePicture);
+//       const profilePictureUrl = uploadResponse.secure_url;
+
+//       doctor.profilePictureUrl = profilePictureUrl;
+//       doctor.strNumber = strNumber;
+//       doctor.sipNumber = sipNumber;
+//       doctor.specialization = specialization;
+//       doctor.practiceStartYear = practiceStartYear;
+//       doctor.practiceLocation = practiceLocation;
+//       doctor.practiceCity = practiceCity;
+//       doctor.offScheduleFee = offScheduleFee;
+
+//       await doctor.save();
+
+//       await DoctorEducation.destroy({
+//         where: {
+//           doctorId: doctor.id,
+//         },
+//       });
+//       const educations = doctorEducations.map((edu) => ({
+//         ...edu,
+//         doctorId: doctor.id,
+//       }));
+//       await DoctorEducation.bulkCreate(educations);
+
+//       await DoctorSchedule.destroy({
+//         where: {
+//           doctorId: doctor.id,
+//         },
+//       });
+//       const schedules = doctorSchedules.map((schedule) => ({
+//         ...schedule,
+//         doctorId: doctor.id,
+//       }));
+//       await DoctorSchedule.bulkCreate(schedules);
+
+//       return res.status(200).json({
+//         message: "Profil Dokter Berhasil Diperbarui",
+//       });
+//     } else {
+//       return res.status(200).json({
+//         message: "Profil Pasien Berhasil Diperbarui",
+//       });
+//     }
+//   } catch (error) {
+//     console.error("Error di updateProfile controller", error);
+//     return res.status(500).json({
+//       message: "Terjadi kesalahan pada server",
+//     });
+//   }
+// };
+
 export const updateProfile = async (req, res) => {
-  const {
-    fullName,
-    email,
-    password,
-    birthDate,
-    gender,
-    phoneNumber,
-    role,
-    drugAllergies,
-    profilePicture,
-    strNumber,
-    sipNumber,
-    specialization,
-    practiceStartYear,
-    practiceLocation,
-    practiceCity,
-    offScheduleFee,
-    doctorEducations,
-    doctorSchedules,
-  } = req.body;
+  const { fullName, email, password } = req.body;
   try {
-    if (
-      !fullName ||
-      !email ||
-      !password ||
-      !birthDate ||
-      !gender ||
-      !phoneNumber ||
-      !role
-    ) {
+    if (!fullName || !email) {
       return res.status(400).json({ message: "Semua field harus diisi" });
     }
 
-    const user = await User.findByPk(decoded.id, {
-      attributes: { exclude: ["password"] },
+    const user = await User.findByPk(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: "Pengguna tidak ditemukan" });
+    }
+    user.fullName = fullName;
+    user.email = email;
+    if (password) {
+      if (password.length < 6) {
+        return res
+          .status(400)
+          .json({ message: "Password harus lebih dari 6 karakter" });
+      }
+      const salt = await bcryptjs.genSalt(10);
+      user.password = await bcryptjs.hash(password, salt);
+    }
+    await user.save();
+    const { password: userPassword, ...userWithoutPassword } = user.dataValues;
+    return res.status(200).json({
+      message: "Profil berhasil diperbarui",
+      user: userWithoutPassword,
     });
+  } catch (error) {
+    console.error("Error di updateProfile controller", error);
+    return res.status(500).json({
+      message: "Terjadi kesalahan pada server",
+    });
+  }
+};
 
+export const deleteAccount = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.user.id);
     if (!user) {
       return res.status(404).json({ message: "Pengguna tidak ditemukan" });
     }
 
-    user.fullName = fullName;
-    user.email = email;
-    user.password = password;
-    user.birthDate = birthDate;
-    user.gender = gender;
-    user.phoneNumber = phoneNumber;
-    user.drugAllergies = drugAllergies;
-
-    await user.save();
-
-    if (role === "Dokter") {
-      if (
-        !profilePicture ||
-        !strNumber ||
-        !sipNumber ||
-        !practiceStartYear ||
-        !practiceLocation ||
-        !practiceCity ||
-        !offScheduleFee
-      ) {
-        return res.status(400).json({
-          message: "Semua field harus diisi",
-        });
-      }
-      const doctor = await user.getDoctor();
-      if (!doctor) {
-        return res.status(404).json({ message: "Dokter Tidak Ditemukan" });
-      }
-
-      const uploadResponse = await cloudinary.uploader.upload(profilePicture);
-      const profilePictureUrl = uploadResponse.secure_url;
-
-      doctor.profilePictureUrl = profilePictureUrl;
-      doctor.strNumber = strNumber;
-      doctor.sipNumber = sipNumber;
-      doctor.specialization = specialization;
-      doctor.practiceStartYear = practiceStartYear;
-      doctor.practiceLocation = practiceLocation;
-      doctor.practiceCity = practiceCity;
-      doctor.offScheduleFee = offScheduleFee;
-
-      await doctor.save();
-
-      await DoctorEducation.destroy({
-        where: {
-          doctorId: doctor.id,
-        },
-      });
-      const educations = doctorEducations.map((edu) => ({
-        ...edu,
-        doctorId: doctor.id,
-      }));
-      await DoctorEducation.bulkCreate(educations);
-
-      await DoctorSchedule.destroy({
-        where: {
-          doctorId: doctor.id,
-        },
-      });
-      const schedules = doctorSchedules.map((schedule) => ({
-        ...schedule,
-        doctorId: doctor.id,
-      }));
-      await DoctorSchedule.bulkCreate(schedules);
-
-      return res.status(200).json({
-        message: "Profil Dokter Berhasil Diperbarui",
-      });
-    } else {
-      return res.status(200).json({
-        message: "Profil Pasien Berhasil Diperbarui",
-      });
-    }
+    await user.destroy();
+    res.clearCookie("jwt");
+    return res.status(200).json({ message: "Akun berhasil dihapus" });
   } catch (error) {
-    console.error("Error di updateProfile controller", error);
+    console.error("Error di deleteAccount controller", error);
     return res.status(500).json({
       message: "Terjadi kesalahan pada server",
     });

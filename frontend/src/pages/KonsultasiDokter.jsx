@@ -49,6 +49,10 @@ const Konsultasi = () => {
   const handleLogout = () => {
     logout();
   };
+  const handleProfile = () => {
+    setShowProfileMenu(false);
+    navigate("/profile");
+  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -239,6 +243,18 @@ const Konsultasi = () => {
                   zIndex: 1000,
                 }}
               >
+                <button
+                  onClick={handleProfile}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "#2563eb",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                  }}
+                >
+                  Profile
+                </button>
                 <button
                   onClick={handleLogout}
                   style={{

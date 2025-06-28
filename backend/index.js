@@ -18,7 +18,7 @@ app.use(express.urlencoded({ limit: "10mb", extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://app.oxemed.live",
+    origin: ["https://app.oxemed.live", "http://localhost:5173"],
     credentials: true,
   })
 );

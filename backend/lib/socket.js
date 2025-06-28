@@ -7,7 +7,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: ["https://app.oxemed.live"],
+    origin: ["https://app.oxemed.live", "http://localhost:5173"],
   },
 });
 

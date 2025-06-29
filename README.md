@@ -16,12 +16,18 @@ Platform ini bertujuan untuk memberikan akses mudah bagi pengguna untuk memantau
 
 ## 🏗️ Arsitektur Proyek
 
-Proyek ini dipisahkan menjadi dua direktori utama, yaitu `frontend` dan `backend`, untuk memisahkan logika sisi klien dan sisi server.
+Struktur proyek ini diorganisir untuk memisahkan antara logika *frontend*, *backend*, dan aset lainnya.
 
 OxeMed/
-├── backend/        # Kode sumber sisi server (Node.js, Express, Sequelize)
-├── frontend/       # Kode sumber sisi klien (React.js, Vite)
-└── README.md
+├── backend/          # Kode sumber sisi server (Node.js, Express)
+├── frontend/         # Kode sumber sisi klien (React.js, Vite)
+├── template/         # Berisi file template atau aset pelengkap
+├── .gitignore        # Konfigurasi file yang diabaikan oleh Git
+├── LICENSE           # File lisensi proyek
+├── package.json      # Manifes proyek, berisi daftar skrip dan dependensi
+└── README.md         # File dokumentasi yang sedang Anda baca
+
+
 
 ## 🚀 Teknologi yang Digunakan
 

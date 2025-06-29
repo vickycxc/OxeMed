@@ -21,7 +21,6 @@ Struktur proyek ini diorganisir untuk memisahkan antara logika frontend, backend
 OxeMed/
 ├── backend/          # Kode sumber sisi server (Node.js, Express)
 ├── frontend/         # Kode sumber sisi klien (React.js, Vite)
-├── template/         # Berisi file template atau aset pelengkap
 ├── .gitignore        # Konfigurasi file yang diabaikan oleh Git
 ├── LICENSE           # File lisensi proyek
 ├── package.json      # Manifes proyek, berisi daftar skrip dan dependensi

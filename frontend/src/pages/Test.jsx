@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import oxemedLogo from "../assets/oxemed.jpg";
 import { useAuthStore } from "../store/useAuthStore";
+import { useChatStore } from "../store/useChatStore";
 
 const profilePicUrl = "https://randomuser.me/api/portraits/men/75.jpg";
 
@@ -13,26 +14,30 @@ const Test = () => {
   const [result, setResult] = useState(null);
   const navigate = useNavigate();
   const { logout } = useAuthStore();
+  const { testResult, subscribeToTest, unsubscribeToTest } = useChatStore();
 
   const startDetection = () => {
     if (isDetecting) return;
     setIsDetecting(true);
     setResult(null);
-    setTimeout(() => {
-      const simulatedSpO2 = (95 + Math.random() * 4).toFixed(1);
-      const simulatedHeartRate = Math.floor(65 + Math.random() * 30);
+    subscribeToTest();
+  };
+
+  useEffect(() => {
+    if (testResult) {
       setResult({
-        spO2: simulatedSpO2,
-        heartRate: simulatedHeartRate,
-        timestamp: new Date().toLocaleTimeString("id-ID", {
+        spO2: testResult.spo2,
+        heartRate: testResult.pulse,
+        timestamp: new Date(testResult.timestamp).toLocaleTimeString("id-ID", {
           hour: "2-digit",
           minute: "2-digit",
           second: "2-digit",
         }),
       });
       setIsDetecting(false);
-    }, 5000);
-  };
+      unsubscribeToTest();
+    }
+  }, [testResult]);
 
   const toggleProfileMenu = () => setShowProfileMenu(!showProfileMenu);
   const handleLogout = () => {
@@ -41,6 +46,11 @@ const Test = () => {
     logout();
     // navigate("/login");
     window.scrollTo(0, 0);
+  };
+
+  const handleProfile = () => {
+    setShowProfileMenu(false);
+    navigate("/profile");
   };
 
   useEffect(() => {
@@ -166,6 +176,18 @@ const Test = () => {
                   zIndex: 1000,
                 }}
               >
+                <button
+                  onClick={handleProfile}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "#2563eb",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                  }}
+                >
+                  Profile
+                </button>
                 <button
                   onClick={handleLogout}
                   style={{

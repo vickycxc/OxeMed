@@ -1,6 +1,7 @@
 import { Op } from "sequelize";
 import { Message } from "../models/index.js";
 import cloudinary from "../lib/cloudinary.js";
+import { getReceiverSocketId, io } from "../lib/socket.js";
 
 export const getMessages = async (req, res) => {
   try {
@@ -24,7 +25,7 @@ export const getMessages = async (req, res) => {
 };
 export const sendMessage = async (req, res) => {
   try {
-    const { message, image } = req.body;
+    const { message, image, consultationId } = req.body;
     const { id: senderId } = req.user;
     const { id: receiverId } = req.params;
 
@@ -35,16 +36,23 @@ export const sendMessage = async (req, res) => {
       console.log("🚀 ~ sendMessage ~ imageUrl:", imageUrl);
     }
 
-    const data = await Message.create({
+    const newMessage = await Message.create({
       senderId,
       receiverId,
       message,
+      consultationId,
       imageUrl: imageUrl,
     });
 
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    console.log("🚀 ~ sendMessage ~ receiverSocketId:", receiverSocketId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newMessage", newMessage.dataValues);
+    }
+
     res.status(201).json({
       message: "Pesan berhasil dikirim",
-      data: data.dataValues,
+      data: newMessage.dataValues,
     });
   } catch (error) {
     console.log("Error di sendMessage controller", error);

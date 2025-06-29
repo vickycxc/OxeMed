@@ -25,6 +25,7 @@ Database: MySQL
 7. Jalankan 'npm install'
 8. Jalankan 'npm run dev'
 9. Buka browser, ketik 'http://localhost:5173' (localhost yang muncul ketika menjalankan frontend)
-10. OxeMed siap digunakan
+10. Apabila Menggunakan di localhost, cari url "https://api.oxemed.live/api" di file axios.js dan useAuthStore.js dan ganti menjadi "http:localhost:3000/api"
+11. OxeMed siap digunakan
 
 repository juga tersedia di: https://github.com/vickycxc/OxeMed

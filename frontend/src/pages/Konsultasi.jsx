@@ -18,6 +18,7 @@ const Konsultasi = () => {
   const [activeSection, setActiveSection] = useState("home");
   const [activeTab, setActiveTab] = useState(null);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+
   const navigate = useNavigate();
   const chatBoxRef = useRef();
 
@@ -28,28 +29,37 @@ const Konsultasi = () => {
     isMessagesLoading,
     messages,
     sendMessage,
-  } = useChatStore(); // Assuming getDoctors is a function that fetches doctors
+    consultations,
+    createConsultation,
+    selectedConsultation,
+    setSelectedConsultation,
+    getConsultations,
+    endConsultation,
+    selectedUser,
+    setSelectedUser,
+    getMessages,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+    isUpdatingConsultation,
+  } = useChatStore();
 
   const handleDoctorSelect = (doctor) => {
     setSelectedUser(doctor);
     console.log("Selected Doctor: ", doctor);
+    setSelectedConsultation();
     setIsDoctorSelectionVisible(false); // Hide doctor selection after selection
   };
 
   // Toggle menu profil dropdown
   const toggleProfileMenu = () => setShowProfileMenu((prev) => !prev);
   const { logout, user } = useAuthStore(); // Assuming logout is a function in your store
-  const {
-    selectedUser,
-    setSelectedUser,
-    getMessages,
-    subscribeToMessages,
-    unsubscribeFromMessages,
-  } = useChatStore(); // Assuming these are functions in your store
-
   // Logout function
   const handleLogout = () => {
     logout();
+  };
+  const handleProfile = () => {
+    setShowProfileMenu(false);
+    navigate("/profile");
   };
 
   const handleImageChange = (e) => {
@@ -76,29 +86,15 @@ const Konsultasi = () => {
     });
     setMessage("");
     setImage(null);
-    if (fileInputRef.current) fileInputRef.current.value = "";
-
-    // setTimeout(() => {
-    //   // setChat((prev) => [
-    //   //   ...prev,
-    //   //   {
-    //   //     sender: "dokter",
-    //   //     text: "Terima kasih atas informasinya. Kami akan pelajari dan bantu segera.",
-    //   //   },
-    //   // ]);
-    // }, 1000);
   };
 
   const handleFinish = () => {
-    const summary = {
-      doctor: selectedUser,
-      messages,
-      timestamp: new Date().toISOString(),
-    };
-    localStorage.setItem("konsultasi_terakhir", JSON.stringify(summary));
-    navigate("/riwayat");
+    endConsultation();
   };
 
+  const handleStartConsultation = () => {
+    createConsultation();
+  };
   // Scroll to top on mount
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -117,10 +113,24 @@ const Konsultasi = () => {
   useEffect(() => {
     if (selectedUser) {
       getMessages(selectedUser.id);
+      setSelectedConsultation();
+      console.log("boom");
+      console.log("Selected Consultations: ", consultations);
       subscribeToMessages();
     }
     return () => unsubscribeFromMessages();
-  }, [selectedUser, getMessages]);
+  }, [
+    selectedUser,
+    getMessages,
+    consultations,
+    setSelectedConsultation,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+  ]);
+
+  useEffect(() => {
+    getConsultations();
+  }, [getConsultations]);
 
   if (isUsersLoading || isMessagesLoading) {
     return (
@@ -129,8 +139,6 @@ const Konsultasi = () => {
       </div>
     );
   }
-
-  console.log("Doctors: ", doctors);
 
   return (
     <div
@@ -252,6 +260,18 @@ const Konsultasi = () => {
                 }}
               >
                 <button
+                  onClick={handleProfile}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "#2563eb",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                  }}
+                >
+                  Profile
+                </button>
+                <button
                   onClick={handleLogout}
                   style={{
                     background: "none",
@@ -361,7 +381,12 @@ const Konsultasi = () => {
                   <small>Spesialis Penyakit Dalam</small>
                 </div>
                 <button
-                  onClick={handleFinish}
+                  disabled={isUpdatingConsultation}
+                  onClick={
+                    selectedConsultation
+                      ? handleFinish
+                      : handleStartConsultation
+                  }
                   style={{
                     marginLeft: "auto",
                     padding: "8px 20px",
@@ -369,10 +394,14 @@ const Konsultasi = () => {
                     background: "#3b60e4",
                     color: "white",
                     border: "none",
-                    cursor: "pointer",
+                    cursor: !isUpdatingConsultation ? "pointer" : "auto",
                   }}
                 >
-                  Selesai
+                  {isUpdatingConsultation
+                    ? "Loading..."
+                    : selectedConsultation
+                    ? "Selesai"
+                    : "Mulai Konsultasi"}
                 </button>
               </div>
 
@@ -389,53 +418,69 @@ const Konsultasi = () => {
                   marginBottom: 16,
                 }}
               >
-                {messages.map((item, index) => {
-                  console.log("🚀 ~ {messages.map ~ item:", item);
-
-                  return (
-                    <div
-                      key={index}
-                      style={{
-                        display: "flex",
-                        justifyContent:
-                          item.senderId === user.id ? "flex-end" : "flex-start",
-                        marginBottom: 12,
-                      }}
-                    >
+                {messages.length > 0 ? (
+                  messages.map((item, index) => {
+                    return (
                       <div
+                        key={index}
                         style={{
-                          backgroundColor:
-                            item.senderId === user.id ? "#d1e7dd" : "#e2e6ea",
-                          padding: 12,
-                          borderRadius: 12,
-                          maxWidth: "70%",
-                          wordBreak: "break-word",
+                          display: "flex",
+                          justifyContent:
+                            item.senderId === user.id
+                              ? "flex-end"
+                              : "flex-start",
+                          marginBottom: 12,
                         }}
                       >
-                        <p style={{ margin: 0 }}>{item.message}</p>
-                        {item.imageUrl && (
-                          <img
-                            src={item.imageUrl}
-                            alt="Upload"
-                            style={{
-                              marginTop: 10,
-                              maxWidth: 120,
-                              borderRadius: 8,
-                            }}
-                          />
-                        )}
+                        <div
+                          style={{
+                            backgroundColor:
+                              item.senderId === user.id ? "#d1e7dd" : "#e2e6ea",
+                            padding: 12,
+                            borderRadius: 12,
+                            maxWidth: "70%",
+                            wordBreak: "break-word",
+                          }}
+                        >
+                          <p style={{ margin: 0 }}>{item.message}</p>
+                          {item.imageUrl && (
+                            <img
+                              src={item.imageUrl}
+                              alt="Upload"
+                              style={{
+                                marginTop: 10,
+                                maxWidth: 120,
+                                borderRadius: 8,
+                              }}
+                            />
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })
+                ) : (
+                  <div
+                    style={{
+                      textAlign: "center",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      height: "100%",
+                      color: "#666",
+                      fontSize: "16px",
+                    }}
+                  >
+                    Silakan Mulai Konsultasi
+                  </div>
+                )}
               </div>
-
               {/* Input */}
               <div style={{ display: "flex", gap: 10 }}>
                 <input
                   type="file"
                   accept="image/*"
                   onChange={handleImageChange}
+                  disabled={!selectedConsultation}
                   style={{
                     flexBasis: "30%",
                     borderRadius: 8,
@@ -448,6 +493,7 @@ const Konsultasi = () => {
                   type="text"
                   placeholder="Tulis pesan..."
                   value={message}
+                  disabled={!selectedConsultation}
                   onChange={(e) => setMessage(e.target.value)}
                   style={{
                     flex: 1,
@@ -459,13 +505,14 @@ const Konsultasi = () => {
 
                 <button
                   onClick={handleSend}
+                  disabled={!selectedConsultation}
                   style={{
                     borderRadius: 8,
-                    backgroundColor: "#3b60e4",
+                    backgroundColor: !selectedConsultation ? "#ccc" : "#3b60e4",
                     color: "white",
                     border: "none",
                     padding: "8px 16px",
-                    cursor: "pointer",
+                    cursor: selectedConsultation ? "pointer" : "auto",
                   }}
                 >
                   Kirim

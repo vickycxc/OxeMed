@@ -12,6 +12,7 @@ import { Toaster } from "react-hot-toast";
 import { useAuthStore } from "./store/useAuthStore.js";
 import oxemedLogo from "./assets/oxemed.jpg";
 import "./styles/app.css";
+import Profile from "./pages/Profile.jsx";
 
 const App = () => {
   const { user, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
@@ -20,9 +21,7 @@ const App = () => {
     checkAuth();
   }, [checkAuth]);
 
-  console.log({ user });
-
-  if(isCheckingAuth && !authUser) 
+  if (isCheckingAuth && !user)
     return (
       <div className="loader">
         <img src={oxemedLogo} />
@@ -30,7 +29,6 @@ const App = () => {
     );
 
   if (user) {
-    console.log("🚀 ~ App ~ role:", user);
     return (
       <>
         <Routes>
@@ -39,12 +37,11 @@ const App = () => {
             path="/"
             element={user.role === "Pasien" ? <Login /> : <LoginDokter />}
           />
-          <Route
-            path="/konsultasi"
-            element={
-              user.role === "Pasien" ? <Konsultasi /> : <KonsultasiDokter />
-            }
-          />
+          {user.role === "Pasien" ? (
+            <Route path="/konsultasi" element={<Konsultasi />} />
+          ) : (
+            <Route path="/konsultasi/:id" element={<KonsultasiDokter />} />
+          )}
           <Route
             path="/test"
             element={user.role === "Pasien" ? <Test /> : <Navigate to="/" />}
@@ -53,6 +50,7 @@ const App = () => {
             path="/riwayat"
             element={user.role === "Pasien" ? <Riwayat /> : <RiwayatDokter />}
           />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
         <Toaster />
       </>

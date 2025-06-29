@@ -9,6 +9,6 @@ import { protectRoute } from "../middleware/auth.middleware.js";
 const router = express.Router();
 
 router.post("/", validateDeviceApiKey, addSensorReading);
-router.get("/:userId", protectRoute, getSensorReadings);
+router.get("/", protectRoute, getSensorReadings);
 
 export default router;

@@ -1,31 +1,132 @@
-# OxeMed - Respiratory Health Monitoring and Consultation Platform
+# OxeMed - Platform Pemantauan Kesehatan Pernapasan dan Konsultasi
 
-OxeMed adalah platform web interaktif yang dirancang untuk pemantauan kesehatan pernapasan secara real-time dan konsultasi langsung dengan tenaga medis profesional. Sistem ini memungkinkan pengguna untuk melacak tanda-tanda vital seperti saturasi oksigen (SpO2) dan detak jantung, serta terhubung secara aman dengan dokter untuk mendapatkan saran medis yang tepat waktu.
+OxeMed adalah platform web interaktif yang dirancang untuk pemantauan kesehatan pernapasan secara *real-time* dan konsultasi langsung dengan tenaga medis profesional.
 
-# Key Features
-1. Health Test & Monitoring: Memungkinkan pengguna melakukan tes mandiri untuk saturasi oksigen (SpO2) dan detak jantung dengan panduan yang jelas.
-2. Live Doctor Consultation: Menghubungkan pengguna dengan dokter melalui fitur obrolan (chat) yang aman dan real-time untuk mendapatkan nasihat profesional.
-3. AI-Powered Preliminary Insights: Memanfaatkan Google GenAI (Gemini) untuk memberikan analisis dan wawasan awal selama sesi konsultasi berlangsung.
-4. Digital Medical History (Login Required): Secara otomatis menyimpan riwayat hasil tes dan catatan konsultasi, yang dapat diakses oleh pengguna setelah masuk ke akun.
-5. Responsive Interface: Menampilkan antarmuka ramah pengguna yang dibangun dengan React untuk pengalaman optimal di berbagai perangkat.
+## 📜 Deskripsi Singkat
 
-# Tech Stack:
-- Frontend: React.js (Vite), Zustand, Socket.io Client, Axios
-- Backend: Node.js, Express.js, Sequelize ORM, Google GenAI (Gemini), Socket.io
-- Database: MySQL
+Platform ini bertujuan untuk memberikan akses mudah bagi pengguna untuk memantau tanda-tanda vital esensial seperti saturasi oksigen (SpO2) dan detak jantung. Selain itu, OxeMed menyediakan jembatan komunikasi yang aman antara pengguna dan dokter melalui fitur konsultasi daring, didukung oleh analisis awal berbasis AI untuk wawasan yang lebih cepat.
 
-## Cara Instalasi:
+## ✨ Fitur Utama
 
-1. Nyalakan XAMPP, buat database baru bernama oxemed
-2. Buka terminal, pastikan direktori sudah di OxeMed (cd OxeMed)
-3. Pindah direktori ke backend dengan menjalankan 'cd backend/'
-4. Jalankan 'npm install'
-5. Jalankan 'npm run dev'
-6. Buka terminal baru, kali ini arahkan ke direktori frontend
-7. Jalankan 'npm install'
-8. Jalankan 'npm run dev'
-9. Buka browser, ketik 'http://localhost:5173' (localhost yang muncul ketika menjalankan frontend)
-10. Apabila Menggunakan di localhost, cari url "https://api.oxemed.live/api" di file axios.js dan useAuthStore.js dan ganti menjadi "http:localhost:3000/api"
-11. OxeMed siap digunakan
+- **Tes & Pemantauan Kesehatan:** Melakukan tes mandiri untuk saturasi oksigen (SpO2) dan detak jantung dengan panduan interaktif.
+- **Konsultasi Dokter Langsung:** Fitur obrolan (*chat*) *real-time* yang aman untuk terhubung langsung dengan dokter profesional.
+- **Wawasan Awal Berbasis AI:** Integrasi dengan Google GenAI (Gemini) untuk memberikan analisis pendahuluan selama sesi konsultasi.
+- **Riwayat Medis Digital:** Penyimpanan riwayat hasil tes dan transkrip konsultasi secara otomatis yang dapat diakses pengguna setelah *login*.
+- **Antarmuka Responsif:** Dibangun dengan React untuk pengalaman pengguna yang optimal di berbagai perangkat, termasuk *desktop* dan *mobile*.
 
-repository juga tersedia di: https://github.com/vickycxc/OxeMed
+## 🏗️ Arsitektur Proyek
+
+Proyek ini dipisahkan menjadi dua direktori utama, yaitu `frontend` dan `backend`, untuk memisahkan logika sisi klien dan sisi server.
+
+OxeMed/
+├── backend/        # Kode sumber sisi server (Node.js, Express, Sequelize)
+├── frontend/       # Kode sumber sisi klien (React.js, Vite)
+└── README.md
+
+## 🚀 Teknologi yang Digunakan
+
+### Frontend
+- **Framework**: React.js (Vite)
+- **State Management**: Zustand
+- **Komunikasi Real-time**: Socket.io Client
+- **HTTP Client**: Axios
+
+### Backend
+- **Runtime Environment**: Node.js
+- **Framework**: Express.js
+- **ORM**: Sequelize
+- **AI**: Google GenAI (Gemini)
+- **Komunikasi Real-time**: Socket.io
+
+### Database
+- MySQL
+
+## ⚙️ Cara Instalasi atau Menjalankan Proyek
+
+Ikuti langkah-langkah berikut untuk menjalankan proyek ini di lingkungan lokal Anda.
+
+1.  **Clone Repositori**
+    ```bash
+    git clone [https://github.com/vickycxc/OxeMed.git](https://github.com/vickycxc/OxeMed.git)
+    cd OxeMed
+    ```
+
+2.  **Setup Database**
+    - Nyalakan layanan Apache dan MySQL di XAMPP.
+    - Buka phpMyAdmin (`http://localhost/phpmyadmin`) dan buat database baru dengan nama `oxemed`.
+
+3.  **Konfigurasi Backend**
+    - Pindah ke direktori backend.
+    ```bash
+    cd backend
+    ```
+    - Instal semua dependensi yang dibutuhkan.
+    ```bash
+    npm install
+    ```
+    - Jalankan server backend.
+    ```bash
+    npm run dev
+    ```
+    Server akan berjalan di `http://localhost:3000`.
+
+4.  **Konfigurasi Frontend**
+    - Buka terminal baru dan arahkan ke direktori root proyek (`OxeMed`).
+    - Pindah ke direktori frontend.
+    ```bash
+    cd frontend
+    ```
+    - Instal semua dependensi yang dibutuhkan.
+    ```bash
+    npm install
+    ```
+
+5.  **Konfigurasi Environment Frontend**
+    - Buka file `src/lib/axios.js` dan `src/store/useAuthStore.js`.
+    - Cari URL `https://api.oxemed.live/api` dan ganti dengan alamat API lokal Anda: `http://localhost:3000/api`.
+
+6.  **Jalankan Frontend**
+    - Jalankan server development frontend.
+    ```bash
+    npm run dev
+    ```
+    - Buka browser dan akses alamat yang muncul di terminal (biasanya `http://localhost:5173`).
+
+7.  Platform OxeMed siap digunakan di lingkungan lokal Anda.
+
+## 🌐 Cara Deploy
+
+Proyek ini telah di-deploy dan dapat diakses melalui URL berikut:
+
+-   **Live Demo**: [https://oxemed.live](https://oxemed.live)
+-   **API Endpoint**: `https://api.oxemed.live/api`
+
+## 📸 Screenshot / Demo
+
+*(Disarankan untuk menambahkan beberapa screenshot di sini untuk menampilkan antarmuka pengguna)*
+
+**Contoh Screenshot yang bisa ditambahkan:**
+-   Halaman Utama (Landing Page)
+-   Halaman Tes Kesehatan (SpO2 & Detak Jantung)
+-   Tampilan Antarmuka Konsultasi Chat dengan Dokter
+-   Halaman Riwayat Kesehatan Pengguna
+
+## 🤝 Kontribusi
+
+Kontribusi untuk pengembangan OxeMed sangat diharapkan. Jika Anda ingin berkontribusi, silakan lakukan *fork* pada repositori ini dan buat *pull request* dengan penjelasan detail mengenai perubahan atau penambahan fitur yang Anda ajukan.
+
+1.  Fork repositori ini.
+2.  Buat branch fitur baru (`git checkout -b fitur/NamaFiturBaru`).
+3.  Commit perubahan Anda (`git commit -m 'Menambahkan fitur X'`).
+4.  Push ke branch Anda (`git push origin fitur/NamaFiturBaru`).
+5.  Buka *Pull Request*.
+
+## 📜 Lisensi
+
+Hak cipta dilindungi dan dimiliki oleh pengembang. Proyek ini menggunakan lisensi [MIT](https://opensource.org/licenses/MIT), kecuali jika disebutkan lain.
+
+## 📧 Kontak
+
+Jika Anda memiliki pertanyaan, saran, atau ingin berdiskusi lebih lanjut, jangan ragu untuk menghubungi pengembang utama.
+
+-   **GitHub**: [vickycxc](https://github.com/vickycxc)

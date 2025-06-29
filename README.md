@@ -1,4 +1,18 @@
-# OxeMed
+# OxeMed - Respiratory Health Monitoring and Consultation Platform
+
+OxeMed adalah platform web interaktif yang dirancang untuk pemantauan kesehatan pernapasan secara real-time dan konsultasi langsung dengan tenaga medis profesional. Sistem ini memungkinkan pengguna untuk melacak tanda-tanda vital seperti saturasi oksigen (SpO2) dan detak jantung, serta terhubung secara aman dengan dokter untuk mendapatkan saran medis yang tepat waktu.
+
+# Key Features
+1. Health Test & Monitoring: Memungkinkan pengguna melakukan tes mandiri untuk saturasi oksigen (SpO2) dan detak jantung dengan panduan yang jelas.
+2. Live Doctor Consultation: Menghubungkan pengguna dengan dokter melalui fitur obrolan (chat) yang aman dan real-time untuk mendapatkan nasihat profesional.
+3. AI-Powered Preliminary Insights: Memanfaatkan Google GenAI (Gemini) untuk memberikan analisis dan wawasan awal selama sesi konsultasi berlangsung.
+4. Digital Medical History (Login Required): Secara otomatis menyimpan riwayat hasil tes dan catatan konsultasi, yang dapat diakses oleh pengguna setelah masuk ke akun.
+5. Responsive Interface: Menampilkan antarmuka ramah pengguna yang dibangun dengan React untuk pengalaman optimal di berbagai perangkat.
+
+# Tech Stack:
+Frontend: React.js (Vite), Zustand, Socket.io Client, Axios
+Backend: Node.js, Express.js, Sequelize ORM, Google GenAI (Gemini), Socket.io
+Database: MySQL
 
 ## Cara Instalasi:
 

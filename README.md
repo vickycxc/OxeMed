@@ -16,6 +16,7 @@ Platform ini bertujuan untuk memberikan akses mudah bagi pengguna untuk memantau
 
 ## 🏗️ Arsitektur Proyek
 
+```
 Struktur proyek ini diorganisir untuk memisahkan antara logika frontend, backend, dan aset lainnya.
 OxeMed/
 ├── backend/          # Kode sumber sisi server (Node.js, Express)
@@ -25,7 +26,7 @@ OxeMed/
 ├── LICENSE           # File lisensi proyek
 ├── package.json      # Manifes proyek, berisi daftar skrip dan dependensi
 └── README.md         # File dokumentasi yang sedang Anda baca
-
+```
 
 ## 🚀 Teknologi yang Digunakan
 

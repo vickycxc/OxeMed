@@ -10,9 +10,9 @@ OxeMed adalah platform web interaktif yang dirancang untuk pemantauan kesehatan 
 5. Responsive Interface: Menampilkan antarmuka ramah pengguna yang dibangun dengan React untuk pengalaman optimal di berbagai perangkat.
 
 # Tech Stack:
-Frontend: React.js (Vite), Zustand, Socket.io Client, Axios
-Backend: Node.js, Express.js, Sequelize ORM, Google GenAI (Gemini), Socket.io
-Database: MySQL
+- Frontend: React.js (Vite), Zustand, Socket.io Client, Axios
+- Backend: Node.js, Express.js, Sequelize ORM, Google GenAI (Gemini), Socket.io
+- Database: MySQL
 
 ## Cara Instalasi:
 

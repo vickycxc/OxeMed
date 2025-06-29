@@ -103,7 +103,7 @@ Ikuti langkah-langkah berikut untuk menjalankan proyek ini di lingkungan lokal A
 
 Proyek ini telah di-deploy dan dapat diakses melalui URL berikut:
 
--   **Live Demo**: [https://oxemed.live](https://app.oxemed.live) / http://localhost:5173
+-   **Live Demo**: [https://app.oxemed.live](https://app.oxemed.live) / http://localhost:5173
 -   **API Endpoint**: `https://api.oxemed.live/api` / http://localhost:3000/api
 
 ## 📸 Screenshot / Demo

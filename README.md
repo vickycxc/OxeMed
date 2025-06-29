@@ -41,6 +41,7 @@ OxeMed/
 - **ORM**: Sequelize
 - **AI**: Google GenAI (Gemini)
 - **Komunikasi Real-time**: Socket.io
+- **Cloud Storage**: Cloudinary
 
 ### Database
 - MySQL
@@ -102,8 +103,8 @@ Ikuti langkah-langkah berikut untuk menjalankan proyek ini di lingkungan lokal A
 
 Proyek ini telah di-deploy dan dapat diakses melalui URL berikut:
 
--   **Live Demo**: [https://oxemed.live](https://oxemed.live)
--   **API Endpoint**: `https://api.oxemed.live/api`
+-   **Live Demo**: [https://oxemed.live](https://app.oxemed.live) / http://localhost:5173
+-   **API Endpoint**: `https://api.oxemed.live/api` / http://localhost:3000/api
 
 ## 📸 Screenshot / Demo
 

@@ -108,13 +108,15 @@ Proyek ini telah di-deploy dan dapat diakses melalui URL berikut:
 
 ## 📸 Screenshot / Demo
 
-*(Disarankan untuk menambahkan beberapa screenshot di sini untuk menampilkan antarmuka pengguna)*
-
-**Contoh Screenshot yang bisa ditambahkan:**
 -   Halaman Utama (Landing Page)
+![alt text](image/login.png)
 -   Halaman Tes Kesehatan (SpO2 & Detak Jantung)
+![alt text](image/tes.png)
 -   Tampilan Antarmuka Konsultasi Chat dengan Dokter
+![alt text](image/konsul.png)
 -   Halaman Riwayat Kesehatan Pengguna
+![alt text](image/history.png)
+![alt text](image/rangkuman.png)
 
 ## 🤝 Kontribusi
 

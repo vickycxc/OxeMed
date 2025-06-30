@@ -12,51 +12,45 @@ import { Toaster } from "react-hot-toast";
 import { useAuthStore } from "./store/useAuthStore.js";
 import oxemedLogo from "./assets/oxemed.jpg";
 import "./styles/app.css";
+import Profile from "./pages/Profile.jsx";
 
 const App = () => {
-  const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
+  const { user, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
 
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
 
-  console.log({ authUser });
-
-  if (isCheckingAuth && !authUser)
+  if (isCheckingAuth && !user)
     return (
       <div className="loader">
         <img src={oxemedLogo} />
       </div>
     );
 
-  if (authUser) {
-    console.log("🚀 ~ App ~ role:", authUser);
+  if (user) {
     return (
       <>
         <Routes>
           <Route path="*" element={<Navigate to="/" />} />
           <Route
             path="/"
-            element={authUser.role === "Pasien" ? <Login /> : <LoginDokter />}
+            element={user.role === "Pasien" ? <Login /> : <LoginDokter />}
           />
-          <Route
-            path="/konsultasi"
-            element={
-              authUser.role === "Pasien" ? <Konsultasi /> : <KonsultasiDokter />
-            }
-          />
+          {user.role === "Pasien" ? (
+            <Route path="/konsultasi" element={<Konsultasi />} />
+          ) : (
+            <Route path="/konsultasi/:id" element={<KonsultasiDokter />} />
+          )}
           <Route
             path="/test"
-            element={
-              authUser.role === "Pasien" ? <Test /> : <Navigate to="/" />
-            }
+            element={user.role === "Pasien" ? <Test /> : <Navigate to="/" />}
           />
           <Route
             path="/riwayat"
-            element={
-              authUser.role === "Pasien" ? <Riwayat /> : <RiwayatDokter />
-            }
+            element={user.role === "Pasien" ? <Riwayat /> : <RiwayatDokter />}
           />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
         <Toaster />
       </>

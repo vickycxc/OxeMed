@@ -7,26 +7,49 @@ import consultationLogo from "../assets/consultation.jpg";
 import historyLogo from "../assets/history.jpg";
 import arrow from "../assets/arrow.jpg"; // Import the back arrow image
 import { useAuthStore } from "../store/useAuthStore";
-const profilePicUrl = "https://randomuser.me/api/portraits/men/75.jpg";
+import { useChatStore } from "../store/useChatStore";
+const profilePicUrl = "https://randomuser.me/api/portraits/women/65.jpg";
 
 const RiwayatDokter = () => {
   const [activeSection, setActiveSection] = useState("home");
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+  const [filteredPasien, setFilteredPasien] = useState([]);
+
+  const { consultations, getConsultations, isUsersLoading } = useChatStore();
 
   // Scroll to top when the page is first loaded
   useEffect(() => {
     window.scrollTo(0, 0); // This will scroll to the top of the page
   }, []);
 
+  useEffect(() => {
+    getConsultations();
+  }, [getConsultations]);
+
+  useEffect(() => {
+    if (consultations.length > 0) {
+      const newFilteredPasien = consultations.filter((consultation) => {
+        return consultation.patient.fullName
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase());
+      });
+      console.log(
+        "🚀 ~ newFilteredPasien ~ newFilteredPasien:",
+        newFilteredPasien
+      );
+      setFilteredPasien(newFilteredPasien);
+    }
+  }, [consultations, searchQuery]);
+
   // Handler untuk navigasi ke masing-masing halaman
   const goToHome = () => navigate("/logindokter");
   const goToConsultation = () => navigate("/logindokter#consultation");
 
   // Fungsi untuk mengarahkan ke halaman konsultasi
-  const handleOngoingClick = () => {
-    navigate("/konsultasi");
+  const handleOngoingClick = (patientId) => {
+    navigate(`/konsultasi/${patientId}`); // Navigasi ke halaman konsultasi dengan ID pasien
   };
 
   // Fungsi untuk mengarahkan ke halaman RiwayatDokter.jsx
@@ -72,6 +95,10 @@ const RiwayatDokter = () => {
     logout();
     // navigate("/");
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+  const handleProfile = () => {
+    setShowProfileMenu(false);
+    navigate("/profile");
   };
 
   const pasienData = [
@@ -125,9 +152,6 @@ const RiwayatDokter = () => {
   };
 
   // Filtered patient data based on search query
-  const filteredPasien = pasienData.filter((pasien) => {
-    return pasien.nama.toLowerCase().includes(searchQuery.toLowerCase());
-  });
 
   return (
     <div className="index-page">
@@ -203,6 +227,18 @@ const RiwayatDokter = () => {
                 }}
               >
                 <button
+                  onClick={handleProfile}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "#2563eb",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                  }}
+                >
+                  Profile
+                </button>
+                <button
                   onClick={handleLogout}
                   style={{
                     background: "none",
@@ -255,10 +291,10 @@ const RiwayatDokter = () => {
               textAlign: "center",
             }}
           >
-            Riwayat Kesehatan Pasien
+            Riwayat Konsultasi Pasien
           </h1>
 
-          <p
+          <div
             style={{
               fontWeight: "500",
               fontSize: "1rem",
@@ -289,88 +325,78 @@ const RiwayatDokter = () => {
                 }}
               />
             </div>
-          </p>
+          </div>
         </section>
 
         {/* Consultation Section */}
         <section className="consultation section" id="consultation">
           <div className="container-fluid container-xl">
             <div className="pasien-container">
-              {filteredPasien.length > 0 ? (
-                <div
-                  className="pasien-list"
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "15px",
-                  }}
-                >
-                  {filteredPasien.map((pasien, index) => (
-                    <div
-                      className="pasien-card"
-                      key={index}
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        padding: "10px",
-                        border: "1px solid #ddd",
-                        borderRadius: "8px",
-                      }}
-                    >
-                      <div className="pasien-info">
-                        <h2>{pasien.nama}</h2>
-                        <p>{pasien.umur}</p>
-                        {pasien.penyakit && (
-                          <p>
-                            <strong>Penyakit:</strong> {pasien.penyakit}
-                          </p>
-                        )}
-                        <p>
-                          <strong>Waktu:</strong> {pasien.waktu}
-                        </p>
-                      </div>
+              {!isUsersLoading &&
+                (filteredPasien.length > 0 ? (
+                  <div
+                    className="pasien-list"
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "15px",
+                    }}
+                  >
+                    {filteredPasien.map((consultation, index) => (
                       <div
-                        className={`status ${
-                          pasien.status === "Sedang Berlangsung"
-                            ? "ongoing"
-                            : "finished"
-                        }`}
-                        onClick={
-                          pasien.status === "Sedang Berlangsung"
-                            ? handleOngoingClick
-                            : null
-                        }
+                        className="pasien-card"
+                        key={index}
                         style={{
-                          padding: "5px 10px",
-                          borderRadius: "20px",
-                          backgroundColor:
-                            pasien.status === "Sedang Berlangsung"
-                              ? "green"
-                              : "gray",
-                          color: "#fff",
-                          cursor:
-                            pasien.status === "Sedang Berlangsung"
-                              ? "pointer"
-                              : "default",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          padding: "10px",
+                          border: "1px solid #ddd",
+                          borderRadius: "8px",
                         }}
                       >
-                        <p>{pasien.status}</p>
+                        <div className="pasien-info">
+                          <h2>{consultation.patient.fullName}</h2>
+                          <p>
+                            <strong>Waktu:</strong>{" "}
+                            {new Intl.DateTimeFormat("id-ID", {
+                              dateStyle: "full",
+                              timeStyle: "long",
+                            }).format(new Date(consultation.timeStart))}
+                          </p>
+                        </div>
+                        <div
+                          className={`status ${consultation.status}`}
+                          onClick={() =>
+                            handleOngoingClick(consultation.patientId)
+                          }
+                          style={{
+                            padding: "5px 10px",
+                            borderRadius: "20px",
+                            backgroundColor:
+                              consultation.status === "Aktif"
+                                ? "green"
+                                : "gray",
+                            color: "#fff",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <p>{consultation.status}</p>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p
-                  style={{
-                    textAlign: "center",
-                    fontSize: "1.25rem",
-                    fontWeight: "500",
-                    color: "#FF3B30",
-                  }}
-                >
-                  Data Tidak Ditemukan
-                </p>
-              )}
+                    ))}
+                  </div>
+                ) : (
+                  <p
+                    style={{
+                      textAlign: "center",
+                      fontSize: "1.25rem",
+                      fontWeight: "500",
+                      color: "#FF3B30",
+                    }}
+                  >
+                    Data Tidak Ditemukan
+                  </p>
+                ))}
             </div>
           </div>
         </section>

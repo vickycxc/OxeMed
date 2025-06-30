@@ -384,7 +384,6 @@ h6 {
   color: #1d4ed8;
 }
 
-
 /*--------------------------------------------------------------
 # Navigation Menu
 --------------------------------------------------------------*/
@@ -1423,12 +1422,11 @@ section,
 }
 
 /* Sedang Berlangsung (Clickable - Redirect to Konsultasi) */
-.status.ongoing {
+.status.Aktif {
   background-color: #4caf50; /* Calm Green */
 }
 
-.status.ongoing:hover {
-  background-color: #45a049; /* Darker green for hover effect */
+.status:hover {
   transform: scale(1.05);
 }
 
@@ -2396,15 +2394,46 @@ form#contact-form button:hover {
   /* Add your styles here */
 }
 
+/* File: index.css atau App.css (atau di file CSS global Anda) */
+
+/* Reset dasar untuk memastikan tidak ada margin/padding default browser */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%; /* Penting untuk memastikan lebar penuh */
+  height: 100%; /* Penting untuk memastikan tinggi penuh */
+}
+
+/* Pastikan root DOM element (tempat React me-mount aplikasi) juga mengisi penuh */
+#root {
+  width: 100%;
+  height: 100%;
+  /* display: flex; /* Optional: Jika #root juga perlu menjadi flex container */
+  /* justify-content: center; */
+  /* align-items: center; */
+}
+
 .loader {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  width: 100%;
+  justify-content: center; /* Pusat horizontal */
+  align-items: center; /* Pusat vertikal */
+  height: 100vh; /* Pastikan mengambil tinggi penuh viewport */
+  width: 100vw; /* **Gunakan 100vw untuk memastikan mengambil lebar penuh viewport** */
+  position: fixed; /* Memastikan loader berada di atas konten lain dan mengambil seluruh viewport */
+  top: 0;
+  left: 0;
+  z-index: 9999; /* Pastikan loader muncul di lapisan paling atas */
+  background-color: white; /* Opsional: Warna latar belakang loader, sesuaikan */
+  /* Untuk debugging: */
+  /* border: 2px solid red; */
+  /* background-color: rgba(0, 0, 255, 0.1); */
 }
 
 .loader img {
-  justify-content: center;
-  align-items: center;
+  max-width: 80%; /* Sedikit lebih kecil agar ada ruang di sekitar logo */
+  max-height: 80%; /* Sesuaikan jika perlu */
+  object-fit: contain;
+  /* Untuk debugging: */
+  /* border: 2px solid green; */
 }

@@ -10,6 +10,10 @@ export const ConsultationSummary = sequelize.define(
       autoIncrement: false,
       primaryKey: true,
     },
+    patientId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     chiefComplaint: {
       type: DataTypes.TEXT,
       allowNull: false,

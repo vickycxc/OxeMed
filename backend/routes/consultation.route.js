@@ -4,6 +4,7 @@ import {
   addDoctorNote,
   addPrescription,
   getConsultations,
+  getConsultationsToday,
   summarizeConsultation,
   updateConsultation,
 } from "../controller/consultation.controller.js";
@@ -14,6 +15,7 @@ const router = express.Router();
 router.post("/", protectRoute, addConsultation);
 router.put("/", protectRoute, updateConsultation);
 router.get("/", protectRoute, getConsultations);
+router.get("/today", protectRoute, getConsultationsToday);
 router.post("/:id/add-doctor-note", protectRoute, addDoctorNote);
 router.post("/:id/add-prescription", protectRoute, addPrescription);
 router.post("/:id/summarize", protectRoute, summarizeConsultation);

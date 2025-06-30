@@ -35,7 +35,7 @@ export const Message = sequelize.define(
         "Catatan Dokter",
         "Resep Digital"
       ),
-      allowNull: false,
+      // allowNull: false,
     },
     isRead: {
       type: DataTypes.BOOLEAN,

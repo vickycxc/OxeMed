@@ -130,7 +130,11 @@ Kontribusi untuk pengembangan OxeMed sangat diharapkan. Jika Anda ingin berkontr
 
 ## 📜 Lisensi
 
-Hak cipta dilindungi dan dimiliki oleh pengembang. Proyek ini menggunakan lisensi [MIT](https://opensource.org/licenses/MIT), kecuali jika disebutkan lain.
+Hak cipta dilindungi dan dimiliki oleh pengembang. Proyek ini menggunakan lisensi [MIT](https://opensource.org/licenses/MIT).
+
+## 📽️ Video Demo
+
+URL Video Demo Aplikasi OxeMed: https://youtu.be/iiSqYEMq1Ug
 
 ## 📧 Kontak
 
